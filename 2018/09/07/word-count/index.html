@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/hyzgh-32x32.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/hyzgh-16x16.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+
+
+  <meta name="description" content="Github项目地址传送门 项目相关要求 基本功能  统计C语言源文件的字符数（完成） 统计C语言源文件的词的数目（完成） 统计C语言源文件的行数（完成）   拓展功能  递归处理目录下符合条件的文件（完成） 返回更复杂的数据（代码行 / 空行 / 注释行）（完成） 支持各种文件的通配符（*,?）（完成）   高级功能  实现图形界面（待完成）    首先，我们需要明确一下“字符”，“词”，“行”">
+<meta property="og:type" content="article">
+<meta property="og:title" content="wc项目折腾笔记">
+<meta property="og:url" content="http://yoursite.com/2018/09/07/word-count/index.html">
+<meta property="og:site_name" content="hyz&#39;s blog">
+<meta property="og:description" content="Github项目地址传送门 项目相关要求 基本功能  统计C语言源文件的字符数（完成） 统计C语言源文件的词的数目（完成） 统计C语言源文件的行数（完成）   拓展功能  递归处理目录下符合条件的文件（完成） 返回更复杂的数据（代码行 / 空行 / 注释行）（完成） 支持各种文件的通配符（*,?）（完成）   高级功能  实现图形界面（待完成）    首先，我们需要明确一下“字符”，“词”，“行”">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911205421076-284872409.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911205428881-788451626.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911205439689-254256383.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911205923166-1878202581.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911205912825-488820294.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911205958319-1399208864.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210007243-239773037.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210013271-1946409668.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210114455-1151020509.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210119963-1429841711.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210126528-40224607.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210131462-486603797.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210153931-1158546205.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210159342-1826726136.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210210247-1688868089.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210225526-1188622487.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210231620-1867302132.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210246330-568258736.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210335631-1210398873.png">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1484352/201809/1484352-20180915090044777-1329710180.png">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1484352/201809/1484352-20180915090113262-414065472.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911234128799-238501992.png">
+<meta property="og:updated_time" content="2019-07-13T14:08:13.639Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="wc项目折腾笔记">
+<meta name="twitter:description" content="Github项目地址传送门 项目相关要求 基本功能  统计C语言源文件的字符数（完成） 统计C语言源文件的词的数目（完成） 统计C语言源文件的行数（完成）   拓展功能  递归处理目录下符合条件的文件（完成） 返回更复杂的数据（代码行 / 空行 / 注释行）（完成） 支持各种文件的通配符（*,?）（完成）   高级功能  实现图形界面（待完成）    首先，我们需要明确一下“字符”，“词”，“行”">
+<meta name="twitter:image" content="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911205421076-284872409.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="hyz's blog" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2018/09/07/word-count/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>wc项目折腾笔记 | hyz's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hyz's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/07/word-count/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="hyz">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hyzgh-128x128.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hyz's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">wc项目折腾笔记
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-09-07 15:09:53" itemprop="dateCreated datePublished" datetime="2018-09-07T15:09:53+08:00">2018-09-07</time>
+            </span>
+          
+
+          
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://github.com/hyzgh/wordCount" target="_blank" rel="noopener">Github项目地址传送门</a></p>
+<h1 id="项目相关要求"><a href="#项目相关要求" class="headerlink" title="项目相关要求"></a>项目相关要求</h1><ul>
+<li><p>基本功能</p>
+<ul>
+<li>统计C语言源文件的字符数（完成）</li>
+<li>统计C语言源文件的词的数目（完成）</li>
+<li>统计C语言源文件的行数（完成）</li>
+</ul>
+</li>
+<li><p>拓展功能</p>
+<ul>
+<li>递归处理目录下符合条件的文件（完成）</li>
+<li>返回更复杂的数据（代码行 / 空行 / 注释行）（完成）</li>
+<li>支持各种文件的通配符（*,?）（完成）</li>
+</ul>
+</li>
+<li><p>高级功能</p>
+<ul>
+<li>实现图形界面（待完成）</li>
+</ul>
+</li>
+</ul>
+<p>首先，我们需要明确一下“字符”，“词”，“行”，“代码行”，“空行”，“注释行”的定义。<br>字符：一个ASCII字符，包括控制字符和可打印字符。<br>词：一个由空白字符（不仅指空格，还指’\f’,’\v’,’\n’,’\r’这些控制字符）分隔的非空字符串。<br>行：一个由换行符分隔的字符串，可以为空。一行结束的标志是换行符。</p>
+<blockquote>
+<p>代码行：本行包括多于一个字符的代码。<br>空行：本行全部是空格或格式控制字符，如果包括代码，则只有不超过一个可显示的字符，例如“{”。<br>注释行：本行不是代码行，并且本行包括注释。</p>
+</blockquote>
+<p>以上代码行、空行、注释行的说明摘自项目说明。</p>
+<p>为了消除歧义，特提出以下补充说明：<br>1.项目说明指出了下面第一行是注释行，类似的，第二行和第三行也是项目行。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#125; <span class="comment">//注释</span></span><br><span class="line">&#123; <span class="comment">//注释</span></span><br><span class="line">; <span class="comment">//注释</span></span><br></pre></td></tr></table></figure></p>
+<p>2.按照定义，下面这一行是代码行，但不是注释行。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">"Hello, world"</span>); <span class="comment">//say "Hello, world"</span></span><br></pre></td></tr></table></figure></p>
+<p>3.按照定义，第一行是代码行，但不是注释行。第二行和第三行是注释行。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">"Hello, world"</span>); <span class="comment">/*say "Hello, world"</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">                         */</span></span><br></pre></td></tr></table></figure></p>
+<p>4.第二行不是空白行。第一行到第三行都是注释行。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* The next line is a comment line.</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>对于字符数的统计，每读取一个字符，让<code>chracters</code>加一即可。<br>对于词数的统计，需要一个标记，用于记录前面一个字符是不是空白字符，假如前面一个字符是空白字符且当前字符是可显示字符，那么让<code>words</code>加一。<br>对于行数的统计，每读取到一个换行符，让<code>lines</code>加一即可。<br>对于空白行、代码行、注释行的统计，需要用到一个块注释标记和一些正则表达式，具体如下：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bool</span> blockCommentFlag = <span class="literal">false</span>;</span><br><span class="line"><span class="built_in">string</span> blankLineRegex = <span class="string">"(\\s*)([&#123;&#125;;]?)(\\s*)"</span>;</span><br><span class="line"><span class="built_in">string</span> lineCommentRegex = <span class="string">"(\\s*)([&#123;&#125;;]?)(\\s*)(//)(.*)"</span>;</span><br><span class="line"><span class="built_in">string</span> blockCommentStartFlagRegex = <span class="string">"(\\s*)([&#123;&#125;;]?)(\\s*)(/&#123;1&#125;)(\\*&#123;1&#125;)(.*)"</span>;</span><br><span class="line"><span class="built_in">string</span> blockCommentStartFlag1Regex = <span class="string">"(.*)(/&#123;1&#125;)(\\*&#123;1&#125;)(.*)"</span>;</span><br><span class="line"><span class="built_in">string</span> blockCommentCloseFlagRegex = <span class="string">"(.*)(\\*&#123;1&#125;)(/&#123;1&#125;)(\\s*)"</span>;</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>每读取一行，首先需要判断当前行是不是位于块注释中，假如是，让注释行加一，否则进行2</li>
+<li>使用blankLineRegex这个正则表达式判断当前行是不是空白行，假如是，让空白行加一，否则进行3</li>
+<li>使用lineCommentRegex判断当前行是不是行注释，假如是，让注释行加一，否则进行4</li>
+<li>使用blockCommentStartFlagRegex判断当前行是不是含有块注释开始的标志且为注释行，假如是，把blockCommentFlag改为true，并将注释行加一，否则进行5</li>
+<li>使用blockCommentStartFlag1Regex判断当前行是不是含有块注释开始的标志且为代码行，假如是，把blockCommentFlag改为true，并将代码行加一，否则进行6</li>
+<li>假如以上情况都不是，那么说明该行是代码行，让代码行加一，并结束该行的判断</li>
+</ol>
+<h1 id="设计"><a href="#设计" class="headerlink" title="设计"></a>设计</h1><p>File类：</p>
+<ul>
+<li>变量：<code>characters, words, lines, blankLines, codeLines, commentLines</code>.</li>
+<li>方法：<ul>
+<li><code>countBasic</code>：统计字符数、词数、行数。</li>
+<li><code>countSpecialLines</code>：统计空白行、代码行、注释行。</li>
+<li><code>print</code>：输出统计结果。</li>
+</ul>
+</li>
+</ul>
+<p><code>setMode</code>函数：根据输入参数设置模式。<br><code>readFile</code>函数：处理一个文件。<br><code>recursiveReadFiles</code>函数：处理一个目录。</p>
+<p>主要流程就是读取命令行参数，然后调用<code>setMode</code>设置参数，接着根据对象是文件还是目录，分别调用<code>readFile</code>或<code>recursiveReadFiles</code>。<br><code>readFile</code>接着又会调用<code>countBasic</code>和<code>countSpecialLines</code>，执行程序的核心部分，进行统计。接着调用print输出结果。</p>
+<h1 id="关键代码"><a href="#关键代码" class="headerlink" title="关键代码"></a>关键代码</h1><p>1.统计字符、词、行<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">countBasic</span><span class="params">(FILE *pFile)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">char</span> c;</span><br><span class="line">    <span class="keyword">bool</span> spaceFlag = <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">while</span>((c = fgetc(pFile)) != EOF) &#123;</span><br><span class="line">        characters++;</span><br><span class="line"></span><br><span class="line">        words += (spaceFlag == <span class="literal">true</span> &amp;&amp; <span class="built_in">isgraph</span>(c));</span><br><span class="line">        spaceFlag = <span class="built_in">isspace</span>(c);</span><br><span class="line"></span><br><span class="line">        lines += c == <span class="string">'\n'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>2.统计空白行、代码行、注释行<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 要确定一行是不是空白行，只要通过判断该行的可打印字符个数是否不超过1个即可。另外还要注意，该行不能在块注释中。</span></span><br><span class="line"><span class="comment"> * 要确定一行是不是代码行，只要判断该行的可打印字符个数是否超过1个即可。另外还要注意，改行不在块注释中。</span></span><br><span class="line"><span class="comment"> * 假如一行是注释行，那么该行首先必须不是代码行，其次，需要有注释标志。</span></span><br><span class="line"><span class="comment"> * 根据以上信息，可写出正则表达式进行匹配。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">countSpecialLines</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">string</span> line;</span><br><span class="line">    <span class="function">ifstream <span class="title">file</span><span class="params">(fileName)</span></span>;</span><br><span class="line">    <span class="keyword">bool</span> blockCommentFlag = <span class="literal">false</span>;</span><br><span class="line">    <span class="built_in">string</span> blankLineRegex = <span class="string">"(\\s*)([&#123;&#125;;]?)(\\s*)"</span>;</span><br><span class="line">    <span class="built_in">string</span> lineCommentRegex = <span class="string">"(\\s*)([&#123;&#125;;]?)(\\s*)(//)(.*)"</span>;</span><br><span class="line">    <span class="built_in">string</span> blockCommentStartFlagRegex = <span class="string">"(\\s*)([&#123;&#125;;]?)(\\s*)(/&#123;1&#125;)(\\*&#123;1&#125;)(.*)"</span>;</span><br><span class="line">    <span class="built_in">string</span> blockCommentStartFlag1Regex = <span class="string">"(.*)(/&#123;1&#125;)(\\*&#123;1&#125;)(.*)"</span>;</span><br><span class="line">    <span class="built_in">string</span> blockCommentCloseFlagRegex = <span class="string">"(.*)(\\*&#123;1&#125;)(/&#123;1&#125;)(\\s*)"</span>;</span><br><span class="line">    <span class="keyword">while</span> (getline(file, line)) &#123; <span class="keyword">if</span>(blockCommentFlag) &#123;</span><br><span class="line">            commentLines++;</span><br><span class="line">            <span class="keyword">if</span>(regex_match(line, regex(blockCommentCloseFlagRegex))) &#123;</span><br><span class="line">                blockCommentFlag = <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(regex_match(line, regex(blankLineRegex))) &#123;</span><br><span class="line">            blankLines++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(regex_match(line, regex(lineCommentRegex))) &#123;</span><br><span class="line">            commentLines++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(regex_match(line, regex(blockCommentStartFlagRegex))) &#123;</span><br><span class="line">            commentLines++;</span><br><span class="line">            blockCommentFlag = <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(regex_match(line, regex(blockCommentStartFlag1Regex))) &#123;</span><br><span class="line">            codeLines++;</span><br><span class="line">            blockCommentFlag = <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            codeLines++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    file.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>3.根据参数输出统计结果，注意输出顺序是有规律的，依次为字符数 词数 行数 空白行数 代码行数 注释行数。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">(<span class="built_in">map</span>&lt;<span class="keyword">char</span>, <span class="keyword">bool</span>&gt; mode)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(mode[<span class="string">'c'</span>])</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%6d"</span>, characters);</span><br><span class="line">    <span class="keyword">if</span>(mode[<span class="string">'w'</span>])</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%6d"</span>, words);</span><br><span class="line">    <span class="keyword">if</span>(mode[<span class="string">'l'</span>])</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%6d"</span>, lines);</span><br><span class="line">    <span class="keyword">if</span>(mode[<span class="string">'a'</span>])</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%6d%6d%6d"</span>, blankLines, codeLines, commentLines);</span><br><span class="line">    <span class="built_in">putchar</span>(<span class="string">'\n'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="测试报告"><a href="#测试报告" class="headerlink" title="测试报告"></a>测试报告</h1><p>首先我制作了几个经典的测试样例以及对应的参考统计结果，另外，为了节省测试时间，我还写了一个脚本来进行自动化测试。<br>假如所有的测试样例都通过了，则会提示ok，如下：<br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911205421076-284872409.png" alt="ok"><br>假如有些样例没有通过，则会提示wrong，并指出错在哪里，如下：<br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911205428881-788451626.png" alt="wrong"><br>我构造的测试样例及测试结果如下：</p>
+<ol>
+<li>空文件<br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911205439689-254256383.png" alt="空文件"><br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911205923166-1878202581.png" alt><br><strong>这里输出的依次是字符数、词数、行数、空行数、代码行数、注释行数。下面的也一样。</strong><br>之所以这么输出，是模仿了Linux系统下自带的wc命令。一开始我也不太理解wc命令输出的东西哪个是字符数、哪个是单词数，所以阅读了一下文档，找到了输出的规则，理解了输出的含义。<br>所以，我这里也用了这种实现方式，这样做能减少输出冗余信息，减少用户的阅读负担，让用户更快地获得想要的信息。</li>
+<li>一个字符的文件<br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911205912825-488820294.png" alt><br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911205958319-1399208864.png" alt></li>
+<li>一个单词的文件<br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210007243-239773037.png" alt><br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210013271-1946409668.png" alt></li>
+<li>一行的文件<br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210114455-1151020509.png" alt><br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210119963-1429841711.png" alt></li>
+<li>典型的C源文件<br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210126528-40224607.png" alt><br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210131462-486603797.png" alt></li>
+<li>另一个典型的C源文件<br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210153931-1158546205.png" alt><br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210159342-1826726136.png" alt></li>
+</ol>
+<p>除了测试这些样例，我还测试了非法输入的情况，如下：</p>
+<ol>
+<li>没有输入参数<br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210210247-1688868089.png" alt></li>
+<li>参数非法<br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210225526-1188622487.png" alt></li>
+<li>文件或目录不存在<br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210231620-1867302132.png" alt></li>
+<li>在未输入s参数的情况下查询目录<br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210246330-568258736.png" alt></li>
+</ol>
+<p>拓展功能的查询更复杂信息和查询目录的测试：<br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210335631-1210398873.png" alt></p>
+<p>支持各种文件的通配符（*,?）的测试：<br><img src="https://img2018.cnblogs.com/blog/1484352/201809/1484352-20180915090044777-1329710180.png" alt><br><img src="https://img2018.cnblogs.com/blog/1484352/201809/1484352-20180915090113262-414065472.png" alt></p>
+<h1 id="代码覆盖率"><a href="#代码覆盖率" class="headerlink" title="代码覆盖率"></a>代码覆盖率</h1><p>博主使用了gcov与lcov进行代码覆盖率的测试。经过测试发现，行覆盖率为91.5%，函数覆盖率为100%。<br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911234128799-238501992.png" alt></p>
+<h1 id="遇到的困难及解决方法"><a href="#遇到的困难及解决方法" class="headerlink" title="遇到的困难及解决方法"></a>遇到的困难及解决方法</h1><ol>
+<li>之前很少用C++写与文件操作相关的代码，所以对于实现-s这个参数的时候无从下手，最后，通过搜索引擎，查阅官方文档和他人的博客，学习到了新知识，顺利地解决了这个问题。</li>
+<li>实现-a这个参数，需要统计空行、代码行、注释行。一开始，我的想法是逐个读取字符，进行相关变量的更新，并进行状态转化。但是，这样实现的话，会需要很多的标记，让代码晦涩难懂。而且由于这个状态机的状态很多，状态之间的转化也相当复杂。所以，最后我放弃了这种实现方式，改用正则表达式来实现，这样会简单很多。这启发我，在具体实现前，最好先比较一下各种实现方式的难易程度，再选择一种比较容易的来写。</li>
+</ol>
+<h1 id="PSP"><a href="#PSP" class="headerlink" title="PSP"></a>PSP</h1><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>PSP2.1</th>
+<th>Personal Software Process Stages</th>
+<th>预估耗时（分钟）</th>
+<th>实际耗时（分钟）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Planning</td>
+<td>计划</td>
+<td>25</td>
+<td>50</td>
+</tr>
+<tr>
+<td>· Estimate</td>
+<td>· 估计这个任务需要多少时间</td>
+<td>25</td>
+<td>50</td>
+</tr>
+<tr>
+<td>Development</td>
+<td>开发</td>
+<td>525</td>
+<td>600</td>
+</tr>
+<tr>
+<td>· Analysis</td>
+<td>· 需求分析 (包括学习新技术)</td>
+<td>75</td>
+<td>75</td>
+</tr>
+<tr>
+<td>· Design Spec</td>
+<td>· 生成设计文档</td>
+<td>25</td>
+<td>0</td>
+</tr>
+<tr>
+<td>· Design Review</td>
+<td>· 设计复审 (和同事审核设计文档)</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>· Coding Standard</td>
+<td>· 代码规范 (为目前的开发制定合适的规范)</td>
+<td>25</td>
+<td>0</td>
+</tr>
+<tr>
+<td>· Design</td>
+<td>· 具体设计</td>
+<td>25</td>
+<td>50</td>
+</tr>
+<tr>
+<td>· Coding</td>
+<td>· 具体编码</td>
+<td>325</td>
+<td>425</td>
+</tr>
+<tr>
+<td>· Code Review</td>
+<td>· 代码复审</td>
+<td>25</td>
+<td>25</td>
+</tr>
+<tr>
+<td>· Test</td>
+<td>· 测试（自我测试，修改代码，提交修改）</td>
+<td>25</td>
+<td>25</td>
+</tr>
+<tr>
+<td>Reporting</td>
+<td>报告</td>
+<td>100</td>
+<td>100</td>
+</tr>
+<tr>
+<td>· Test Report</td>
+<td>· 测试报告</td>
+<td>50</td>
+<td>50</td>
+</tr>
+<tr>
+<td>· Size Measurement</td>
+<td>· 计算工作量</td>
+<td>25</td>
+<td>25</td>
+</tr>
+<tr>
+<td>· Postmortem &amp; Process Improvement Plan</td>
+<td>· 事后总结, 并提出过程改进计划</td>
+<td>25</td>
+<td>25</td>
+</tr>
+<tr>
+<td>合计</td>
+<td></td>
+<td>650</td>
+<td>750</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>一开始没有认真分析需求，没有想好就开始动手编码实现，中途停停顿顿，浪费了不少时间。从上面的PSP也可以看出，我花了很少时间在“生成设计文档”、“设计复审”、“代码规范”这三个环节上，导致我后面“具体编码”的环节花的时间比预估的时间长了很多。后来，我重新阅读了项目文件，明确了需求，并进行了相关设计，然后就实现得比较顺利了。这启发我，在开始动手编码前，应该先想好思路，并设计好模块，磨刀不误砍柴工嘛。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="http://magustest.com/2010/09/12/using-gcov-lcov/" target="_blank" rel="noopener">C/C++代码覆盖工具gcov与lcov入门</a></li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/04/palindromic-tree-learning/" rel="next" title="回文自动机学习笔记">
+                <i class="fa fa-chevron-left"></i> 回文自动机学习笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/30/arithmetic-problems-generator/" rel="prev" title="四则运算项目折腾笔记">
+                四则运算项目折腾笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hyzgh-128x128.png" alt="hyz">
+            
+              <p class="site-author-name" itemprop="name">hyz</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">54</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">41</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/hyzgh" title="GitHub &rarr; https://github.com/hyzgh" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#项目相关要求"><span class="nav-number">1.</span> <span class="nav-text">项目相关要求</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#思路"><span class="nav-number">2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#设计"><span class="nav-number">3.</span> <span class="nav-text">设计</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关键代码"><span class="nav-number">4.</span> <span class="nav-text">关键代码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试报告"><span class="nav-number">5.</span> <span class="nav-text">测试报告</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码覆盖率"><span class="nav-number">6.</span> <span class="nav-text">代码覆盖率</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#遇到的困难及解决方法"><span class="nav-number">7.</span> <span class="nav-text">遇到的困难及解决方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PSP"><span class="nav-number">8.</span> <span class="nav-text">PSP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">9.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">10.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-male"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hyz</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.2.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.2.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://yoursite.com/2018/09/07/word-count/";
+    this.page.identifier = "2018/09/07/word-count/";
+    this.page.title = 'wc项目折腾笔记';
+    };
+  function loadComments() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://hyzgh.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', '' + +new Date());
+    (d.head || d.body).appendChild(s);
+  }
+  
+    window.addEventListener('load', loadComments, false);
+  
+</script>
+
+
+
+
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>
