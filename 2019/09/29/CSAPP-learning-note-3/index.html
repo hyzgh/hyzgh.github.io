@@ -453,7 +453,6 @@
 <p>机器代码是一些二进制代码，不具有可读性。汇编代码非常接近机器代码，我们可通过学习汇编代码来认识机器代码。</p>
 <h1 id="数据格式"><a href="#数据格式" class="headerlink" title="数据格式"></a>数据格式</h1><p>Intel的体系结构一直在变化，从16位到32位，再到64位，可能以后还会拓展到128位。</p>
 <p>Intel用以下术语来表示不同的数据类型。</p>
-<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -462,8 +461,7 @@
 <th>大小（字节）</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>字节</td>
 <td>b</td>
 <td>1</td>
@@ -493,9 +491,7 @@
 <td>l</td>
 <td>8</td>
 </tr>
-</tbody>
-</table>
-</div>
+</tbody></table>
 <h1 id="访问信息"><a href="#访问信息" class="headerlink" title="访问信息"></a>访问信息</h1><p>一个CPU包含一组16个存储64位值的通用目的寄存器，这些寄存器用来存储整数数据和指针。</p>
 <p>我们知道，程序运行时，其数据存放在内存中。CPU需要一些指令来进行内存与寄存器间的数据转移，称为数据转移指令。</p>
 <p>我们也知道，程序运行时，在内存中有一个对应的程序栈。CPU有专门指令进行入栈、出栈操作。可否将这些指令去掉呢？可以，存在代替指令。但是这样做，会让机器代码增多，考虑到入栈出栈操作是非常常见的，所以提供专门的指令会缩减机器代码的大小。这也就是在精简指令集上编译出来的机器代码比复杂指令集庞大的原因。</p>
@@ -637,7 +633,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">54</span>
+                    <span class="site-state-item-count">55</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -742,7 +738,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">41</span>
+                      
+                    
+                    <span class="site-state-item-count">42</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

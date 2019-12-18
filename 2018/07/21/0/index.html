@@ -95,18 +95,18 @@
 
 
 
-  <meta name="description" content="介绍Lindström-Gessel-Vienot Lemma可以用来解决一类路径计数问题。要想将这个引理用于解决计数问题，首先需要令图的所有边的权值等于1。接着需要说明的是，从起点 A=\{a_{1},\ldots ,a_{n}\} 到终点 B=\{b_{1},\ldots ,b_{n}\} 的所有不相交路径，并不是指{a_{i} }一定到{b_{i} }，它包括得更广，起点A中的某点到达终点B">
+  <meta name="description" content="介绍Lindström-Gessel-Vienot Lemma可以用来解决一类路径计数问题。要想将这个引理用于解决计数问题，首先需要令图的所有边的权值等于1。接着需要说明的是，从起点 $$ A={a_{1},\ldots ,a_{n}} $$ 到终点 $$ B={b_{1},\ldots ,b_{n}} $$ 的所有不相交路径，并不是指$$ {a_{i} } $$一定到$$ {b_{i} } $$">
 <meta name="keywords" content="数学">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Lindström-Gessel-Vienot-Lemma学习笔记">
 <meta property="og:url" content="http://yoursite.com/2018/07/21/0/index.html">
 <meta property="og:site_name" content="hyz&#39;s blog">
-<meta property="og:description" content="介绍Lindström-Gessel-Vienot Lemma可以用来解决一类路径计数问题。要想将这个引理用于解决计数问题，首先需要令图的所有边的权值等于1。接着需要说明的是，从起点 A=\{a_{1},\ldots ,a_{n}\} 到终点 B=\{b_{1},\ldots ,b_{n}\} 的所有不相交路径，并不是指{a_{i} }一定到{b_{i} }，它包括得更广，起点A中的某点到达终点B">
+<meta property="og:description" content="介绍Lindström-Gessel-Vienot Lemma可以用来解决一类路径计数问题。要想将这个引理用于解决计数问题，首先需要令图的所有边的权值等于1。接着需要说明的是，从起点 $$ A={a_{1},\ldots ,a_{n}} $$ 到终点 $$ B={b_{1},\ldots ,b_{n}} $$ 的所有不相交路径，并不是指$$ {a_{i} } $$一定到$$ {b_{i} } $$">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:updated_time" content="2019-06-09T12:43:32.147Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Lindström-Gessel-Vienot-Lemma学习笔记">
-<meta name="twitter:description" content="介绍Lindström-Gessel-Vienot Lemma可以用来解决一类路径计数问题。要想将这个引理用于解决计数问题，首先需要令图的所有边的权值等于1。接着需要说明的是，从起点 A=\{a_{1},\ldots ,a_{n}\} 到终点 B=\{b_{1},\ldots ,b_{n}\} 的所有不相交路径，并不是指{a_{i} }一定到{b_{i} }，它包括得更广，起点A中的某点到达终点B">
+<meta name="twitter:description" content="介绍Lindström-Gessel-Vienot Lemma可以用来解决一类路径计数问题。要想将这个引理用于解决计数问题，首先需要令图的所有边的权值等于1。接着需要说明的是，从起点 $$ A={a_{1},\ldots ,a_{n}} $$ 到终点 $$ B={b_{1},\ldots ,b_{n}} $$ 的所有不相交路径，并不是指$$ {a_{i} } $$一定到$$ {b_{i} } $$">
 
 
 
@@ -429,10 +429,10 @@
       
 
       
-        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>Lindström-Gessel-Vienot Lemma可以用来解决一类路径计数问题。<br>要想将这个引理用于解决计数问题，首先需要令图的所有边的权值等于1。<br>接着需要说明的是，从起点 <script type="math/tex">A=\{a_{1},\ldots ,a_{n}\}</script> 到终点 <script type="math/tex">B=\{b_{1},\ldots ,b_{n}\}</script> 的所有不相交路径，并不是指<script type="math/tex">{a_{i} }</script>一定到<script type="math/tex">{b_{i} }</script>，它包括得更广，起点A中的某点到达终点B中的任意一点即可，但由于严格不相交，所以它们是一个“双射”。<br>公式的右边，计算的是所有路径的有符号权值和，这里的符号由排列的逆序对个数决定，假如逆序对的个数是奇数，那么符号为负，否则为正。<br>假如我们要求从起点 <script type="math/tex">A=\{a_{1},\ldots ,a_{n}\}</script> 到终点 <script type="math/tex">B=\{b_{1},\ldots ,b_{n}\}</script> ，且<script type="math/tex">{a_{i} }</script>一定到<script type="math/tex">{b_{i} }</script>的所有不相交路径，那么等式的右边就恰好等于这个方案数。</p>
+        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>Lindström-Gessel-Vienot Lemma可以用来解决一类路径计数问题。<br>要想将这个引理用于解决计数问题，首先需要令图的所有边的权值等于1。<br>接着需要说明的是，从起点 $$ A={a_{1},\ldots ,a_{n}} $$ 到终点 $$ B={b_{1},\ldots ,b_{n}} $$ 的所有不相交路径，并不是指$$ {a_{i} } $$一定到$$ {b_{i} } $$，它包括得更广，起点A中的某点到达终点B中的任意一点即可，但由于严格不相交，所以它们是一个“双射”。<br>公式的右边，计算的是所有路径的有符号权值和，这里的符号由排列的逆序对个数决定，假如逆序对的个数是奇数，那么符号为负，否则为正。<br>假如我们要求从起点 $$ A={a_{1},\ldots ,a_{n}} $$ 到终点 $$ B={b_{1},\ldots ,b_{n}} $$ ，且$$ {a_{i} } $$一定到$$ {b_{i} } $$的所有不相交路径，那么等式的右边就恰好等于这个方案数。</p>
 <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><h2 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h2><p>详情请看<a href="https://www.nowcoder.com/acm/contest/139/A" target="_blank" rel="noopener">Monotonic Matrix</a>。</p>
 <h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><blockquote>
-<p>官方题解：<br>考虑 01 和 12 的分界线<br>是 (n, 0) 到 (0, m) 的两条不相交(可重合)路径<br>平移其中一条变成 (n-1, -1) 到 (-1, m-1)<br>变成起点 (n, 0) 和 (n-1, -1),终点 (0, m) 和 (-1, m-1) 的严格不相交路径<br>套 Lindström–Gessel–Viennot lemma<br>答案是 <script type="math/tex">{C_{n+m}^n}^2 - C_{n+m}^{m - 1} C_{n+m}^{n-1}</script></p>
+<p>官方题解：<br>考虑 01 和 12 的分界线<br>是 (n, 0) 到 (0, m) 的两条不相交(可重合)路径<br>平移其中一条变成 (n-1, -1) 到 (-1, m-1)<br>变成起点 (n, 0) 和 (n-1, -1),终点 (0, m) 和 (-1, m-1) 的严格不相交路径<br>套 Lindström–Gessel–Viennot lemma<br>答案是 $$ {C_{n+m}^n}^2 - C_{n+m}^{m - 1} C_{n+m}^{n-1}  $$</p>
 </blockquote>
 <p>我们设左下角的两点为起点a1, a2，右上角的两点为终点b1, b2，我们需要求的是从a1到b1、a2到b2的路径方案数，由于题目的限制，a1到b2、a2到b1的路径是不合法的，所以，公式的右边恰好就不包含a1到b2、a2到b1的路径方案数了。因此，我们就可以通过计算矩阵行列式来计算答案了。</p>
 <h2 id="推广"><a href="#推广" class="headerlink" title="推广"></a>推广</h2><p>留坑待填。</p>
@@ -573,7 +573,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">54</span>
+                    <span class="site-state-item-count">55</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -678,7 +678,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">41</span>
+                      
+                    
+                    <span class="site-state-item-count">42</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
