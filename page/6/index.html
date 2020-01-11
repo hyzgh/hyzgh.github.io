@@ -175,7 +175,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/28/0/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/15/CSAPP-learning-note-4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/hyzgh-128x128.png">
@@ -189,7 +189,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2018/03/28/0/" class="post-title-link" itemprop="url">HrbustOJ 2375: easy math problem</a>
+            <a href="/2019/10/15/CSAPP-learning-note-4/" class="post-title-link" itemprop="url">CSAPP 学习笔记 4</a>
         </h1>
 
         <div class="post-meta">
@@ -199,7 +199,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2018-03-28 23:59:59" itemprop="dateCreated datePublished" datetime="2018-03-28T23:59:59+08:00">2018-03-28</time>
+              <time title="创建时间：2019-10-15 12:31:41" itemprop="dateCreated datePublished" datetime="2019-10-15T12:31:41+08:00">2019-10-15</time>
             </span>
 
           
@@ -213,10 +213,12 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="题目链接"><a href="#题目链接" class="headerlink" title="题目链接"></a>题目链接</h1><p><a href="http://acm.hrbust.edu.cn/index.php?m=ProblemSet&a=showProblem&problem_id=2375" target="_blank" rel="noopener">传送门</a></p>
-<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>题目需要我们求i的3次方(1&lt;= i &lt;= n)的和，由于n很大，无法暴力算。</p>
-<p>一般这种题的套路是利用二项式定理+求导，由于求的是i的3次方，所以我们可以通过连续”二项式方程左右两边求导乘x”3次，然后令x=1来构造出题目所求的式子，然后通过快速幂计算即可。<br>记得CF上有一道类似的题，从3变成了k，顺便给出<a href="http://codeforces.com/problemset/problem/932/E" target="_blank" rel="noopener">CF932E</a>。</p>
-<p>由于不会LaTeX，所以无法贴公式，留坑。。</p>
+          <p>这两周看得比较少，进度缓慢，只看了第三章关于控制的一小节内容，下面简单写一写。</p>
+<p>在CPU中，维护着一组单个位的条件码寄存器，用于描述算术或逻辑操作的属性，可以通过检测这些寄存器来执行条件分支指令，最常用的条件码有进位标志、零标志、符号标志、溢出标志。</p>
+<p>在CPU执行所有算术和逻辑运算时，都会设置条件码。此外，还有两类指令，即<code>CMP</code>和<code>TEST</code>，也会设置条件码，但它们不会改变其他寄存器。</p>
+<p>那么怎么访问这些条件寄存器呢？CPU中提供了<code>SET</code>指令，对这些标志位进行了封装，可以更方便地获取常见的比较结果。举个例子，最简单的情况，是判断结果是否为零，对应<code>SETE</code>指令，它会读取零标志寄存器。而比较复杂的情况，判断有符号数的小于比较，对应<code>SETL</code>，它会读取符号标志寄存器和溢出标志寄存器，然后取它们的异或值。</p>
+<p>要实现像C语言中的for语句，还需要一类指令<code>JMP</code>。它可以根据条件跳转到其他语句，而不是一直顺序执行。</p>
+<p>（全文完）</p>
 
       
     </div>
@@ -236,7 +238,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/51/">51</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
