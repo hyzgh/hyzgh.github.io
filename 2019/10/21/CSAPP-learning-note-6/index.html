@@ -40,14 +40,14 @@
       hits: {"per_page":10},
       labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
     },
-    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
     path: 'search.xml',
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
   };
 </script>
 
   <meta name="description" content="最近看了CSAPP的第八章——异常控制流。 异常在计算机中，假如没有异常，那么指令是顺序执行的。当遇到异常时，会执行异常处理程序。异常有不同的种类，有中断、陷阱、故障、终止。 中断，是在CPU执行某条指令的时候，其他部件异步产生的，比如定时器芯片、磁盘控制器、网络适配器等。CPU检测到中断后，会把当前指令执行完，然后转去执行异常处理程序，接着再返回来执行下一条指令。 陷阱，是有意的异常，最常见的陷">
-<meta name="keywords" content="计算机系统,CSAPP">
+<meta name="keywords" content="CSAPP,计算机系统">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CSAPP 学习笔记 6">
 <meta property="og:url" content="http://yoursite.com/2019/10/21/CSAPP-learning-note-6/index.html">
@@ -139,11 +139,6 @@
     <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
 
   </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
-
-  </li>
         <li class="menu-item menu-item-about">
 
     <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
@@ -154,34 +149,14 @@
     <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
 
   </li>
-      <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
-        </a>
-      </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
   </ul>
 
 </nav>
-  <div class="site-search">
-    <div class="popup search-popup">
-    <div class="search-header">
-  <span class="search-icon">
-    <i class="fa fa-search"></i>
-  </span>
-  <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="none"
-           placeholder="搜索..." spellcheck="false"
-           type="text" id="search-input">
-  </div>
-  <span class="popup-btn-close">
-    <i class="fa fa-times-circle"></i>
-  </span>
-</div>
-<div id="search-result"></div>
-
-</div>
-<div class="search-pop-overlay"></div>
-
-  </div>
 </div>
     </header>
 
@@ -269,8 +244,8 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/计算机系统/" rel="tag"># 计算机系统</a>
               <a href="/tags/CSAPP/" rel="tag"># CSAPP</a>
+              <a href="/tags/计算机系统/" rel="tag"># 计算机系统</a>
           </div>
 
         
@@ -299,13 +274,6 @@
 
           </div>
           
-    
-  <div class="comments">
-    <div id="disqus_thread">
-      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
-    </div>
-  </div>
-  
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -445,8 +413,6 @@
 
 
 
-  <script src="/js/local-search.js"></script>
-
 
 
 
@@ -461,27 +427,6 @@
   
 
   
-
-<script>
-  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
-    if (window.DISQUS) {
-      DISQUS.reset({
-        reload: true,
-        config: {page: {
-            url: "http://yoursite.com/2019/10/21/CSAPP-learning-note-6/",
-            identifier: "2019/10/21/CSAPP-learning-note-6/",
-            title: "CSAPP 学习笔记 6"
-          }
-        }
-      });
-    } else {
-      var d = document, s = d.createElement('script');
-      s.src = 'https://hyzgh.disqus.com/embed.js';
-      s.setAttribute('data-timestamp', '' + +new Date());
-      (d.head || d.body).appendChild(s);
-    }
-  });
-</script>
 
 </body>
 </html>

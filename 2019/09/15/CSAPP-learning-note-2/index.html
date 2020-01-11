@@ -40,14 +40,14 @@
       hits: {"per_page":10},
       labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
     },
-    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
     path: 'search.xml',
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
   };
 </script>
 
   <meta name="description" content="这一周看了第二章的剩余篇幅，关于整数运算以及浮点数。目前还未完全搞定，有很多习题待写。 整数运算整数运算的分类主要有两个维度，一个是无符号数、有符号数，另一个是加法、乘法。 之前知道编译器会将乘法转化成加减法/移位，但始终不知所以然。这次通过阅读CSAPP，深入理解了它的原理，另外知道了还可以将除法转化为加减法/移位。 这一节讲得都是规律和证明，这里不再赘述。贴一张图进行总结，以方便以后回忆。">
-<meta name="keywords" content="计算机系统,CSAPP">
+<meta name="keywords" content="CSAPP,计算机系统">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CSAPP 学习笔记 2">
 <meta property="og:url" content="http://yoursite.com/2019/09/15/CSAPP-learning-note-2/index.html">
@@ -142,11 +142,6 @@
     <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
 
   </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
-
-  </li>
         <li class="menu-item menu-item-about">
 
     <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
@@ -157,34 +152,14 @@
     <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
 
   </li>
-      <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
-        </a>
-      </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
   </ul>
 
 </nav>
-  <div class="site-search">
-    <div class="popup search-popup">
-    <div class="search-header">
-  <span class="search-icon">
-    <i class="fa fa-search"></i>
-  </span>
-  <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="none"
-           placeholder="搜索..." spellcheck="false"
-           type="text" id="search-input">
-  </div>
-  <span class="popup-btn-close">
-    <i class="fa fa-times-circle"></i>
-  </span>
-</div>
-<div id="search-result"></div>
-
-</div>
-<div class="search-pop-overlay"></div>
-
-  </div>
 </div>
     </header>
 
@@ -266,8 +241,8 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/计算机系统/" rel="tag"># 计算机系统</a>
               <a href="/tags/CSAPP/" rel="tag"># CSAPP</a>
+              <a href="/tags/计算机系统/" rel="tag"># 计算机系统</a>
           </div>
 
         
@@ -296,13 +271,6 @@
 
           </div>
           
-    
-  <div class="comments">
-    <div id="disqus_thread">
-      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
-    </div>
-  </div>
-  
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -442,8 +410,6 @@
 
 
 
-  <script src="/js/local-search.js"></script>
-
 
 
 
@@ -458,27 +424,6 @@
   
 
   
-
-<script>
-  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
-    if (window.DISQUS) {
-      DISQUS.reset({
-        reload: true,
-        config: {page: {
-            url: "http://yoursite.com/2019/09/15/CSAPP-learning-note-2/",
-            identifier: "2019/09/15/CSAPP-learning-note-2/",
-            title: "CSAPP 学习笔记 2"
-          }
-        }
-      });
-    } else {
-      var d = document, s = d.createElement('script');
-      s.src = 'https://hyzgh.disqus.com/embed.js';
-      s.setAttribute('data-timestamp', '' + +new Date());
-      (d.head || d.body).appendChild(s);
-    }
-  });
-</script>
 
 </body>
 </html>

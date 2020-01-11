@@ -40,14 +40,14 @@
       hits: {"per_page":10},
       labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
     },
-    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
     path: 'search.xml',
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
   };
 </script>
 
   <meta name="description" content="kuangin带你飞专题十七 AC自动机 传送门AC自动机是著名的多模匹配算法，在ACM中通常会结合计数问题、动态规划问题等一起出现。 A. HDU 2222 Keywords Search统计字符串出现的个数，AC自动机模板题。 123456789101112131415161718192021222324252627282930313233343536373839404142434445464">
-<meta name="keywords" content="AC自动机,DP,计数,动态规划">
+<meta name="keywords" content="计数,AC自动机,DP,动态规划">
 <meta property="og:type" content="article">
 <meta property="og:title" content="kuangbin带你飞 专题十七 AC自动机 题解">
 <meta property="og:url" content="http://yoursite.com/2018/08/23/ac-auto-machine-learning/index.html">
@@ -139,11 +139,6 @@
     <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
 
   </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
-
-  </li>
         <li class="menu-item menu-item-about">
 
     <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
@@ -154,34 +149,14 @@
     <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
 
   </li>
-      <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
-        </a>
-      </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
   </ul>
 
 </nav>
-  <div class="site-search">
-    <div class="popup search-popup">
-    <div class="search-header">
-  <span class="search-icon">
-    <i class="fa fa-search"></i>
-  </span>
-  <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="none"
-           placeholder="搜索..." spellcheck="false"
-           type="text" id="search-input">
-  </div>
-  <span class="popup-btn-close">
-    <i class="fa fa-times-circle"></i>
-  </span>
-</div>
-<div id="search-result"></div>
-
-</div>
-<div class="search-pop-overlay"></div>
-
-  </div>
 </div>
     </header>
 
@@ -294,9 +269,9 @@
 
       <footer class="post-footer">
           <div class="post-tags">
+              <a href="/tags/计数/" rel="tag"># 计数</a>
               <a href="/tags/AC自动机/" rel="tag"># AC自动机</a>
               <a href="/tags/DP/" rel="tag"># DP</a>
-              <a href="/tags/计数/" rel="tag"># 计数</a>
               <a href="/tags/动态规划/" rel="tag"># 动态规划</a>
           </div>
 
@@ -326,13 +301,6 @@
 
           </div>
           
-    
-  <div class="comments">
-    <div id="disqus_thread">
-      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
-    </div>
-  </div>
-  
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -472,8 +440,6 @@
 
 
 
-  <script src="/js/local-search.js"></script>
-
 
 
 
@@ -488,27 +454,6 @@
   
 
   
-
-<script>
-  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
-    if (window.DISQUS) {
-      DISQUS.reset({
-        reload: true,
-        config: {page: {
-            url: "http://yoursite.com/2018/08/23/ac-auto-machine-learning/",
-            identifier: "2018/08/23/ac-auto-machine-learning/",
-            title: "kuangbin带你飞 专题十七 AC自动机 题解"
-          }
-        }
-      });
-    } else {
-      var d = document, s = d.createElement('script');
-      s.src = 'https://hyzgh.disqus.com/embed.js';
-      s.setAttribute('data-timestamp', '' + +new Date());
-      (d.head || d.body).appendChild(s);
-    }
-  });
-</script>
 
 </body>
 </html>
