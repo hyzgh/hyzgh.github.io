@@ -46,27 +46,34 @@
   };
 </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="hyz&#39;s blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="切片的数据结构切片，本身不存储实际数据。切片的数据结构，也被称为slice header，包含指向首元素的指针、切片长度、切片容量：  当将切片作为实参时，只会传递slice header。这个传递是值传递，这意味着：  假如在函数里面对slice的元素作赋值操作，由于有指针指着元素，所以原有slice指向的元素也会被改变。 假如在函数里面reslice，并不会影响原slice。  假如想要改变原">
+<meta name="keywords" content="Go">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go Lang slice 学习笔记">
+<meta property="og:url" content="http://yoursite.com/2020/01/27/go-slice-learning-note/index.html">
 <meta property="og:site_name" content="hyz&#39;s blog">
+<meta property="og:description" content="切片的数据结构切片，本身不存储实际数据。切片的数据结构，也被称为slice header，包含指向首元素的指针、切片长度、切片容量：  当将切片作为实参时，只会传递slice header。这个传递是值传递，这意味着：  假如在函数里面对slice的元素作赋值操作，由于有指针指着元素，所以原有slice指向的元素也会被改变。 假如在函数里面reslice，并不会影响原slice。  假如想要改变原">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://s2.ax1x.com/2020/01/27/1uWu2n.png">
+<meta property="og:updated_time" content="2020-01-27T14:04:47.284Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hyz&#39;s blog">
+<meta name="twitter:title" content="Go Lang slice 学习笔记">
+<meta name="twitter:description" content="切片的数据结构切片，本身不存储实际数据。切片的数据结构，也被称为slice header，包含指向首元素的指针、切片长度、切片容量：  当将切片作为实参时，只会传递slice header。这个传递是值传递，这意味着：  假如在函数里面对slice的元素作赋值操作，由于有指针指着元素，所以原有slice指向的元素也会被改变。 假如在函数里面reslice，并不会影响原slice。  假如想要改变原">
+<meta name="twitter:image" content="https://s2.ax1x.com/2020/01/27/1uWu2n.png">
 
-<link rel="canonical" href="http://yoursite.com/">
+<link rel="canonical" href="http://yoursite.com/2020/01/27/go-slice-learning-note/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome: true,
-    isPost: false
+    isHome: false,
+    isPost: true
   };
 </script>
 
-  <title>hyz's blog</title>
+  <title>Go Lang slice 学习笔记 | hyz's blog</title>
   
 
 
@@ -171,10 +178,10 @@
             
 
   <div class="posts-expand">
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/27/go-slice-learning-note/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -188,8 +195,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/01/27/go-slice-learning-note/" class="post-title-link" itemprop="url">Go Lang slice 学习笔记</a>
+          Go Lang slice 学习笔记
         </h1>
 
         <div class="post-meta">
@@ -213,7 +219,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="切片的数据结构"><a href="#切片的数据结构" class="headerlink" title="切片的数据结构"></a>切片的数据结构</h1><p>切片，本身不存储实际数据。切片的数据结构，也被称为slice header，包含指向首元素的指针、切片长度、切片容量：</p>
+        <h1 id="切片的数据结构"><a href="#切片的数据结构" class="headerlink" title="切片的数据结构"></a>切片的数据结构</h1><p>切片，本身不存储实际数据。切片的数据结构，也被称为slice header，包含指向首元素的指针、切片长度、切片容量：</p>
 <p><img src="https://s2.ax1x.com/2020/01/27/1uWu2n.png" alt="img"></p>
 <p>当将切片作为实参时，只会传递slice header。这个传递是值传递，这意味着：</p>
 <ul>
@@ -280,27 +286,36 @@
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i := <span class="built_in">len</span>(a) - <span class="number">1</span>; i &gt; <span class="number">0</span>; i-- &#123;</span><br><span class="line">    j := rand.Intn(i + <span class="number">1</span>)</span><br><span class="line">    a[i], a[j] = a[j], a[i]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 或者直接用math/rand.Shuffle</span></span><br><span class="line"><span class="comment">// 使用了Fisher–Yates算法</span></span><br></pre></td></tr></table></figure>
 
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
+          <div class="post-tags">
+              <a href="/tags/Go/" rel="tag"># Go</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/01/11/go-garbage-collector-learning-note/" rel="prev" title="Go Lang GC 学习笔记">
+      <i class="fa fa-chevron-left"></i> Go Lang GC 学习笔记
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
       </footer>
+    
   </article>
   
   
   
 
   </div>
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/52/">52</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
-  </nav>
-
 
 
           </div>
@@ -351,6 +366,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#切片的数据结构"><span class="nav-number">1.</span> <span class="nav-text">切片的数据结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#切片的append"><span class="nav-number">2.</span> <span class="nav-text">切片的append</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#切片的内存管理"><span class="nav-number">3.</span> <span class="nav-text">切片的内存管理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#切片的创建"><span class="nav-number">4.</span> <span class="nav-text">切片的创建</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#切片的遍历"><span class="nav-number">5.</span> <span class="nav-text">切片的遍历</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#切片的技巧"><span class="nav-number">6.</span> <span class="nav-text">切片的技巧</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
