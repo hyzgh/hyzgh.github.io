@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Leetcode 每日一题2 Happy Number]]></title>
+    <url>%2F2020%2F04%2F02%2Fleetcode-exercise-per-day-2-Happy-Number%2F</url>
+    <content type="text"><![CDATA[题意 题目链接：Happy Number 给一个数字，判断它是不是Happy Number。假如一个数是Happy Number，则可以通过不断取各数位的平方和得到1。而假如不是Happy Number，则会陷入循环，不会得到1。 思路这道题的关键在于怎么知道发生了循环，并在发生循环的时候及时结束。弗洛伊德判圈法(Floyd Cycle detection algorithm)是可以在O(1)的空间复杂度和O(n)的时间复杂度内，判断是否发生循环的一种算法，其中n是循环的次数。其思想是维护两个指针，令它们一开始都指向最开始的位置，然后进行do while循环，让其中一个指针一次走两步，另一个一次走一步，直到两者相等，就可以判定存在圈。 这道题一定存在循环，Happy Number在找到圈的时候，指向的数为1，而非Happy Number指向的数非1，得解。 代码12345678910111213141516171819202122class Solution &#123;public: bool isHappy(int n) &#123; int slow, fast; slow = fast = n; do &#123; slow = getSum(slow); fast = getSum(fast); fast = getSum(fast); &#125; while (slow != fast); return slow == 1; &#125; int getSum(int d) &#123; int sum = 0; while (d) &#123; int mod = d % 10; d /= 10; sum += mod * mod; &#125; return sum; &#125;&#125;;]]></content>
+      <tags>
+        <tag>Leetcode</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Leetcode 每日一题01 Single Number]]></title>
     <url>%2F2020%2F04%2F01%2Fleetcode-exercise-per-day-1-Single-Number%2F</url>
     <content type="text"><![CDATA[最近Leetcode举办了一个为期一个月的活动，每天会推出一道题目。最近这段时间正好有空，所以打算跟着参加一下，顺便写一下题解。使用的语言为C++。 题意 题目链接：Single Number 给一个非空的数组，其中有1个元素出现了1次，其他的都出现2次。时间要求为线性，不允许使用额外内存，求出现1次的元素。 思路题目保证数组非空，所以不需要特殊处理。 两个相同的数异或等于0，因此我们可以将数组所有元素异或起来，最后得到的值即为出现1次的元素。 代码123456789class Solution &#123;public: int singleNumber(vector&lt;int&gt;&amp; nums) &#123; for (int i = 1; i &lt; nums.size(); i++) &#123; nums[0] ^= nums[i]; &#125; return nums[0]; &#125;&#125;;]]></content>
