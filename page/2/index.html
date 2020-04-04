@@ -175,7 +175,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/01/leetcode-exercise-per-day-1-Single-Number/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/02/leetcode-exercise-per-day-2-Happy-Number/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/hyzgh-128x128.png">
@@ -189,7 +189,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2020/04/01/leetcode-exercise-per-day-1-Single-Number/" class="post-title-link" itemprop="url">Leetcode 每日一题01 Single Number</a>
+            <a href="/2020/04/02/leetcode-exercise-per-day-2-Happy-Number/" class="post-title-link" itemprop="url">Leetcode 每日一题2 Happy Number</a>
         </h1>
 
         <div class="post-meta">
@@ -199,7 +199,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-04-01 17:03:20" itemprop="dateCreated datePublished" datetime="2020-04-01T17:03:20+08:00">2020-04-01</time>
+              <time title="创建时间：2020-04-02 16:35:01" itemprop="dateCreated datePublished" datetime="2020-04-02T16:35:01+08:00">2020-04-02</time>
             </span>
 
           
@@ -213,14 +213,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>最近Leetcode举办了一个为期一个月的活动，每天会推出一道题目。最近这段时间正好有空，所以打算跟着参加一下，顺便写一下题解。使用的语言为C++。</p>
-<h1 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h1><blockquote>
-<p> 题目链接：<a href="https://leetcode.com/explore/featured/card/30-day-leetcoding-challenge/528/week-1/3283/" target="_blank" rel="noopener">Single Number</a></p>
+          <h1 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h1><blockquote>
+<p>题目链接：<a href="https://leetcode.com/explore/featured/card/30-day-leetcoding-challenge/528/week-1/3284/" target="_blank" rel="noopener">Happy Number</a></p>
 </blockquote>
-<p>给一个非空的数组，其中有1个元素出现了1次，其他的都出现2次。时间要求为线性，不允许使用额外内存，求出现1次的元素。</p>
-<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>题目保证数组非空，所以不需要特殊处理。</p>
-<p>两个相同的数异或等于0，因此我们可以将数组所有元素异或起来，最后得到的值即为出现1次的元素。</p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">singleNumber</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; nums.size(); i++) &#123;</span><br><span class="line">            nums[<span class="number">0</span>] ^= nums[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> nums[<span class="number">0</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>给一个数字，判断它是不是Happy Number。假如一个数是Happy Number，则可以通过不断取各数位的平方和得到1。而假如不是Happy Number，则会陷入循环，不会得到1。</p>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>这道题的关键在于怎么知道发生了循环，并在发生循环的时候及时结束。弗洛伊德判圈法(Floyd Cycle detection algorithm)是可以在O(1)的空间复杂度和O(n)的时间复杂度内，判断是否发生循环的一种算法，其中n是循环的次数。其思想是维护两个指针，令它们一开始都指向最开始的位置，然后进行<code>do while</code>循环，让其中一个指针一次走两步，另一个一次走一步，直到两者相等，就可以判定存在圈。</p>
+<p>这道题一定存在循环，Happy Number在找到圈的时候，指向的数为1，而非Happy Number指向的数非1，得解。</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">isHappy</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> slow, fast;</span><br><span class="line">        slow = fast = n;</span><br><span class="line">        <span class="keyword">do</span> &#123;</span><br><span class="line">            slow = getSum(slow);</span><br><span class="line">            fast = getSum(fast);</span><br><span class="line">            fast = getSum(fast);</span><br><span class="line">        &#125; <span class="keyword">while</span> (slow != fast);</span><br><span class="line">        <span class="keyword">return</span> slow == <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getSum</span><span class="params">(<span class="keyword">int</span> d)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (d) &#123;</span><br><span class="line">            <span class="keyword">int</span> mod = d % <span class="number">10</span>;</span><br><span class="line">            d /= <span class="number">10</span>;</span><br><span class="line">            sum += mod * mod;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> sum;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
 
       
@@ -241,7 +240,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/54/">54</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/55/">55</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -309,7 +308,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">54</span>
+          <span class="site-state-item-count">55</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
