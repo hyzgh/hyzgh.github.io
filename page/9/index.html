@@ -175,7 +175,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/21/CSAPP-learning-note-6/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/07/null/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/hyzgh-128x128.png">
@@ -189,7 +189,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2019/10/21/CSAPP-learning-note-6/" class="post-title-link" itemprop="url">CSAPP 学习笔记 6</a>
+            <a href="/2019/12/07/null/" class="post-title-link" itemprop="url">图片文件格式 学习笔记</a>
         </h1>
 
         <div class="post-meta">
@@ -199,7 +199,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2019-10-21 19:16:38" itemprop="dateCreated datePublished" datetime="2019-10-21T19:16:38+08:00">2019-10-21</time>
+              <time title="创建时间：2019-12-07 16:07:02" itemprop="dateCreated datePublished" datetime="2019-12-07T16:07:02+08:00">2019-12-07</time>
             </span>
 
           
@@ -213,23 +213,14 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>最近看了CSAPP的第八章——异常控制流。</p>
-<h1 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h1><p>在计算机中，假如没有异常，那么指令是顺序执行的。当遇到异常时，会执行异常处理程序。异常有不同的种类，有中断、陷阱、故障、终止。</p>
-<p>中断，是在CPU执行某条指令的时候，其他部件异步产生的，比如定时器芯片、磁盘控制器、网络适配器等。CPU检测到中断后，会把当前指令执行完，然后转去执行异常处理程序，接着再返回来执行下一条指令。</p>
-<p>陷阱，是有意的异常，最常见的陷阱是系统调用。系统调用，是指从用户模式转为内核模式，以执行一些特殊的指令，比如操作I/O设备。执行完系统调用后，会返回来执行下一条指令。</p>
-<p>故障，是指执行指令的时候遇到了意外，比如遇到了缺页、访问了未定义的虚拟内存区域等。根据故障的不同，异常处理程序执行完后可能会返回执行当前指令，也有可能会终止程序。在写程序时常常遇到的<code>Floating point exception</code>和<code>Segmentation fault</code>就属于故障，且在Linux中的处理是程序被终止。</p>
-<p>终止，是指遇到了致命的硬件错误，必须结束程序。</p>
-<p>因为异常种类繁多，所以计算机中有一张异常表，用来记录不同的异常及对应的异常处理程序。在CPU中，有一个特殊的寄存器——异常表基址寄存器，用来存放异常表在内存中的基址。当CPU遇到一种异常的时候，会拿到一个异常号。CPU拿着这个异常号及寄存器中的基址，便可以找到对应的异常处理程序了。</p>
-<h1 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h1><p>进程，是执行中的程序实例，是操作系统对于程序的一种抽象。这种抽象，使得看起来进程是独占cpu和内存的。为了实现这种抽象，需要操作系统保存好进程的上下文，进行进程调度。</p>
-<p>进程的上下文，是指进程执行的状态，包括CPU中的状态、用户模式中的状态、内核模式中的状态。具体来说，cpu中的状态，包括各种寄存器，比如通用寄存器，用来保存指令执行用到的数据，还有程序计数器，用来指明程序执行的进度。用户模式下的状态，包括用户栈等。内核模式中的状态，包括内核栈、进程已打开文件的信息的文件表、有关当前进程的信息的进程表等。</p>
-<p>什么时候会触发进程调度呢？主要有两种情况。一种是进程执行了系统调用，阻塞住了，比如读写文件、sleep等。另一种是中断，包括IO操作完成以及时钟中断等。</p>
-<h1 id="操作进程的工具"><a href="#操作进程的工具" class="headerlink" title="操作进程的工具"></a>操作进程的工具</h1><ul>
-<li><code>PS</code>：列出当前系统中的进程。</li>
-<li><code>TOP</code>：打印出关于当前进程资源使用的进程。</li>
-<li><code>PMAP</code>：显示进程的内存映射。</li>
-<li><code>STRACE</code>：打印一个正在运行的程序和它的子进程调用的每个系统调用的轨迹。<code>-static</code>是个实用的参数。</li>
-<li><code>/proc</code>：一个虚拟文件系统，以ASCII文件格式输出大量内核数据结构的内容。</li>
-</ul>
+          <p>在互联网中，常见的图片文件格式有jpeg, png, bmp, gif等。</p>
+<p>一副图片，具有很多的属性，比如分辨率，色彩空间等。可以通过<code>ImageMagick</code>这个程序来解析图片文件。</p>
+<p>分辨率，比如1920x1080，是指图片的一行具有1920个像素，一列具有1080个像素。</p>
+<p>色彩空间，是指描述一个像素点的方式。比如RGB，是指一个像素点用red, green, blue各8bit一共24bit来描述。而YUV，是指Y表示亮度，U和V一起表示色调和饱和度。</p>
+<p>在互联网上最常见的大概是jpeg类的文件。jpeg文件之所以适合在互联网上传播，是因为它的压缩比较高，且能在压缩和图片还原度上保持平衡，使得一张图片既有小巧的体积，又能在肉眼级别上有良好的清晰度。</p>
+<p>但是jpeg文件并不适合保存图标等图像内容，因为它不具有alpha通道，不能用来表示透明的背景。一般会用png来保存图标。由于png是无损压缩存储图片的，所以会比jpeg文件要大一些，也适合对于图像质量要求较高的情况。</p>
+<p>bmp文件，它也是无损不压缩的，所以会比较大，比较少见。</p>
+<p>git文件，可以存储动图，但是由于它只用了8bit来描述一个像素点，所以可用的色彩并不多，色彩丰富度低。</p>
 <p>（全文完）</p>
 
       
@@ -250,7 +241,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/56/">56</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/57/">57</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -318,7 +309,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">56</span>
+          <span class="site-state-item-count">57</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
