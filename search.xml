@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Leetcode 每日一题6 Group Anagrams]]></title>
+    <url>%2F2020%2F04%2F06%2Fleetcode-exercise-per-day-6-Group-Anagrams%2F</url>
+    <content type="text"><![CDATA[题意给一个数组，起元素为只包含英文小写字母的单词。 要求分组输出使用了相同字符构造的单词，比如tea和eat就是同类单词。 思路将所有的单词遍历一遍，将同类单词放到同一个位置中去，关键是这个映射要怎么实现。对于一个长度为m的单词，我们可以用O(m)的时间遍历出各字符的使用次数。接着，我们将其转化成字符串，对于某个字符，其出现次数可以编码成cnt + char，然后按照英文字母表顺序连接起来。比如，teaa编码成2a1e1t。 上面的编码使用了一个优化，即对于出现次数的0的字母，不编码到字符串中。 假如追求极致，还可以对编码继续优化。 对于出现次数为1的字母，可以不写上cnt。比如teaa可以写成2aet。 当cnt很大时，可以使用整形来表示。比如250，使用char来表示需要3个字节，使用整形只要1个字节。 编码是个很有趣的知识点，上面的编码方式似乎都有专门的名称，以后有空的话专门写篇博客总结一下，这里留个坑:) 代码12345678910111213141516171819202122232425262728class Solution &#123;public: vector&lt;vector&lt;string&gt;&gt; groupAnagrams(vector&lt;string&gt;&amp; strs) &#123; vector&lt;vector&lt;string&gt;&gt; v; unordered_map&lt;string, vector&lt;string&gt;&gt; m; for (auto i: strs) &#123; m[hashWord(i)].push_back(i); &#125; for (auto it: m) &#123; v.push_back(it.second); &#125; return v; &#125; string hashWord(string s) &#123; vector&lt;int&gt; cnt(26, 0); for (int i = 0; i &lt; s.length(); i++) &#123; cnt[s[i] - 'a']++; &#125; string hash; for (int i = 0; i &lt; 26; i++) &#123; if (!cnt[i]) continue; hash += string(cnt[i], 'a' + i); &#125; return hash; &#125;&#125;;]]></content>
+      <tags>
+        <tag>Leetcode</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Leetcode 每日一题5 Best Time to Buy and Sell Stock II]]></title>
     <url>%2F2020%2F04%2F05%2Fleetcode-exercise-per-day-5-Best-Time-to-Buy-and-Sell-Stock-II%2F</url>
     <content type="text"><![CDATA[题意给一个数组，表示每天的股票股价。可以进行无数次交易，但同一时刻只能持有一股的股票。求最大收益。 思路假如股价在未来是涨的，那么就应该购买。假如是跌的，就不购买。 因此，我们扫描一遍数组，维护当前最低的股价，假如遇到较高的股价，就卖出，并更新最低股价。时间复杂度为O(n)，空间复杂度为O(1)。 代码123456789101112131415161718class Solution &#123;public: int maxProfit(vector&lt;int&gt;&amp; prices) &#123; if (prices.size() == 0) &#123; return 0; &#125; int mi = prices[0]; int ans = 0; for (int i = 1; i &lt; prices.size(); i++) &#123; if (prices[i] - mi &gt; 0) &#123; ans += prices[i] - mi; mi = prices[i]; &#125; mi = min(mi, prices[i]); &#125; return ans; &#125;&#125;;]]></content>
