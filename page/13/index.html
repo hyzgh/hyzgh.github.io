@@ -175,7 +175,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/15/CSAPP-learning-note-4/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/18/CSAPP-learning-note-5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/hyzgh-128x128.png">
@@ -189,7 +189,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2019/10/15/CSAPP-learning-note-4/" class="post-title-link" itemprop="url">CSAPP 学习笔记 4</a>
+            <a href="/2019/10/18/CSAPP-learning-note-5/" class="post-title-link" itemprop="url">CSAPP 学习笔记 5</a>
         </h1>
 
         <div class="post-meta">
@@ -199,7 +199,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2019-10-15 12:31:41" itemprop="dateCreated datePublished" datetime="2019-10-15T12:31:41+08:00">2019-10-15</time>
+              <time title="创建时间：2019-10-18 22:27:36" itemprop="dateCreated datePublished" datetime="2019-10-18T22:27:36+08:00">2019-10-18</time>
             </span>
 
           
@@ -213,11 +213,21 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>这两周看得比较少，进度缓慢，只看了第三章关于控制的一小节内容，下面简单写一写。</p>
-<p>在CPU中，维护着一组单个位的条件码寄存器，用于描述算术或逻辑操作的属性，可以通过检测这些寄存器来执行条件分支指令，最常用的条件码有进位标志、零标志、符号标志、溢出标志。</p>
-<p>在CPU执行所有算术和逻辑运算时，都会设置条件码。此外，还有两类指令，即<code>CMP</code>和<code>TEST</code>，也会设置条件码，但它们不会改变其他寄存器。</p>
-<p>那么怎么访问这些条件寄存器呢？CPU中提供了<code>SET</code>指令，对这些标志位进行了封装，可以更方便地获取常见的比较结果。举个例子，最简单的情况，是判断结果是否为零，对应<code>SETE</code>指令，它会读取零标志寄存器。而比较复杂的情况，判断有符号数的小于比较，对应<code>SETL</code>，它会读取符号标志寄存器和溢出标志寄存器，然后取它们的异或值。</p>
-<p>要实现像C语言中的for语句，还需要一类指令<code>JMP</code>。它可以根据条件跳转到其他语句，而不是一直顺序执行。</p>
+          <p>这一周看了CSAPP第六章存储器层次结构的前三节，下面是思维笔记。</p>
+<p><img src="https://s2.ax1x.com/2019/10/18/KeyBvV.png" alt="第六章存储器层次结构"></p>
+<h1 id="存储技术"><a href="#存储技术" class="headerlink" title="存储技术"></a>存储技术</h1><p>存储器有着很多的种类，比如CPU的寄存器、高速缓存，主存（内存）的DRAM，机械硬盘、固态硬盘、U盘、SD卡、磁带等。不同的存储器，会用到不同的存储技术。其中寄存器的存储技术从性能上看是最好的，同时价格也最昂贵的，因此寄存器的大小相比于其他存储器，少得可怜，比如一般来说，通用寄存器只有16个，而1个寄存器只能存储64个bit。高速缓存采用的是SRAM，而主存用的是DRAM。SRAM用到了多个晶体管，比DRAM要快得多，会更加稳定，同时成本也更高。一般来说，高速缓存是几M的量级，而主存是以几G的量级，可见两者的价格差异。RAM有一个特点是断电后内容会丢失。</p>
+<p>我们常用的U盘、SD卡等，并不是基于RAM，而是基于ROM。所谓ROM，翻译成中文便是只读存储器。个人觉得这个名字有点歧义，容易让人误解成数据不可更改。但实际上，ROM也有多个种类，我们常用的U盘基于EEPROM（电子可擦写只读存储器），是可以进行擦写的。而固态硬盘，基于闪存，它也是可擦写的。以前给手机刷机的时候，常常会听到ROM和固件这两个名词。所谓固件，是指写入到ROM中的程序。</p>
+<p>机械硬盘，常常会听到一个参数叫转数。这个参数表示盘片旋转速度的速度。这个参数虽然重要，但却非影响硬盘随机IO时间的最重要因素。磁盘访问数据，由三个部分的时间组成，即寻道时间、旋转时间、传送时间。寻道时间是磁头定位到对应磁道的时间，这个时间平均占比是最大的，通常可占到整体时间的1/2以上，所以我们可以用两倍寻道时间来估计总时间。磁头定位到对应磁道，有专门的寻道算法，比如电梯算法。</p>
+<p>固态硬盘，是近些年流行起来的存储器。其性能、价格皆介于主存和机械硬盘之间。由于固态硬盘采用了闪存，避免了机械硬盘缓慢的寻道和旋转，所以速度更快，特别是在随机IO的表现上。</p>
+<p>根据历史趋势，存储器将会访问速度越来越快，越来越大，且会越来越便宜。但是，由于CPU的性能提升要比SRAM、DRAM、磁盘的速度快，所以两者的差距在增大，这将成为计算机的瓶颈。也因此，各级缓存的必要性就体现出来了，利用局部性原理，我们可以减弱这种差距。</p>
+<h1 id="局部性"><a href="#局部性" class="headerlink" title="局部性"></a>局部性</h1><p>局部性分为空间局部性及时间局部性。空间局部性指的是某个位置的数据被访问后，其附近的数据将可能被访问。时间局部性指的是某个位置的数据被访问后，这个位置还将可能被再次访问。</p>
+<p>以前对于这个概念的认识有点模糊，对其带来的性能差异没有明确的认知。我们下面通过一个程序来看一下空间局部性带来的影响。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sum1</span><span class="params">(<span class="keyword">int</span> a[N][N])</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i, j, sum = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; N; j++) &#123;</span><br><span class="line">            sum += a[i][j];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sum2</span><span class="params">(<span class="keyword">int</span> a[N][N])</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i, j, sum = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; N; j++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; i++) &#123;    </span><br><span class="line">            sum += a[i][j];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当N = 20000时，在我的机器上，sum1执行的时间为2.1s，而sum2执行的时间为5.6s，两者差距两倍多。</p>
+<p>sum1之所以性能表现比sum2优秀，是因为它访问数据时的步长为1，让计算机能更好地利用空间局部性原理。</p>
+<h1 id="存储器层次结构"><a href="#存储器层次结构" class="headerlink" title="存储器层次结构"></a>存储器层次结构</h1><p>计算机的存储器层次结构从快到慢分为寄存器、L1高速缓存、L2高速缓存、L3高速缓存、主存、本地二级磁盘（本地磁盘）、远程二级存储（分布式文件系统、Web服务器）等。通过这样的层次结构，在大小、访问速度、价格等因素之间取得了折衷，让计算机的价格合理、访问速度较快、存储空间较大。</p>
+<p>缓存无处不在，其目的是降低不同存储器之间速度差异带来的影响。计算机各级存储器之间，上层是下层的缓存。浏览器访问网页时，在本地磁盘有缓存，能提高用户打开同一网页的速度。Web服务器被访问的时候，本地磁盘也有缓存，能提高不同用户访问同一网页的速度。磁盘也有缓存，用于缓存磁盘扇区，提高计算机访问磁盘的速度。代理服务器，也可用来做缓存，能降低网络延迟。业务上，redis用作MySQL的缓存，是用内存来缓存磁盘的内容，缓解了随机I/O带来的性能问题。</p>
 <p>（全文完）</p>
 
       
@@ -238,7 +248,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/12/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/58/">58</a><a class="extend next" rel="next" href="/page/14/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/12/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/59/">59</a><a class="extend next" rel="next" href="/page/14/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -306,14 +316,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-count">59</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-count">45</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

@@ -175,7 +175,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/07/null/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/18/null/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/hyzgh-128x128.png">
@@ -189,7 +189,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2019/12/07/null/" class="post-title-link" itemprop="url">图片文件格式 学习笔记</a>
+            <a href="/2019/12/18/null/" class="post-title-link" itemprop="url">perl 学习笔记</a>
         </h1>
 
         <div class="post-meta">
@@ -199,7 +199,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2019-12-07 16:07:02" itemprop="dateCreated datePublished" datetime="2019-12-07T16:07:02+08:00">2019-12-07</time>
+              <time title="创建时间：2019-12-18 23:09:06" itemprop="dateCreated datePublished" datetime="2019-12-18T23:09:06+08:00">2019-12-18</time>
             </span>
 
           
@@ -213,15 +213,28 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>在互联网中，常见的图片文件格式有jpeg, png, bmp, gif等。</p>
-<p>一副图片，具有很多的属性，比如分辨率，色彩空间等。可以通过<code>ImageMagick</code>这个程序来解析图片文件。</p>
-<p>分辨率，比如1920x1080，是指图片的一行具有1920个像素，一列具有1080个像素。</p>
-<p>色彩空间，是指描述一个像素点的方式。比如RGB，是指一个像素点用red, green, blue各8bit一共24bit来描述。而YUV，是指Y表示亮度，U和V一起表示色调和饱和度。</p>
-<p>在互联网上最常见的大概是jpeg类的文件。jpeg文件之所以适合在互联网上传播，是因为它的压缩比较高，且能在压缩和图片还原度上保持平衡，使得一张图片既有小巧的体积，又能在肉眼级别上有良好的清晰度。</p>
-<p>但是jpeg文件并不适合保存图标等图像内容，因为它不具有alpha通道，不能用来表示透明的背景。一般会用png来保存图标。由于png是无损压缩存储图片的，所以会比jpeg文件要大一些，也适合对于图像质量要求较高的情况。</p>
-<p>bmp文件，它也是无损不压缩的，所以会比较大，比较少见。</p>
-<p>git文件，可以存储动图，但是由于它只用了8bit来描述一个像素点，所以可用的色彩并不多，色彩丰富度低。</p>
-<p>（全文完）</p>
+          <p>Perl是一门解释型语言，具有动态语言的特性，可以写得很随性。缺点是由于语法灵活导致难以维护，这和Go Lang形成了强烈的对比。Go Lang很适合用来团队协作开发，因为它写法很单一固定。Perl，更像是黑客的工具。</p>
+<p>Perl的强大之处，在于它具有sed和awk的全部功能，以及众多语言的语法特性，以及非常强大的正则表达式，等等。</p>
+<h1 id="Hello-World"><a href="#Hello-World" class="headerlink" title="Hello, World"></a>Hello, World</h1><p>Perl的Hello, World：</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">perl -e <span class="string">'print("Hello, World\n")'</span></span><br></pre></td></tr></table></figure>
+
+<p>在安装了perl的计算机上，直接执行上述代码，即可输出<code>Hello, World</code>。</p>
+<p>也可以将perl代码写在文件，以重复执行，具体可以这样写：</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/perl</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出 "Hello, World"</span></span><br><span class="line"><span class="keyword">print</span>(<span class="string">"Hello, World\n"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>将上述代码保存成<code>learn.pl</code>后，加下执行权限，然后执行<code>./learn.pl</code>，可输出<code>Hello, World</code>。</p>
+<h1 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h1><p>Perl的正式表达式非常强大，是常用编程语言里最顶尖的之一。下面来看几个例子。</p>
+<h2 id="例子1"><a href="#例子1" class="headerlink" title="例子1"></a>例子1</h2><p><code>echo box.svc.content | perl -p -e &#39;s/\.+/\//g&#39;</code></p>
+<p>将会输出<code>box/svc/content</code>。</p>
+<p>解析：</p>
+<p><code>-p</code>参数会将结果输出出来。</p>
+<p>这里用到了一个常用的<strong>替换</strong>句型，<code>s/old/new/parameters</code>，表示将<code>old</code>替换成<code>new</code>。</p>
+<p><code>s/\.+/\//g</code>的<code>s</code>表示替换，<code>\.+</code>表示至少一个<code>.</code>，<code>\/</code>表示一个<code>/</code>，<code>g</code>表示全局匹配。</p>
+<h2 id="例子2"><a href="#例子2" class="headerlink" title="例子2"></a>例子2</h2><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/perl </span></span><br><span class="line"></span><br><span class="line">$string = <span class="string">'welcome to w3cschool site.'</span>;</span><br><span class="line">$string =~ <span class="regexp">tr/a-z/A-z/</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> <span class="string">"$string\n"</span>;</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码将会输出<code>WELCOME TO W3CSCHOOL SITE.</code>。</p>
+<p>这里用到了一个常用的<strong>转化</strong>句型，<code>tr/old/new/parameters</code>。表示将<code>old</code>转化成<code>new</code>。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://www.w3cschool.cn/perl/perl-regular-expressions.html" target="_blank" rel="noopener">Perl 正则表达式 - W3Cschool</a></p>
 
       
     </div>
@@ -241,7 +254,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/58/">58</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/59/">59</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -309,14 +322,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-count">59</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-count">45</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
