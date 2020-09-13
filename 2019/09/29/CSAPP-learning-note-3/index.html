@@ -47,17 +47,17 @@
 </script>
 
   <meta name="description" content="这两周看了第三章的前面五节，对机器指令有了更进一步的认识。  历史观点Intel处理器系列俗称x86，它有着一段进化之旅。从最初的8086到i386，再到i5和i7。那么它究竟有哪些方面的提升呢？  晶体管数量增加。Core i7的1.4G个晶体管，是8086芯片29K个晶体管的4.8万倍。晶体管越多，意味着芯片的电路越复杂，能力越强。 指令集变大，支持更多指令。8087在8086的基础上，建立了">
-<meta name="keywords" content="计算机系统,CSAPP">
+<meta name="keywords" content="CSAPP,计算机系统">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CSAPP 学习笔记 3">
+<meta property="og:title" content="CSAPP 学习笔记 3 程序的机器级表示">
 <meta property="og:url" content="https://hyzgh.github.io/2019/09/29/CSAPP-learning-note-3/index.html">
 <meta property="og:site_name" content="hyz&#39;s blog">
 <meta property="og:description" content="这两周看了第三章的前面五节，对机器指令有了更进一步的认识。  历史观点Intel处理器系列俗称x86，它有着一段进化之旅。从最初的8086到i386，再到i5和i7。那么它究竟有哪些方面的提升呢？  晶体管数量增加。Core i7的1.4G个晶体管，是8086芯片29K个晶体管的4.8万倍。晶体管越多，意味着芯片的电路越复杂，能力越强。 指令集变大，支持更多指令。8087在8086的基础上，建立了">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://s2.ax1x.com/2019/09/29/uGR19e.png">
-<meta property="og:updated_time" content="2019-09-29T15:45:45.171Z">
+<meta property="og:updated_time" content="2020-08-29T09:17:22.329Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CSAPP 学习笔记 3">
+<meta name="twitter:title" content="CSAPP 学习笔记 3 程序的机器级表示">
 <meta name="twitter:description" content="这两周看了第三章的前面五节，对机器指令有了更进一步的认识。  历史观点Intel处理器系列俗称x86，它有着一段进化之旅。从最初的8086到i386，再到i5和i7。那么它究竟有哪些方面的提升呢？  晶体管数量增加。Core i7的1.4G个晶体管，是8086芯片29K个晶体管的4.8万倍。晶体管越多，意味着芯片的电路越复杂，能力越强。 指令集变大，支持更多指令。8087在8086的基础上，建立了">
 <meta name="twitter:image" content="https://s2.ax1x.com/2019/09/29/uGR19e.png">
 
@@ -73,7 +73,7 @@
   };
 </script>
 
-  <title>CSAPP 学习笔记 3 | hyz's blog</title>
+  <title>CSAPP 学习笔记 3 程序的机器级表示 | hyz's blog</title>
   
 
 
@@ -195,7 +195,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          CSAPP 学习笔记 3
+          CSAPP 学习笔记 3 程序的机器级表示
         </h1>
 
         <div class="post-meta">
@@ -295,8 +295,8 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/计算机系统/" rel="tag"># 计算机系统</a>
               <a href="/tags/CSAPP/" rel="tag"># CSAPP</a>
+              <a href="/tags/计算机系统/" rel="tag"># 计算机系统</a>
           </div>
 
         
@@ -305,12 +305,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2019/09/15/CSAPP-learning-note-2/" rel="prev" title="CSAPP 学习笔记 2">
-      <i class="fa fa-chevron-left"></i> CSAPP 学习笔记 2
+    <a href="/2019/09/15/CSAPP-learning-note-2/" rel="prev" title="CSAPP 学习笔记 2 信息的表示与处理">
+      <i class="fa fa-chevron-left"></i> CSAPP 学习笔记 2 信息的表示与处理
     </a></div>
       <div class="post-nav-item">
-    <a href="/2019/10/15/CSAPP-learning-note-4/" rel="next" title="CSAPP 学习笔记 4">
-      CSAPP 学习笔记 4 <i class="fa fa-chevron-right"></i>
+    <a href="/2019/10/15/CSAPP-learning-note-4/" rel="next" title="CSAPP 学习笔记 4 程序的机器级表示">
+      CSAPP 学习笔记 4 程序的机器级表示 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -387,14 +387,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">60</span>
+          <span class="site-state-item-count">63</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-count">46</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

@@ -175,7 +175,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2019/09/15/CSAPP-learning-note-2/">
+    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2019/10/15/CSAPP-learning-note-4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/hyzgh-128x128.png">
@@ -189,7 +189,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2019/09/15/CSAPP-learning-note-2/" class="post-title-link" itemprop="url">CSAPP 学习笔记 2</a>
+            <a href="/2019/10/15/CSAPP-learning-note-4/" class="post-title-link" itemprop="url">CSAPP 学习笔记 4 程序的机器级表示</a>
         </h1>
 
         <div class="post-meta">
@@ -199,7 +199,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2019-09-15 23:31:06" itemprop="dateCreated datePublished" datetime="2019-09-15T23:31:06+08:00">2019-09-15</time>
+              <time title="创建时间：2019-10-15 12:31:41" itemprop="dateCreated datePublished" datetime="2019-10-15T12:31:41+08:00">2019-10-15</time>
             </span>
 
           
@@ -213,17 +213,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>这一周看了第二章的剩余篇幅，关于整数运算以及浮点数。目前还未完全搞定，有很多习题待写。</p>
-<h1 id="整数运算"><a href="#整数运算" class="headerlink" title="整数运算"></a>整数运算</h1><p>整数运算的分类主要有两个维度，一个是无符号数、有符号数，另一个是加法、乘法。</p>
-<p>之前知道编译器会将乘法转化成加减法/移位，但始终不知所以然。这次通过阅读CSAPP，深入理解了它的原理，另外知道了还可以将除法转化为加减法/移位。</p>
-<p>这一节讲得都是规律和证明，这里不再赘述。贴一张图进行总结，以方便以后回忆。</p>
-<p><img src="https://s2.ax1x.com/2019/09/16/nRiAaT.png" alt="image-20190915234925595"></p>
-<h1 id="浮点数"><a href="#浮点数" class="headerlink" title="浮点数"></a>浮点数</h1><p>阅读完这一节后，对于浮点数的表示、运算、舍入等有了更深入的理解。</p>
-<p>其中，有的地方一开始不是很理解，当弄懂后，觉得这些设计很优雅、很聪明。</p>
-<p>比如，对于IEEE非规范值得设计不是很理解，为什么要增加复杂性呢。后来，明白了非规格值的设计，使得0的表示很加自然且靠近0的浮点数分布得更均匀。</p>
-<p>比如，一开始不太明白为什么要有偶数舍入法，直接四舍五入不行吗。后来，明白了偶数舍入法是对四舍五入的一种改进，避免了舍入所造成的统计误差。</p>
-<p>还有浮点的运算，不遵循结合律，这是之前没有注意到但也是十分重要的知识点。</p>
-<p><img src="https://s2.ax1x.com/2019/09/16/nRikZV.png" alt="image-20190916000251225"></p>
+          <p>这两周看得比较少，进度缓慢，只看了第三章关于控制的一小节内容，下面简单写一写。</p>
+<p>在CPU中，维护着一组单个位的条件码寄存器，用于描述算术或逻辑操作的属性，可以通过检测这些寄存器来执行条件分支指令，最常用的条件码有进位标志、零标志、符号标志、溢出标志。</p>
+<p>在CPU执行所有算术和逻辑运算时，都会设置条件码。此外，还有两类指令，即<code>CMP</code>和<code>TEST</code>，也会设置条件码，但它们不会改变其他寄存器。</p>
+<p>那么怎么访问这些条件寄存器呢？CPU中提供了<code>SET</code>指令，对这些标志位进行了封装，可以更方便地获取常见的比较结果。举个例子，最简单的情况，是判断结果是否为零，对应<code>SETE</code>指令，它会读取零标志寄存器。而比较复杂的情况，判断有符号数的小于比较，对应<code>SETL</code>，它会读取符号标志寄存器和溢出标志寄存器，然后取它们的异或值。</p>
+<p>要实现像C语言中的for语句，还需要一类指令<code>JMP</code>。它可以根据条件跳转到其他语句，而不是一直顺序执行。</p>
 <p>（全文完）</p>
 
       
@@ -244,7 +238,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/16/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/">18</a><span class="space">&hellip;</span><a class="page-number" href="/page/60/">60</a><a class="extend next" rel="next" href="/page/18/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/16/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/">18</a><span class="space">&hellip;</span><a class="page-number" href="/page/63/">63</a><a class="extend next" rel="next" href="/page/18/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -312,14 +306,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">60</span>
+          <span class="site-state-item-count">63</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-count">46</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

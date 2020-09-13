@@ -175,7 +175,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2019/09/29/CSAPP-learning-note-3/">
+    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2019/10/18/CSAPP-learning-note-5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/hyzgh-128x128.png">
@@ -189,7 +189,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2019/09/29/CSAPP-learning-note-3/" class="post-title-link" itemprop="url">CSAPP 学习笔记 3</a>
+            <a href="/2019/10/18/CSAPP-learning-note-5/" class="post-title-link" itemprop="url">CSAPP 学习笔记 5 存储器层次结构</a>
         </h1>
 
         <div class="post-meta">
@@ -199,7 +199,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2019-09-29 22:38:59" itemprop="dateCreated datePublished" datetime="2019-09-29T22:38:59+08:00">2019-09-29</time>
+              <time title="创建时间：2019-10-18 22:27:36" itemprop="dateCreated datePublished" datetime="2019-10-18T22:27:36+08:00">2019-10-18</time>
             </span>
 
           
@@ -213,72 +213,21 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>这两周看了第三章的前面五节，对机器指令有了更进一步的认识。</p>
-<p><img src="https://s2.ax1x.com/2019/09/29/uGR19e.png" alt="程序的机器级表示 阅读进度"></p>
-<h1 id="历史观点"><a href="#历史观点" class="headerlink" title="历史观点"></a>历史观点</h1><p>Intel处理器系列俗称x86，它有着一段进化之旅。从最初的8086到i386，再到i5和i7。那么它究竟有哪些方面的提升呢？</p>
-<ul>
-<li>晶体管数量增加。Core i7的1.4G个晶体管，是8086芯片29K个晶体管的4.8万倍。晶体管越多，意味着芯片的电路越复杂，能力越强。</li>
-<li>指令集变大，支持更多指令。8087在8086的基础上，建立了浮点模型。</li>
-<li>更多的位数。Pentium 4E是Intel对AMD提出的对IA32的64位拓展的实现，我们称之为x86-64。</li>
-<li>更多的核数。Core 2是Intel的第一个多核微处理器。</li>
-<li>更多的技术。Pentium 4E增加了超线程，允许一个处理器上同时运行两个程序。</li>
-</ul>
-<p>AMD等产商的大多处理器与Intel处理器兼容，能够运行完全相同的机器级程序。</p>
-<h1 id="程序编码"><a href="#程序编码" class="headerlink" title="程序编码"></a>程序编码</h1><p>什么是机器代码呢？我们知道，C语言会经过预处理、编译、汇编、链接这些过程。</p>
-<ul>
-<li>预编译：拓展源代码，主要处理对象是#include及#define。</li>
-<li>编译：产生源文件的汇编代码，拓展名为.s。</li>
-<li>汇编：产生二进制目标代码，拓展名为.o。</li>
-<li>链接：将多个.o文件转化成一个可执行文件。</li>
-</ul>
-<p>所谓机器代码，第一种是指.o文件中的代码，第二种是指可执行文件中的代码。它们的区别在于前者还没有填入全局值的地址。</p>
-<p>机器代码是一些二进制代码，不具有可读性。汇编代码非常接近机器代码，我们可通过学习汇编代码来认识机器代码。</p>
-<h1 id="数据格式"><a href="#数据格式" class="headerlink" title="数据格式"></a>数据格式</h1><p>Intel的体系结构一直在变化，从16位到32位，再到64位，可能以后还会拓展到128位。</p>
-<p>Intel用以下术语来表示不同的数据类型。</p>
-<table>
-<thead>
-<tr>
-<th>Intel数据类型</th>
-<th>汇编代码后缀</th>
-<th>大小（字节）</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>字节</td>
-<td>b</td>
-<td>1</td>
-</tr>
-<tr>
-<td>字</td>
-<td>w</td>
-<td>2</td>
-</tr>
-<tr>
-<td>双字</td>
-<td>l</td>
-<td>4</td>
-</tr>
-<tr>
-<td>四字</td>
-<td>q</td>
-<td>8</td>
-</tr>
-<tr>
-<td>单精度</td>
-<td>s</td>
-<td>4</td>
-</tr>
-<tr>
-<td>双精度</td>
-<td>l</td>
-<td>8</td>
-</tr>
-</tbody></table>
-<h1 id="访问信息"><a href="#访问信息" class="headerlink" title="访问信息"></a>访问信息</h1><p>一个CPU包含一组16个存储64位值的通用目的寄存器，这些寄存器用来存储整数数据和指针。</p>
-<p>我们知道，程序运行时，其数据存放在内存中。CPU需要一些指令来进行内存与寄存器间的数据转移，称为数据转移指令。</p>
-<p>我们也知道，程序运行时，在内存中有一个对应的程序栈。CPU有专门指令进行入栈、出栈操作。可否将这些指令去掉呢？可以，存在代替指令。但是这样做，会让机器代码增多，考虑到入栈出栈操作是非常常见的，所以提供专门的指令会缩减机器代码的大小。这也就是在精简指令集上编译出来的机器代码比复杂指令集庞大的原因。</p>
-<h1 id="算术和逻辑操作"><a href="#算术和逻辑操作" class="headerlink" title="算术和逻辑操作"></a>算术和逻辑操作</h1><p>所谓算术操作，指的是加减乘除等操作。所谓逻辑操作，是指与或移位等操作。</p>
-<p>通过学习汇编代码的算术和逻辑操作，对于高级语言的便利性有了更具体的认识。一条C语言简单的算术表达式，转化成汇编代码，会变成多条。对于一些更复杂的循环控制语句，就更复杂了。</p>
+          <p>这一周看了CSAPP第六章存储器层次结构的前三节，下面是思维笔记。</p>
+<p><img src="https://s2.ax1x.com/2019/10/18/KeyBvV.png" alt="第六章存储器层次结构"></p>
+<h1 id="存储技术"><a href="#存储技术" class="headerlink" title="存储技术"></a>存储技术</h1><p>存储器有着很多的种类，比如CPU的寄存器、高速缓存，主存（内存）的DRAM，机械硬盘、固态硬盘、U盘、SD卡、磁带等。不同的存储器，会用到不同的存储技术。其中寄存器的存储技术从性能上看是最好的，同时价格也最昂贵的，因此寄存器的大小相比于其他存储器，少得可怜，比如一般来说，通用寄存器只有16个，而1个寄存器只能存储64个bit。高速缓存采用的是SRAM，而主存用的是DRAM。SRAM用到了多个晶体管，比DRAM要快得多，会更加稳定，同时成本也更高。一般来说，高速缓存是几M的量级，而主存是以几G的量级，可见两者的价格差异。RAM有一个特点是断电后内容会丢失。</p>
+<p>我们常用的U盘、SD卡等，并不是基于RAM，而是基于ROM。所谓ROM，翻译成中文便是只读存储器。个人觉得这个名字有点歧义，容易让人误解成数据不可更改。但实际上，ROM也有多个种类，我们常用的U盘基于EEPROM（电子可擦写只读存储器），是可以进行擦写的。而固态硬盘，基于闪存，它也是可擦写的。以前给手机刷机的时候，常常会听到ROM和固件这两个名词。所谓固件，是指写入到ROM中的程序。</p>
+<p>机械硬盘，常常会听到一个参数叫转数。这个参数表示盘片旋转速度的速度。这个参数虽然重要，但却非影响硬盘随机IO时间的最重要因素。磁盘访问数据，由三个部分的时间组成，即寻道时间、旋转时间、传送时间。寻道时间是磁头定位到对应磁道的时间，这个时间平均占比是最大的，通常可占到整体时间的1/2以上，所以我们可以用两倍寻道时间来估计总时间。磁头定位到对应磁道，有专门的寻道算法，比如电梯算法。</p>
+<p>固态硬盘，是近些年流行起来的存储器。其性能、价格皆介于主存和机械硬盘之间。由于固态硬盘采用了闪存，避免了机械硬盘缓慢的寻道和旋转，所以速度更快，特别是在随机IO的表现上。</p>
+<p>根据历史趋势，存储器将会访问速度越来越快，越来越大，且会越来越便宜。但是，由于CPU的性能提升要比SRAM、DRAM、磁盘的速度快，所以两者的差距在增大，这将成为计算机的瓶颈。也因此，各级缓存的必要性就体现出来了，利用局部性原理，我们可以减弱这种差距。</p>
+<h1 id="局部性"><a href="#局部性" class="headerlink" title="局部性"></a>局部性</h1><p>局部性分为空间局部性及时间局部性。空间局部性指的是某个位置的数据被访问后，其附近的数据将可能被访问。时间局部性指的是某个位置的数据被访问后，这个位置还将可能被再次访问。</p>
+<p>以前对于这个概念的认识有点模糊，对其带来的性能差异没有明确的认知。我们下面通过一个程序来看一下空间局部性带来的影响。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sum1</span><span class="params">(<span class="keyword">int</span> a[N][N])</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i, j, sum = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; N; j++) &#123;</span><br><span class="line">            sum += a[i][j];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sum2</span><span class="params">(<span class="keyword">int</span> a[N][N])</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i, j, sum = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; N; j++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; i++) &#123;    </span><br><span class="line">            sum += a[i][j];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当N = 20000时，在我的机器上，sum1执行的时间为2.1s，而sum2执行的时间为5.6s，两者差距两倍多。</p>
+<p>sum1之所以性能表现比sum2优秀，是因为它访问数据时的步长为1，让计算机能更好地利用空间局部性原理。</p>
+<h1 id="存储器层次结构"><a href="#存储器层次结构" class="headerlink" title="存储器层次结构"></a>存储器层次结构</h1><p>计算机的存储器层次结构从快到慢分为寄存器、L1高速缓存、L2高速缓存、L3高速缓存、主存、本地二级磁盘（本地磁盘）、远程二级存储（分布式文件系统、Web服务器）等。通过这样的层次结构，在大小、访问速度、价格等因素之间取得了折衷，让计算机的价格合理、访问速度较快、存储空间较大。</p>
+<p>缓存无处不在，其目的是降低不同存储器之间速度差异带来的影响。计算机各级存储器之间，上层是下层的缓存。浏览器访问网页时，在本地磁盘有缓存，能提高用户打开同一网页的速度。Web服务器被访问的时候，本地磁盘也有缓存，能提高不同用户访问同一网页的速度。磁盘也有缓存，用于缓存磁盘扇区，提高计算机访问磁盘的速度。代理服务器，也可用来做缓存，能降低网络延迟。业务上，redis用作MySQL的缓存，是用内存来缓存磁盘的内容，缓解了随机I/O带来的性能问题。</p>
 <p>（全文完）</p>
 
       
@@ -299,7 +248,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/15/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><span class="page-number current">16</span><a class="page-number" href="/page/17/">17</a><span class="space">&hellip;</span><a class="page-number" href="/page/60/">60</a><a class="extend next" rel="next" href="/page/17/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/15/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><span class="page-number current">16</span><a class="page-number" href="/page/17/">17</a><span class="space">&hellip;</span><a class="page-number" href="/page/63/">63</a><a class="extend next" rel="next" href="/page/17/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -367,14 +316,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">60</span>
+          <span class="site-state-item-count">63</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-count">46</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

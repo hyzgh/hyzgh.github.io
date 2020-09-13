@@ -175,7 +175,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2019/09/08/CSAPP-learning-note-1/">
+    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2019/10/15/CSAPP-learning-note-4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/hyzgh-128x128.png">
@@ -189,7 +189,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2019/09/08/CSAPP-learning-note-1/" class="post-title-link" itemprop="url">CSAPP 学习笔记 1</a>
+            <a href="/2019/10/15/CSAPP-learning-note-4/" class="post-title-link" itemprop="url">CSAPP 学习笔记 4 程序的机器级表示</a>
         </h1>
 
         <div class="post-meta">
@@ -199,7 +199,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2019-09-08 22:18:17" itemprop="dateCreated datePublished" datetime="2019-09-08T22:18:17+08:00">2019-09-08</time>
+              <time title="创建时间：2019-10-15 12:31:41" itemprop="dateCreated datePublished" datetime="2019-10-15T12:31:41+08:00">2019-10-15</time>
             </span>
 
           
@@ -213,24 +213,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>上一周看完了第一章，这一周继续看第二章。本章的内容和信息的表示和处理有关，这部分内容之前修计算机组成原理时有学习到，所以阅读起来比较顺利，预计下周能顺利读完此章。</p>
-<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>这一章的内容分为四小节，分别是：</p>
-<ul>
-<li>信息存储</li>
-<li>整数表示</li>
-<li>整数运算</li>
-<li>浮点数</li>
-</ul>
-<h2 id="信息存储"><a href="#信息存储" class="headerlink" title="信息存储"></a>信息存储</h2><p><a href="https://hyzgh.github.io/2019/08/30/CSAPP-learning-note-0/">上篇笔记</a>谈到了信息，什么是信息？信息是数据+上下文。</p>
-<p>在不同的上下文中，数据会有不同的含义。一个字节，既可表示一个字符，也可表示范围在[0, 256)的无符号整数，也可表示范围在[-128, 128)的有符号整数，还可以表示具有8个元素的集合，等等。</p>
-<p>大多数机器使用8位的块，称为字节，作为最小的可寻址的内存单位，而不是直接访问内存中单独的位。字长为32位的机器，寻址的最大空间是$2^{32}$字节，而字长为64位的机器，寻址的最大空间就是$2^{64}$字节。什么是字长呢，字长用于指明指针数据的标称大小。</p>
-<p>因为一个字节有8个位，用二进制表示起来有点冗长，而用十进制表示法的话，与位模式的互相转化会很麻烦。于是就有了十六进制数来表示位模式，在二进制和十进制取了折中，既方便表示，又不那么难读。</p>
-<p>假如我们想要访问跨越多字节的对象，需要建立两个规则：这个对象的地址是什么，以及在内存中如何排列这些字节。对象地址的寻址范围根据字长而定，当字长为$w$时，可寻址空间为$2^{w}$。确定好对象的起始地址，还需要知道它有多少个字节以及如何排列这些字节。假设读取对象为<code>int</code>，有四个字节，且在内存中从低址到高址的内容为<code>0x00000001</code>，采用大端法读取就是$1$，采用小端法读取就是$2^{24}$。大端表示法比较符合人类的习惯，而小端法需要将数据按字节倒序排列。这些数据在机器中的字节排列通常对我们没有影响，但当涉及到网络编程时，就需要关注网络传输数据和机器存储数据的区别了。</p>
-<h2 id="整数表示"><a href="#整数表示" class="headerlink" title="整数表示"></a>整数表示</h2><p>整数在计算机中有多种表示形式，比如原码、补码、反码等。</p>
-<p>而编程语言中遇到的整数类型，比如<code>short</code>, <code>int</code>, <code>long long</code>等，是对整数大小的限制。</p>
-<p>而常说的有符号数、无符号数，则是在人类限制整数能否表示负数而产生。我认为有符号数和无符号数的设计其实意义不大，只用一种有符号数来表示整数就足够了。有了无符号数和有符号数，就需要用户去关注无符号数和有符号数的转化，一些隐式转化很容易引起出人意料的隐蔽错误。在Java中，并没有无符号数的概念，而在C语言中，有符号数和无符号数的转化，其实整数在底层的位表示中是不变的，只是C语言在不同的上下文中对它进行了不同的解释。</p>
-<p>无符号数，采用简单的原码编码即可。而有符号数，一般采用补码编码，因为相对于源码、反码，它能表示更多一个数，更重要的是，机器中的位表示与整数是一个双射关系，很优雅。</p>
-<p>无符号数和有符号数的转化，在理解了机器的位表示始终不变以及补码的相关知识后，我们可以总结出规律。我们这里假设两者的位数都为$w$。将无符号数转化为有符号数，当超过其表示范围时，需要减去$2^w$。将有符号数转化为无符号数时，负数需要加上$2^w$。</p>
+          <p>这两周看得比较少，进度缓慢，只看了第三章关于控制的一小节内容，下面简单写一写。</p>
+<p>在CPU中，维护着一组单个位的条件码寄存器，用于描述算术或逻辑操作的属性，可以通过检测这些寄存器来执行条件分支指令，最常用的条件码有进位标志、零标志、符号标志、溢出标志。</p>
+<p>在CPU执行所有算术和逻辑运算时，都会设置条件码。此外，还有两类指令，即<code>CMP</code>和<code>TEST</code>，也会设置条件码，但它们不会改变其他寄存器。</p>
+<p>那么怎么访问这些条件寄存器呢？CPU中提供了<code>SET</code>指令，对这些标志位进行了封装，可以更方便地获取常见的比较结果。举个例子，最简单的情况，是判断结果是否为零，对应<code>SETE</code>指令，它会读取零标志寄存器。而比较复杂的情况，判断有符号数的小于比较，对应<code>SETL</code>，它会读取符号标志寄存器和溢出标志寄存器，然后取它们的异或值。</p>
+<p>要实现像C语言中的for语句，还需要一类指令<code>JMP</code>。它可以根据条件跳转到其他语句，而不是一直顺序执行。</p>
 <p>（全文完）</p>
 
       
@@ -251,7 +238,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/17/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><span class="page-number current">18</span><a class="page-number" href="/page/19/">19</a><span class="space">&hellip;</span><a class="page-number" href="/page/60/">60</a><a class="extend next" rel="next" href="/page/19/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/17/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><span class="page-number current">18</span><a class="page-number" href="/page/19/">19</a><span class="space">&hellip;</span><a class="page-number" href="/page/63/">63</a><a class="extend next" rel="next" href="/page/19/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -319,14 +306,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">60</span>
+          <span class="site-state-item-count">63</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-count">46</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

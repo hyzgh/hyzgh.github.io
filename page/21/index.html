@@ -175,7 +175,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2019/07/13/financial-management/">
+    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2019/09/08/CSAPP-learning-note-1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/hyzgh-128x128.png">
@@ -189,7 +189,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2019/07/13/financial-management/" class="post-title-link" itemprop="url">理财入门</a>
+            <a href="/2019/09/08/CSAPP-learning-note-1/" class="post-title-link" itemprop="url">CSAPP 学习笔记 1 信息的表示和处理</a>
         </h1>
 
         <div class="post-meta">
@@ -199,7 +199,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2019-07-13 21:02:59" itemprop="dateCreated datePublished" datetime="2019-07-13T21:02:59+08:00">2019-07-13</time>
+              <time title="创建时间：2019-09-08 22:18:17" itemprop="dateCreated datePublished" datetime="2019-09-08T22:18:17+08:00">2019-09-08</time>
             </span>
 
           
@@ -213,12 +213,25 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>前段时间开始了实习，并拿到了人生的第一桶金。为了能够掌握好自己的财务情况，以及怀着尽快实现财务自由的目标，开始了自己理财知识学习之路。学习理财，同时也是提高自我认知的过程。此博文记录了自己的理财学习之路，希望能对读者有些帮助。</p>
-<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>管理好自己的财产的第一步，是要对自己的支出收入情况有所了解。假如一个人对自己的收支情况一点不了解，就算中了百万彩票，挥金如土，也会很快被挥霍完。而假如一个人对于自己的收支情况了然于胸，量入为出，才能过得很踏实。</p>
-<p>在这里，通过一番比较后，我选择了复式记账法，并采用了beancount和fava这两个工具。网上介绍这两个工具的好文章已有不少，这里不再赘述使用方法，而只提一下它的优点。beancount，它是开源的，它可以让你以纯文本的形式记账，并将数据保存在自己的电脑上，保证了数据的可移植性和安全性，无需支付额外费用，使用成本低。另外，利用fava可将数据可视化，可以直观地看到自己的财务情况，非常方便。</p>
-<p>很多人之所以不能坚持记账，大多数是因为记账太过繁琐，且记账产生的数据像一潭死水，无法产生实际的指导价值。而用beancount+fava，可以克服这两个缺点。现在大多数网站，比如支付宝和微信支付，都可以导出账单，我们不难写个脚本将其转化成符合beancount语法的文本数据。fava将数据可视化后，含有损益表、资产负债表、试算表、资产、统计等界面，可以很直观地看到自己的收支情况、资产负债情况等。这些东西需要一些财务知识才能理解，我主要通过搜索引擎+看书来学习，这里推荐一本书，书名叫《给创业小白的财报书》，豆瓣评分9.0，值得一读。</p>
-<p>我认为实现财务自由最关键的是增加收入以及通过投资来增加净资产。增加净资产，可以通过购买债券、基金、股票、房地产等方式。待所购资产实现增值后，我们的净资产也就增加了。现在我对于存款的处理方式是直接购买基金，因为比较方便。但是购买基金是一种低风险低收益的投资活动，虽然可以实现财富增长，但若想尽快实现财务自由这个目标，依靠此方式是行不通的。所以有必要去学习其他投资方式，这里挖个坑，以后学了再补上。</p>
-<p>虽然财务自由听起来很虚幻很遥远，但是我觉得通过一定的努力是能够达到的。当然，每个人对于财务自由的定义会有所不同，我自己的要求比较低，<strong>资产所产生的收益能超过日常开销即算财务自由</strong>。共勉。</p>
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>上一周看完了第一章，这一周继续看第二章。本章的内容和信息的表示和处理有关，这部分内容之前修计算机组成原理时有学习到，所以阅读起来比较顺利，预计下周能顺利读完此章。</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>这一章的内容分为四小节，分别是：</p>
+<ul>
+<li>信息存储</li>
+<li>整数表示</li>
+<li>整数运算</li>
+<li>浮点数</li>
+</ul>
+<h2 id="信息存储"><a href="#信息存储" class="headerlink" title="信息存储"></a>信息存储</h2><p><a href="https://hyzgh.github.io/2019/08/30/CSAPP-learning-note-0/">上篇笔记</a>谈到了信息，什么是信息？信息是数据+上下文。</p>
+<p>在不同的上下文中，数据会有不同的含义。一个字节，既可表示一个字符，也可表示范围在[0, 256)的无符号整数，也可表示范围在[-128, 128)的有符号整数，还可以表示具有8个元素的集合，等等。</p>
+<p>大多数机器使用8位的块，称为字节，作为最小的可寻址的内存单位，而不是直接访问内存中单独的位。字长为32位的机器，寻址的最大空间是$2^{32}$字节，而字长为64位的机器，寻址的最大空间就是$2^{64}$字节。什么是字长呢，字长用于指明指针数据的标称大小。</p>
+<p>因为一个字节有8个位，用二进制表示起来有点冗长，而用十进制表示法的话，与位模式的互相转化会很麻烦。于是就有了十六进制数来表示位模式，在二进制和十进制取了折中，既方便表示，又不那么难读。</p>
+<p>假如我们想要访问跨越多字节的对象，需要建立两个规则：这个对象的地址是什么，以及在内存中如何排列这些字节。对象地址的寻址范围根据字长而定，当字长为$w$时，可寻址空间为$2^{w}$。确定好对象的起始地址，还需要知道它有多少个字节以及如何排列这些字节。假设读取对象为<code>int</code>，有四个字节，且在内存中从低址到高址的内容为<code>0x00000001</code>，采用大端法读取就是$1$，采用小端法读取就是$2^{24}$。大端表示法比较符合人类的习惯，而小端法需要将数据按字节倒序排列。这些数据在机器中的字节排列通常对我们没有影响，但当涉及到网络编程时，就需要关注网络传输数据和机器存储数据的区别了。</p>
+<h2 id="整数表示"><a href="#整数表示" class="headerlink" title="整数表示"></a>整数表示</h2><p>整数在计算机中有多种表示形式，比如原码、补码、反码等。</p>
+<p>而编程语言中遇到的整数类型，比如<code>short</code>, <code>int</code>, <code>long long</code>等，是对整数大小的限制。</p>
+<p>而常说的有符号数、无符号数，则是在人类限制整数能否表示负数而产生。我认为有符号数和无符号数的设计其实意义不大，只用一种有符号数来表示整数就足够了。有了无符号数和有符号数，就需要用户去关注无符号数和有符号数的转化，一些隐式转化很容易引起出人意料的隐蔽错误。在Java中，并没有无符号数的概念，而在C语言中，有符号数和无符号数的转化，其实整数在底层的位表示中是不变的，只是C语言在不同的上下文中对它进行了不同的解释。</p>
+<p>无符号数，采用简单的原码编码即可。而有符号数，一般采用补码编码，因为相对于源码、反码，它能表示更多一个数，更重要的是，机器中的位表示与整数是一个双射关系，很优雅。</p>
+<p>无符号数和有符号数的转化，在理解了机器的位表示始终不变以及补码的相关知识后，我们可以总结出规律。我们这里假设两者的位数都为$w$。将无符号数转化为有符号数，当超过其表示范围时，需要减去$2^w$。将有符号数转化为无符号数时，负数需要加上$2^w$。</p>
+<p>（全文完）</p>
 
       
     </div>
@@ -238,7 +251,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/20/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><span class="page-number current">21</span><a class="page-number" href="/page/22/">22</a><span class="space">&hellip;</span><a class="page-number" href="/page/60/">60</a><a class="extend next" rel="next" href="/page/22/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/20/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><span class="page-number current">21</span><a class="page-number" href="/page/22/">22</a><span class="space">&hellip;</span><a class="page-number" href="/page/63/">63</a><a class="extend next" rel="next" href="/page/22/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -306,14 +319,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">60</span>
+          <span class="site-state-item-count">63</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-count">46</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
