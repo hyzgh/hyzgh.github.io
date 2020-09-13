@@ -44,9 +44,9 @@
     <link href="https://hyzgh.github.io/2020/08/29/CSAPP-learning-note-7/"/>
     <id>https://hyzgh.github.io/2020/08/29/CSAPP-learning-note-7/</id>
     <published>2020-08-29T09:13:37.000Z</published>
-    <updated>2020-08-29T10:45:54.139Z</updated>
+    <updated>2020-09-13T14:57:53.347Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>好久没看CSAPP这本书了。最近在学习redis的AOF重写过程，发现对于涉及的一些概念有些模糊，比如fork、页表、虚拟内存、物理内存等。而且，最近在工作中也经常遇到和内存相关的问题，在利用top命令来排查内存问题的过程中，发现手册里提到的一些内存的概念，自己都不甚清晰。</p><p>于是很有必要重新捡起这本书看看，梳理一下书中第9章虚拟内存的相关知识，巩固一下基础。</p><h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>操作系统的内存是由许多进程共享的，假如进程之间内存没有独立开来，那么很有可能导致进程崩溃。</p><p>虚拟内存是现代系统提供的一种对主存的抽象概念，用于将进程间的内存空间相互独立开来。</p><blockquote><p> 现代操作系统都使用的是按需页面调度的方式。</p></blockquote>]]></content>
+    <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>好久没看CSAPP这本书了。最近在学习redis的AOF重写过程，发现对于涉及的一些概念有些模糊，比如fork、页表、虚拟内存、物理内存等。而且，最近在工作中也经常遇到和内存相关的问题，在利用top命令来排查内存问题的过程中，发现手册里提到的一些内存的概念，自己都不甚清晰。</p><p>于是很有必要重新捡起这本书看看，梳理一下书中第9章虚拟内存的相关知识，巩固一下基础。</p><h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>操作系统的内存是由许多进程共享的，假如进程之间内存没有独立开来，那么很有可能导致进程崩溃。</p><p>虚拟内存是现代系统提供的一种对主存的抽象概念，用于将进程间的内存空间相互独立开来。</p><blockquote><p> 现代操作系统都使用的是按需页面调度的方式。</p></blockquote><p>（未完待续）</p>]]></content>
     
     <summary type="html">
     
@@ -414,7 +414,7 @@
     <link href="https://hyzgh.github.io/2019/10/15/CSAPP-learning-note-4/"/>
     <id>https://hyzgh.github.io/2019/10/15/CSAPP-learning-note-4/</id>
     <published>2019-10-15T04:31:41.000Z</published>
-    <updated>2020-08-29T09:15:32.000Z</updated>
+    <updated>2020-08-29T09:15:50.544Z</updated>
     
     <content type="html"><![CDATA[<p>这两周看得比较少，进度缓慢，只看了第三章关于控制的一小节内容，下面简单写一写。</p><p>在CPU中，维护着一组单个位的条件码寄存器，用于描述算术或逻辑操作的属性，可以通过检测这些寄存器来执行条件分支指令，最常用的条件码有进位标志、零标志、符号标志、溢出标志。</p><p>在CPU执行所有算术和逻辑运算时，都会设置条件码。此外，还有两类指令，即<code>CMP</code>和<code>TEST</code>，也会设置条件码，但它们不会改变其他寄存器。</p><p>那么怎么访问这些条件寄存器呢？CPU中提供了<code>SET</code>指令，对这些标志位进行了封装，可以更方便地获取常见的比较结果。举个例子，最简单的情况，是判断结果是否为零，对应<code>SETE</code>指令，它会读取零标志寄存器。而比较复杂的情况，判断有符号数的小于比较，对应<code>SETL</code>，它会读取符号标志寄存器和溢出标志寄存器，然后取它们的异或值。</p><p>要实现像C语言中的for语句，还需要一类指令<code>JMP</code>。它可以根据条件跳转到其他语句，而不是一直顺序执行。</p><p>（全文完）</p>]]></content>
     
@@ -441,7 +441,7 @@
     <link href="https://hyzgh.github.io/2019/10/15/CSAPP-learning-note-4/"/>
     <id>https://hyzgh.github.io/2019/10/15/CSAPP-learning-note-4/</id>
     <published>2019-10-15T04:31:41.000Z</published>
-    <updated>2020-08-29T09:15:50.544Z</updated>
+    <updated>2020-08-29T09:15:32.000Z</updated>
     
     <content type="html"><![CDATA[<p>这两周看得比较少，进度缓慢，只看了第三章关于控制的一小节内容，下面简单写一写。</p><p>在CPU中，维护着一组单个位的条件码寄存器，用于描述算术或逻辑操作的属性，可以通过检测这些寄存器来执行条件分支指令，最常用的条件码有进位标志、零标志、符号标志、溢出标志。</p><p>在CPU执行所有算术和逻辑运算时，都会设置条件码。此外，还有两类指令，即<code>CMP</code>和<code>TEST</code>，也会设置条件码，但它们不会改变其他寄存器。</p><p>那么怎么访问这些条件寄存器呢？CPU中提供了<code>SET</code>指令，对这些标志位进行了封装，可以更方便地获取常见的比较结果。举个例子，最简单的情况，是判断结果是否为零，对应<code>SETE</code>指令，它会读取零标志寄存器。而比较复杂的情况，判断有符号数的小于比较，对应<code>SETL</code>，它会读取符号标志寄存器和溢出标志寄存器，然后取它们的异或值。</p><p>要实现像C语言中的for语句，还需要一类指令<code>JMP</code>。它可以根据条件跳转到其他语句，而不是一直顺序执行。</p><p>（全文完）</p>]]></content>
     
