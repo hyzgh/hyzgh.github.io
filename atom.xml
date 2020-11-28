@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://hyzgh.github.io/"/>
-  <updated>2020-09-13T14:56:32.644Z</updated>
+  <updated>2020-11-28T07:42:43.102Z</updated>
   <id>https://hyzgh.github.io/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Golang源码学习1 源码编译</title>
+    <link href="https://hyzgh.github.io/2020/11/25/golang-source-code-learning-1-compile-source-code/"/>
+    <id>https://hyzgh.github.io/2020/11/25/golang-source-code-learning-1-compile-source-code/</id>
+    <published>2020-11-25T00:40:12.000Z</published>
+    <updated>2020-11-28T07:42:43.102Z</updated>
+    
+    <content type="html"><![CDATA[<p>前些天在工作中用Go写出了一个内存泄露的bug，原因是没有认真阅读文档，使用姿势不对。根据官方文档纠正使用姿势后，解决掉了这个bug。但是，对于为什么会内存泄露我还不是很明白，于是打算对源码研究一番，就有了这篇博文。</p><p>我的电脑操作系统是Linux，之前安装Go的方式是根据<a href="https://golang.org/dl/" target="_blank" rel="noopener">官网教程</a>下载的二进制，在<code>$GOROOT</code>有编译好的二进制文件，也有源代码。通常在写项目代码时，会跳转标准库的函数说明，就是跳转到这里的源代码。这里的源代码用来参考还好，但是不适合折腾。我选择了从github拷贝最新的源代码来阅读。一是不会影响正常项目的编译，二是能拉取到最新的源代码，三是可以看到整个项目各个大佬的commit。</p><p>下载源代码，直接<code>git clone</code>即可。</p><p>下载了源代码后，开始尝试阅读源码。发现一个问题，IDE会对一些Go标准库的函数标红，提示没有这个函数的引用。经过查看commit，发现这个函数是新增加的，而自己IDE使用的sdk还是老旧的、之前下载的二进制文件。为了让GoLand认识这些新函数，需要使用这份新的源码编译。</p><p>对源码的编译。我参考了<a href="https://golang.org/doc/install/source" target="_blank" rel="noopener">Installing Go from source</a>，这里不再赘述。</p><p>学习Golang的源码，就是跟顶尖程序员学习编程，是一件蛮有意义的事情。后面会写一些Golang源码学习相关的博文。</p><p>（全文完）</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;前些天在工作中用Go写出了一个内存泄露的bug，原因是没有认真阅读文档，使用姿势不对。根据官方文档纠正使用姿势后，解决掉了这个bug。但是，对于为什么会内存泄露我还不是很明白，于是打算对源码研究一番，就有了这篇博文。&lt;/p&gt;
+&lt;p&gt;我的电脑操作系统是Linux，之前安装Go
+      
+    
+    </summary>
+    
+    
+      <category term="Go" scheme="https://hyzgh.github.io/tags/Go/"/>
+    
+  </entry>
   
   <entry>
     <title>生活记录-拔智齿</title>
@@ -58,9 +82,9 @@
     </summary>
     
     
-      <category term="CSAPP" scheme="https://hyzgh.github.io/tags/CSAPP/"/>
-    
       <category term="计算机系统" scheme="https://hyzgh.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/"/>
+    
+      <category term="CSAPP" scheme="https://hyzgh.github.io/tags/CSAPP/"/>
     
   </entry>
   
@@ -376,9 +400,9 @@
     </summary>
     
     
-      <category term="CSAPP" scheme="https://hyzgh.github.io/tags/CSAPP/"/>
-    
       <category term="计算机系统" scheme="https://hyzgh.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/"/>
+    
+      <category term="CSAPP" scheme="https://hyzgh.github.io/tags/CSAPP/"/>
     
   </entry>
   
@@ -403,36 +427,9 @@
     </summary>
     
     
-      <category term="CSAPP" scheme="https://hyzgh.github.io/tags/CSAPP/"/>
-    
       <category term="计算机系统" scheme="https://hyzgh.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/"/>
     
-  </entry>
-  
-  <entry>
-    <title>CSAPP 学习笔记 4 程序的机器级表示</title>
-    <link href="https://hyzgh.github.io/2019/10/15/CSAPP-learning-note-4/"/>
-    <id>https://hyzgh.github.io/2019/10/15/CSAPP-learning-note-4/</id>
-    <published>2019-10-15T04:31:41.000Z</published>
-    <updated>2020-08-29T09:15:50.544Z</updated>
-    
-    <content type="html"><![CDATA[<p>这两周看得比较少，进度缓慢，只看了第三章关于控制的一小节内容，下面简单写一写。</p><p>在CPU中，维护着一组单个位的条件码寄存器，用于描述算术或逻辑操作的属性，可以通过检测这些寄存器来执行条件分支指令，最常用的条件码有进位标志、零标志、符号标志、溢出标志。</p><p>在CPU执行所有算术和逻辑运算时，都会设置条件码。此外，还有两类指令，即<code>CMP</code>和<code>TEST</code>，也会设置条件码，但它们不会改变其他寄存器。</p><p>那么怎么访问这些条件寄存器呢？CPU中提供了<code>SET</code>指令，对这些标志位进行了封装，可以更方便地获取常见的比较结果。举个例子，最简单的情况，是判断结果是否为零，对应<code>SETE</code>指令，它会读取零标志寄存器。而比较复杂的情况，判断有符号数的小于比较，对应<code>SETL</code>，它会读取符号标志寄存器和溢出标志寄存器，然后取它们的异或值。</p><p>要实现像C语言中的for语句，还需要一类指令<code>JMP</code>。它可以根据条件跳转到其他语句，而不是一直顺序执行。</p><p>（全文完）</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;这两周看得比较少，进度缓慢，只看了第三章关于控制的一小节内容，下面简单写一写。&lt;/p&gt;
-&lt;p&gt;在CPU中，维护着一组单个位的条件码寄存器，用于描述算术或逻辑操作的属性，可以通过检测这些寄存器来执行条件分支指令，最常用的条件码有进位标志、零标志、符号标志、溢出标志。&lt;/p&gt;
-
-      
-    
-    </summary>
-    
-    
       <category term="CSAPP" scheme="https://hyzgh.github.io/tags/CSAPP/"/>
-    
-      <category term="计算机系统" scheme="https://hyzgh.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/"/>
     
   </entry>
   
@@ -457,9 +454,36 @@
     </summary>
     
     
+      <category term="计算机系统" scheme="https://hyzgh.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/"/>
+    
       <category term="CSAPP" scheme="https://hyzgh.github.io/tags/CSAPP/"/>
     
+  </entry>
+  
+  <entry>
+    <title>CSAPP 学习笔记 4 程序的机器级表示</title>
+    <link href="https://hyzgh.github.io/2019/10/15/CSAPP-learning-note-4/"/>
+    <id>https://hyzgh.github.io/2019/10/15/CSAPP-learning-note-4/</id>
+    <published>2019-10-15T04:31:41.000Z</published>
+    <updated>2020-08-29T09:15:50.544Z</updated>
+    
+    <content type="html"><![CDATA[<p>这两周看得比较少，进度缓慢，只看了第三章关于控制的一小节内容，下面简单写一写。</p><p>在CPU中，维护着一组单个位的条件码寄存器，用于描述算术或逻辑操作的属性，可以通过检测这些寄存器来执行条件分支指令，最常用的条件码有进位标志、零标志、符号标志、溢出标志。</p><p>在CPU执行所有算术和逻辑运算时，都会设置条件码。此外，还有两类指令，即<code>CMP</code>和<code>TEST</code>，也会设置条件码，但它们不会改变其他寄存器。</p><p>那么怎么访问这些条件寄存器呢？CPU中提供了<code>SET</code>指令，对这些标志位进行了封装，可以更方便地获取常见的比较结果。举个例子，最简单的情况，是判断结果是否为零，对应<code>SETE</code>指令，它会读取零标志寄存器。而比较复杂的情况，判断有符号数的小于比较，对应<code>SETL</code>，它会读取符号标志寄存器和溢出标志寄存器，然后取它们的异或值。</p><p>要实现像C语言中的for语句，还需要一类指令<code>JMP</code>。它可以根据条件跳转到其他语句，而不是一直顺序执行。</p><p>（全文完）</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;这两周看得比较少，进度缓慢，只看了第三章关于控制的一小节内容，下面简单写一写。&lt;/p&gt;
+&lt;p&gt;在CPU中，维护着一组单个位的条件码寄存器，用于描述算术或逻辑操作的属性，可以通过检测这些寄存器来执行条件分支指令，最常用的条件码有进位标志、零标志、符号标志、溢出标志。&lt;/p&gt;
+
+      
+    
+    </summary>
+    
+    
       <category term="计算机系统" scheme="https://hyzgh.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/"/>
+    
+      <category term="CSAPP" scheme="https://hyzgh.github.io/tags/CSAPP/"/>
     
   </entry>
   
@@ -484,35 +508,9 @@
     </summary>
     
     
-      <category term="CSAPP" scheme="https://hyzgh.github.io/tags/CSAPP/"/>
-    
       <category term="计算机系统" scheme="https://hyzgh.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/"/>
     
-  </entry>
-  
-  <entry>
-    <title>CSAPP 学习笔记 2 信息的表示与处理</title>
-    <link href="https://hyzgh.github.io/2019/09/15/CSAPP-learning-note-2/"/>
-    <id>https://hyzgh.github.io/2019/09/15/CSAPP-learning-note-2/</id>
-    <published>2019-09-15T15:31:06.000Z</published>
-    <updated>2020-08-29T09:18:00.814Z</updated>
-    
-    <content type="html"><![CDATA[<p>这一周看了第二章的剩余篇幅，关于整数运算以及浮点数。目前还未完全搞定，有很多习题待写。</p><h1 id="整数运算"><a href="#整数运算" class="headerlink" title="整数运算"></a>整数运算</h1><p>整数运算的分类主要有两个维度，一个是无符号数、有符号数，另一个是加法、乘法。</p><p>之前知道编译器会将乘法转化成加减法/移位，但始终不知所以然。这次通过阅读CSAPP，深入理解了它的原理，另外知道了还可以将除法转化为加减法/移位。</p><p>这一节讲得都是规律和证明，这里不再赘述。贴一张图进行总结，以方便以后回忆。</p><p><img src="https://s2.ax1x.com/2019/09/16/nRiAaT.png" alt="image-20190915234925595"></p><h1 id="浮点数"><a href="#浮点数" class="headerlink" title="浮点数"></a>浮点数</h1><p>阅读完这一节后，对于浮点数的表示、运算、舍入等有了更深入的理解。</p><p>其中，有的地方一开始不是很理解，当弄懂后，觉得这些设计很优雅、很聪明。</p><p>比如，对于IEEE非规范值得设计不是很理解，为什么要增加复杂性呢。后来，明白了非规格值的设计，使得0的表示很加自然且靠近0的浮点数分布得更均匀。</p><p>比如，一开始不太明白为什么要有偶数舍入法，直接四舍五入不行吗。后来，明白了偶数舍入法是对四舍五入的一种改进，避免了舍入所造成的统计误差。</p><p>还有浮点的运算，不遵循结合律，这是之前没有注意到但也是十分重要的知识点。</p><p><img src="https://s2.ax1x.com/2019/09/16/nRikZV.png" alt="image-20190916000251225"></p><p>（全文完）</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;这一周看了第二章的剩余篇幅，关于整数运算以及浮点数。目前还未完全搞定，有很多习题待写。&lt;/p&gt;
-&lt;h1 id=&quot;整数运算&quot;&gt;&lt;a href=&quot;#整数运算&quot; class=&quot;headerlink&quot; title=&quot;整数运算&quot;&gt;&lt;/a&gt;整数运算&lt;/h1&gt;&lt;p&gt;整数运算的分类主要有两
-      
-    
-    </summary>
-    
-    
       <category term="CSAPP" scheme="https://hyzgh.github.io/tags/CSAPP/"/>
-    
-      <category term="计算机系统" scheme="https://hyzgh.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/"/>
     
   </entry>
   
