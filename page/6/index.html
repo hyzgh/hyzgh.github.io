@@ -183,7 +183,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2020/04/06/leetcode-exercise-per-day-6-Group-Anagrams/">
+    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2020/05/10/Mini-Habits-reading-note/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/hyzgh-128x128.png">
@@ -197,7 +197,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/04/06/leetcode-exercise-per-day-6-Group-Anagrams/" class="post-title-link" itemprop="url">Leetcode 每日一题6 Group Anagrams</a>
+            <a href="/2020/05/10/Mini-Habits-reading-note/" class="post-title-link" itemprop="url">《微习惯》读书笔记</a>
         </h2>
 
         <div class="post-meta">
@@ -207,7 +207,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-04-06 16:30:17" itemprop="dateCreated datePublished" datetime="2020-04-06T16:30:17+08:00">2020-04-06</time>
+              <time title="创建时间：2020-05-10 16:23:52" itemprop="dateCreated datePublished" datetime="2020-05-10T16:23:52+08:00">2020-05-10</time>
             </span>
 
           
@@ -221,18 +221,88 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h1><p>给一个数组，起元素为只包含英文小写字母的单词。</p>
-<p>要求分组输出使用了相同字符构造的单词，比如tea和eat就是同类单词。</p>
-<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>将所有的单词遍历一遍，将同类单词放到同一个位置中去，关键是这个映射要怎么实现。对于一个长度为m的单词，我们可以用O(m)的时间遍历出各字符的使用次数。接着，我们将其转化成字符串，对于某个字符，其出现次数可以编码成cnt + char，然后按照英文字母表顺序连接起来。比如，teaa编码成2a1e1t。</p>
-<p>上面的编码使用了一个优化，即对于出现次数的0的字母，不编码到字符串中。</p>
-<p>假如追求极致，还可以对编码继续优化。</p>
-<ul>
-<li>对于出现次数为1的字母，可以不写上cnt。比如teaa可以写成2aet。</li>
-<li>当cnt很大时，可以使用整形来表示。比如250，使用char来表示需要3个字节，使用整形只要1个字节。</li>
+          <p><a href="https://book.douban.com/subject/26877306/" target="_blank" rel="noopener">豆瓣链接</a></p>
+<p>本书主要写了微习惯是什么，以及通过微习惯来培养好习惯的依据和规则。</p>
+<h1 id="第一章-微习惯是什么"><a href="#第一章-微习惯是什么" class="headerlink" title="第一章 微习惯是什么"></a>第一章 微习惯是什么</h1><p>小决心优于大决心。许多人拥有大决心，但是却不去执行，效果是零。有小决心的人，更容易执行某件事情，虽然单次的收益比较小，但远大于不执行。日积月累，小决心产生的收益会很大。</p>
+<p>拥有大决心而不执行，原因是大脑觉得这次行动很难，因此会选择逃避。拥有小决心，就不太会存在这个问题。小决心是为了让大脑接受这次行动。通常来讲，在开始后，会想花更多的时间在上面。</p>
+<p>微习惯就是将较大的行动拆分成容易执行的小行动。比如，每天写3000字可以改成每天写50字，每天锻炼1小时可以改成每天锻炼5分钟。</p>
+<p>养成一个习惯，需要的天数会受各种因素影响。我们假如想要养成一个习惯，不必在意需要的天数，因为重要的是坚持。当连续做某件事情时，大脑的抵触情绪会越来越低，会自然地养成习惯。当有某天没有坚持习惯时，不用气馁，一天的堕落从整个过程上看并不会影响习惯的养成，我们需要做的是克服心理上的自暴自弃。</p>
+<h1 id="第二章-大脑的工作原理"><a href="#第二章-大脑的工作原理" class="headerlink" title="第二章 大脑的工作原理"></a>第二章 大脑的工作原理</h1><p>可以将大脑粗分为潜意识部分和意识部分。从大脑的角度看，改变习惯的两个关键点是重复和回报。如果有回报，大脑会更愿意重复一件事情。重复是潜意识大脑使用的语言，潜意识大脑喜欢效率，这是我们能养成习惯的原因。</p>
+<p>大脑是变化缓慢、状态稳定的，因此习惯的养成过程是缓慢的，习惯的保持是稳定的。</p>
+<p>习惯改变涉及到大脑的两个部分：前额皮层和基底神经节。前额皮层是大脑的意识部分，是管理者，负责让大脑其他部分喜欢上自己想要的东西，用于习惯的执行。基底神经节是大脑的潜意识部分，没有思想，只会一味重复，能够探测都模式，用于新习惯的重复和养成。</p>
+<h1 id="第三章-动力VS意志力"><a href="#第三章-动力VS意志力" class="headerlink" title="第三章 动力VS意志力"></a>第三章 动力VS意志力</h1><p>动力越高，做某件事情所需的意志力就越少。假如动力是满分，那么几乎不需要意志力就会去做某件事情。而假如动力为零，那么就需要很强的意志力才能去做某件事情。</p>
+<p>有些人会使用“激发动力”策略来养成习惯。虽然动力确实有利于执行某件事情，但是它存在诸多问题。第一，动力难以永久保持高昂，容易导致习惯在养成的过程中断。第二，动力的影响因素多，不稳定。第三，不会每次都愿意激发动力。第四，根据热情递减原则，动力会减少，假如只依靠动力，那么会动力不足。</p>
+<p>当连续执行某个行动后，我们会注意到心中不再充满动力。这可能是更稳定和自动的基底神经节正在夺取控制权，我们应该做的是利用微习惯继续执行下去，渡过这个艰难期，迎来新习惯。</p>
+<p>动力并不是行动的唯一基础，我们还可以依靠意志力、习惯等。动力是好东西，只是不可靠。假如我们可以借助意志力，那么动力会变得更加可靠。如果先采取行动，动力会被迅速地激发。</p>
+<p>使用意志力来采取行动远比努力激发动力靠谱。第一，意志力很可靠。第二，意志力可以被强化。第三，意志力策略可以通过计划执行。</p>
+<p>意志力的工作原理是什么？意志力是有阈值的，并不是取之不尽用之不竭的。引起意志力损耗的五大主要因素有努力程度、感知程度、消极情绪、主观疲劳和血糖水平。抵抗诱惑，做决定等行为都会引起意志力的损耗。</p>
+<p>我们需要克服这五大障碍，合理使用意志力，养成习惯。</p>
+<h1 id="第四章-微习惯策略"><a href="#第四章-微习惯策略" class="headerlink" title="第四章 微习惯策略"></a>第四章 微习惯策略</h1><p>微习惯策略就是强迫自己每天实施1到4个“小得到不可思议”的计划好的行动。这些运动小得到不会失败，小到不会因为特殊情况就被自己轻易放弃。它们有双重作用——激励自己继续做下去，并会成为微习惯。</p>
+<p>以微习惯方式运用意志力，可以有效地减少意志力的损耗。因为微习惯的努力程度要求小、感知难度小、消极情绪低、主观疲劳小、血糖水平降低少。</p>
+<p>微习惯能更科学地拓宽我们的舒适区。因为大脑是抗拒改变的，因此大幅度的改变会让大脑抗议，而微习惯因其微小而成之。</p>
+<h1 id="第五章-微习惯的独特之处"><a href="#第五章-微习惯的独特之处" class="headerlink" title="第五章 微习惯的独特之处"></a>第五章 微习惯的独特之处</h1><p>微习惯能与现有习惯一较高下。大脑会抗拒大幅度改变，但是微习惯很小，被抗拒的程度会很小。</p>
+<p>有些人在养成习惯的时候，会给自己设置一个期限。但是这是不科学的，因为习惯的形成因习惯、个体而定。微习惯策略没有截止时间，因为我们不知道需要多少时间，但是我们要寻找养成习惯的信号。</p>
+<p>自我效能感是指对自己影响事件结果的能力的信念。微习惯能提升自我效能感。</p>
+<p>微习惯能给我们更多的自主权，潜意识会恐惧控制，而微习惯通过将行动微小化，让潜意识意识到自己的控制权仍在，从而接受微小的变化。</p>
+<p>微习惯能帮助自己远离恐惧、怀疑、胆怯或犹豫。行动是克服这些消极情绪的最佳武器，而微习惯能帮助自己行动。</p>
+<p>正念是指对自己思维和行动有着清醒认识。正念是目标清晰地活着和敷衍地活着之间的区别。微习惯能让自己意识到在做什么，能培养自己的正念。</p>
+<h1 id="第六章-彻底改变只需八步"><a href="#第六章-彻底改变只需八步" class="headerlink" title="第六章 彻底改变只需八步"></a>第六章 彻底改变只需八步</h1><ol>
+<li>选择适合你的微习惯和计划<ul>
+<li>不超过四个</li>
+<li>微习惯要小到即使精疲力尽也可以执行</li>
+<li>写下来</li>
 </ul>
-<p>编码是个很有趣的知识点，上面的编码方式似乎都有专门的名称，以后有空的话专门写篇博客总结一下，这里留个坑:)</p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt;&gt; groupAnagrams(<span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt;&amp; strs) &#123;</span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt;&gt; v;</span><br><span class="line">        <span class="built_in">unordered_map</span>&lt;<span class="built_in">string</span>, <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt;&gt; m;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> i: strs) &#123;</span><br><span class="line">            m[hashWord(i)].push_back(i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> it: m) &#123;</span><br><span class="line">            v.push_back(it.second);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> v;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="built_in">string</span> <span class="title">hashWord</span><span class="params">(<span class="built_in">string</span> s)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; cnt(<span class="number">26</span>, <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s.length(); i++) &#123;</span><br><span class="line">            cnt[s[i] - <span class="string">'a'</span>]++;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">string</span> hash;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">26</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!cnt[i])</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            hash += <span class="built_in">string</span>(cnt[i], <span class="string">'a'</span> + i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> hash;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
+</li>
+<li>挖掘每个微习惯的内在价值<ul>
+<li>不断问自己为什么要养成这个习惯，寻找依据</li>
+</ul>
+</li>
+<li>明确习惯依据，将其纳入日程<ul>
+<li>根据时间制定</li>
+<li>根据行为方式制定</li>
+<li>非具体习惯</li>
+</ul>
+</li>
+<li>创建奖励机制，以奖励提升成就感<ul>
+<li>奖励，关联美好事物，比如npy、大声微笑、唱歌、吃东西、休息一下等</li>
+<li>奖励时间点：在取得一定里程碑时，给自己奖励。在坚持不下去时，给自己奖励</li>
+<li>奖励能提升意志力</li>
+</ul>
+</li>
+<li>记录与追踪完成情况<ul>
+<li>研究表明，把想法写在纸上时，会让其在大脑中更加突出，而打字就不具备同样的效应</li>
+<li>可以采用纸质日历、电子数据等方式来追踪，关注自己在意的数据，比如完成天数/总天数</li>
+</ul>
+</li>
+<li>微量开始，超额完成<ul>
+<li>强化意志力</li>
+<li>当下就取得进步</li>
+<li>不耗尽意志力</li>
+</ul>
+</li>
+<li>服从计划安排，摆脱高期待值<ul>
+<li>我们常常在执行的过程会超额完成目标，可以记录这些数据</li>
+<li>要把期待值和精力放在坚持目标上，而不要对任务量抱有较高的期待</li>
+</ul>
+</li>
+<li>留意习惯养成的标志<ul>
+<li>没有抵触情绪，做起来容易，不做反而更难</li>
+<li>认同身份，比如我常运动，我喜欢阅读</li>
+<li>行动无需考虑，不再担心，常态化</li>
+<li>很无聊，好的习惯并不会让人兴奋，它们只是对我们有好处而已</li>
+</ul>
+</li>
+</ol>
+<h1 id="第七章-微习惯策略的八大规则"><a href="#第七章-微习惯策略的八大规则" class="headerlink" title="第七章 微习惯策略的八大规则"></a>第七章 微习惯策略的八大规则</h1><ol>
+<li>绝不要自欺欺人。不要偷偷要求自己做得更多，要真正的微习惯</li>
+<li>满意每一个进步。要满意，但别满足</li>
+<li>经常回报自己，尤其在完成微习惯之后</li>
+<li>保持头脑清醒。不管情绪是兴奋的，还是低落的，都要记住，要完成微习惯</li>
+<li>感到强烈抵触时，后退并缩小目标。缩小目标，有利于降低意志力损耗，有利于行动的执行，开始执行要优于不执行，执行的过程会带来动力，形成正反馈</li>
+<li>提醒自己这件事很轻松、很有趣。大脑喜欢轻松、有趣的事情</li>
+<li>绝不要小看微步骤。不积跬步无以至千里</li>
+<li>用多余精力超额完成任务，而不是制定更大目标</li>
+</ol>
 
       
     </div>
@@ -251,7 +321,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/64/">64</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/65/">65</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -319,14 +389,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">64</span>
+          <span class="site-state-item-count">65</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">46</span>
+        <span class="site-state-item-count">48</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -361,7 +431,7 @@
 <div class="copyright">
   
   &copy; 2018 – 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="male"></i>
   </span>

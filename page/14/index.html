@@ -183,7 +183,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2019/12/18/null/">
+    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2020/01/11/go-garbage-collector-learning-note/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/hyzgh-128x128.png">
@@ -197,7 +197,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2019/12/18/null/" class="post-title-link" itemprop="url">perl 学习笔记</a>
+            <a href="/2020/01/11/go-garbage-collector-learning-note/" class="post-title-link" itemprop="url">Go Lang GC 学习笔记</a>
         </h2>
 
         <div class="post-meta">
@@ -207,7 +207,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2019-12-18 23:09:06" itemprop="dateCreated datePublished" datetime="2019-12-18T23:09:06+08:00">2019-12-18</time>
+              <time title="创建时间：2020-01-11 23:42:50" itemprop="dateCreated datePublished" datetime="2020-01-11T23:42:50+08:00">2020-01-11</time>
             </span>
 
           
@@ -221,28 +221,24 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>Perl是一门解释型语言，具有动态语言的特性，可以写得很随性。缺点是由于语法灵活导致难以维护，这和Go Lang形成了强烈的对比。Go Lang很适合用来团队协作开发，因为它写法很单一固定。Perl，更像是黑客的工具。</p>
-<p>Perl的强大之处，在于它具有sed和awk的全部功能，以及众多语言的语法特性，以及非常强大的正则表达式，等等。</p>
-<h1 id="Hello-World"><a href="#Hello-World" class="headerlink" title="Hello, World"></a>Hello, World</h1><p>Perl的Hello, World：</p>
-<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">perl -e <span class="string">'print("Hello, World\n")'</span></span><br></pre></td></tr></table></figure>
+          <p>GC的具体实现一直在改变，但是其模型是相对稳定的。</p>
+<p>collection的三个阶段：</p>
+<ul>
+<li>Mark Setup - STW</li>
+<li>Marking - Concurrent</li>
+<li>Mark Termination - STW</li>
+</ul>
+<p>Mark Setup：当进行gc时，为了保证数据完整性，需要设置Write Barrier，这要求将所有的goroutine停止，正常情况下这个时间平均为10-30ms。但是当goroutine停止不下时，会让这个时间变长。调度器目前停止goroutine的时机是在goroutine执行函数调用的时候，因为这样做才能保证安全。假如某个goroutine一直在执行循环，而不执行函数调用，它就无法被停止，这不仅会耽误gc第一个阶段的完成，还会造成其他goroutine停止着。将在Go1.14引入 <a href="https://github.com/golang/go/issues/24543" target="_blank" rel="noopener">preemptive</a> techniques 尝试对此进行优化。</p>
+<p>Marking - Concurrent：当设置好Write Barrier后，collector会拿走25%可用的CPU，用于mark操作。mark操作，会遍历所有goroutine的栈，寻找指针指向的heap内存，将仍在使用的内存标记一下。这个时候，goroutine是可以并发执行的。在mark的过程，其他正在运行的goroutine可以分配内存，这可能导致内存不够用，这时候需要Mark Assits。Mark Assits，是指短暂停止正在运行的goroutine，让它们来帮忙mark，加快mark的进度。当然，这会影响这些goroutine的执行，collector的目标是尽可能减少Mark Assits的需要。</p>
+<p>Mark Termination - STW：Mark完成后，需要关闭Write Barrier，进行多项清理工作，设定下次collection的目标。在进行这些工作前，仍要求所有的goroutine停止。这些工作平均持续60~90ms。虽然也可以设计成边Termination边正常运行一些gorutine的模式，但是设计者认为这样得到的收益很小，而增加的复杂性较高，所以选择了这种STW的实现方式。当Termination工作完成后，回到正常状态。</p>
+<p>在collection完成后，会进行sweeping。</p>
+<p>sweep是指将那些没有标记为使用的heap内存回收，它不是发生在一次collection中，而是被均摊到每次分配内存的时候。</p>
+<p>以上所有行为只有在GC开始且正在进行的时候发生，GC Percentage对collection有很大影响。GC Pencentage，默认是100%。将GC Pencentage设置为100%，意味着下次GC会在heap达到当前GC的mark live内存的2倍时进行。</p>
+<p>GC trace可用于追踪collection。<code>GODEBUG=gctrace=1 ./app</code>可查看GC信息，输出到<code>stderr</code>。</p>
+<p>GC trace：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 通过设置环境变量查看GC trace</span></span><br><span class="line">GODEBUG=gctrace=1 ./app</span><br><span class="line"></span><br><span class="line">gc 1405 @6.068s 11%: 0.058+1.2+0.083 ms clock, 0.70+2.5/1.5/0+0.99 ms cpu, 7-&gt;11-&gt;6 MB, 10 MB goal, 12 P</span><br><span class="line"></span><br><span class="line">gc 1406 @6.070s 11%: 0.051+1.8+0.076 ms clock, 0.61+2.0/2.5/0+0.91 ms cpu, 8-&gt;11-&gt;6 MB, 13 MB goal, 12 P</span><br><span class="line"></span><br><span class="line">gc 1407 @6.073s 11%: 0.052+1.8+0.20 ms clock, 0.62+1.5/2.2/0+2.4 ms cpu, 8-&gt;14-&gt;8 MB, 13 MB goal, 12 P</span><br><span class="line"></span><br><span class="line"><span class="comment"># GC trace含义</span></span><br><span class="line">gc 1405 @6.068s 11%: 0.058+1.2+0.083 ms clock, 0.70+2.5/1.5/0+0.99 ms cpu, 7-&gt;11-&gt;6 MB, 10 MB goal, 12 P</span><br><span class="line"></span><br><span class="line">// General</span><br><span class="line">gc 1404     : The 1404 GC run since the program started</span><br><span class="line">@6.068s     : Six seconds since the program started</span><br><span class="line">11%         : Eleven percent of the available CPU so far has been spent <span class="keyword">in</span> GC</span><br><span class="line"></span><br><span class="line">// Wall-Clock</span><br><span class="line">0.058ms     : STW        : Mark Start       - Write Barrier on</span><br><span class="line">1.2ms       : Concurrent : Marking</span><br><span class="line">0.083ms     : STW        : Mark Termination - Write Barrier off and clean up</span><br><span class="line"></span><br><span class="line">// CPU Time</span><br><span class="line">0.70ms      : STW        : Mark Start</span><br><span class="line">2.5ms       : Concurrent : Mark - Assist Time (GC performed <span class="keyword">in</span> line with allocation)</span><br><span class="line">1.5ms       : Concurrent : Mark - Background GC time</span><br><span class="line">0ms         : Concurrent : Mark - Idle GC time</span><br><span class="line">0.99ms      : STW        : Mark Term</span><br><span class="line"></span><br><span class="line">// Memory</span><br><span class="line">7MB         : Heap memory <span class="keyword">in</span>-use before the Marking started</span><br><span class="line">11MB        : Heap memory <span class="keyword">in</span>-use after the Marking finished</span><br><span class="line">6MB         : Heap memory marked as live after the Marking finished</span><br><span class="line">10MB        : Collection goal <span class="keyword">for</span> heap memory <span class="keyword">in</span>-use after Marking finished</span><br><span class="line"></span><br><span class="line">// Threads</span><br><span class="line">12P         : Number of logical processors or threads used to run Goroutines</span><br></pre></td></tr></table></figure>
 
-<p>在安装了perl的计算机上，直接执行上述代码，即可输出<code>Hello, World</code>。</p>
-<p>也可以将perl代码写在文件，以重复执行，具体可以这样写：</p>
-<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/perl</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出 "Hello, World"</span></span><br><span class="line"><span class="keyword">print</span>(<span class="string">"Hello, World\n"</span>);</span><br></pre></td></tr></table></figure>
-
-<p>将上述代码保存成<code>learn.pl</code>后，加下执行权限，然后执行<code>./learn.pl</code>，可输出<code>Hello, World</code>。</p>
-<h1 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h1><p>Perl的正式表达式非常强大，是常用编程语言里最顶尖的之一。下面来看几个例子。</p>
-<h2 id="例子1"><a href="#例子1" class="headerlink" title="例子1"></a>例子1</h2><p><code>echo box.svc.content | perl -p -e &#39;s/\.+/\//g&#39;</code></p>
-<p>将会输出<code>box/svc/content</code>。</p>
-<p>解析：</p>
-<p><code>-p</code>参数会将结果输出出来。</p>
-<p>这里用到了一个常用的<strong>替换</strong>句型，<code>s/old/new/parameters</code>，表示将<code>old</code>替换成<code>new</code>。</p>
-<p><code>s/\.+/\//g</code>的<code>s</code>表示替换，<code>\.+</code>表示至少一个<code>.</code>，<code>\/</code>表示一个<code>/</code>，<code>g</code>表示全局匹配。</p>
-<h2 id="例子2"><a href="#例子2" class="headerlink" title="例子2"></a>例子2</h2><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/perl </span></span><br><span class="line"></span><br><span class="line">$string = <span class="string">'welcome to w3cschool site.'</span>;</span><br><span class="line">$string =~ <span class="regexp">tr/a-z/A-z/</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> <span class="string">"$string\n"</span>;</span><br></pre></td></tr></table></figure>
-
-<p>上面的代码将会输出<code>WELCOME TO W3CSCHOOL SITE.</code>。</p>
-<p>这里用到了一个常用的<strong>转化</strong>句型，<code>tr/old/new/parameters</code>。表示将<code>old</code>转化成<code>new</code>。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://www.w3cschool.cn/perl/perl-regular-expressions.html" target="_blank" rel="noopener">Perl 正则表达式 - W3Cschool</a></p>
+<p>（全文完）</p>
 
       
     </div>
@@ -261,7 +257,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/13/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/64/">64</a><a class="extend next" rel="next" href="/page/15/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/13/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/65/">65</a><a class="extend next" rel="next" href="/page/15/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -329,14 +325,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">64</span>
+          <span class="site-state-item-count">65</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">46</span>
+        <span class="site-state-item-count">48</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -371,7 +367,7 @@
 <div class="copyright">
   
   &copy; 2018 – 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="male"></i>
   </span>

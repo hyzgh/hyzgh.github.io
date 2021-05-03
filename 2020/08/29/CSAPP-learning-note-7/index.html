@@ -28,10 +28,13 @@
 <meta property="og:site_name" content="hyz&#39;s blog">
 <meta property="og:description" content="前言好久没看CSAPP这本书了。最近在学习redis的AOF重写过程，发现对于涉及的一些概念有些模糊，比如fork、页表、虚拟内存、物理内存等。而且，最近在工作中也经常遇到和内存相关的问题，在利用top命令来排查内存问题的过程中，发现手册里提到的一些内存的概念，自己都不甚清晰。 于是很有必要重新捡起这本书看看，梳理一下书中第9章虚拟内存的相关知识，巩固一下基础。 正文操作系统的内存是由许多进程共享">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-09-13T14:57:53.347Z">
+<meta property="og:image" content="https://hyzgh.github.io/Documents/notebook/img/image-20201129171849191.png">
+<meta property="og:image" content="https://hyzgh.github.io/Documents/notebook/img/image-20201205114259481.png">
+<meta property="og:updated_time" content="2020-12-05T03:45:01.077Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CSAPP 学习笔记 7 虚拟内存">
 <meta name="twitter:description" content="前言好久没看CSAPP这本书了。最近在学习redis的AOF重写过程，发现对于涉及的一些概念有些模糊，比如fork、页表、虚拟内存、物理内存等。而且，最近在工作中也经常遇到和内存相关的问题，在利用top命令来排查内存问题的过程中，发现手册里提到的一些内存的概念，自己都不甚清晰。 于是很有必要重新捡起这本书看看，梳理一下书中第9章虚拟内存的相关知识，巩固一下基础。 正文操作系统的内存是由许多进程共享">
+<meta name="twitter:image" content="https://hyzgh.github.io/Documents/notebook/img/image-20201129171849191.png">
 
 <link rel="canonical" href="https://hyzgh.github.io/2020/08/29/CSAPP-learning-note-7/">
 
@@ -233,6 +236,61 @@
 <blockquote>
 <p> 现代操作系统都使用的是按需页面调度的方式。</p>
 </blockquote>
+<p>从top的manual中可以查看Linux的多种内存类型的定义。</p>
+<blockquote>
+<p>physical memory: a limited resource where code and data must reside when executed or referenced.</p>
+<p>optional swap file: where modified (dirty) memory can be saved and later retrieved if too many demands are made on physical memory.</p>
+<p>virtual memory: a  nearly  unlimited resource.</p>
+</blockquote>
+<p>其中，虚拟内存是近似无限大的，它的意义在于：</p>
+<blockquote>
+<ol>
+<li>abstraction, free from physical memory addresses/limits</li>
+<li>isolation, every process in a separate address space</li>
+<li>sharing, a single mapping can serve multiple needs</li>
+<li>flexibility, assign a virtual address to a file</li>
+</ol>
+</blockquote>
+<p>对于第一点和第二点，就是CSAPP中提到的进程内存之间抽象和隔离。</p>
+<p>第三点和第四点是什么意思呢？</p>
+<p>另外，手册中也提到了不管是哪种内存类型，都是以页面的方式进行管理，通常是4KB。当然，在某些场景可以将页面设置得大一些，称为big pgae.</p>
+<p>对于每一个page，在Linux中，都可以划分到某一类中。具体类别如下：</p>
+<p><img src="../../../../Documents/notebook/img/image-20201129171849191.png" alt="image-20201129171849191"></p>
+<p>对于物理内存和虚拟内存，可以划分到这四类中任意一个。而对于swap file的内存，只能划分到#1和#3.</p>
+<p>Anonymous和File-backed有什么区别：</p>
+<blockquote>
+<p><strong>File</strong>-<strong>backed</strong> mapping maps an area of the process’s virtual memory to <strong>files</strong>; i.e. reading those areas of memory causes the <strong>file</strong> to be read. It is the default mapping type. <strong>Anonymous</strong> mapping maps an area of the process’s virtual memory not <strong>backed</strong> by any <strong>file</strong>. The contents are initialized to zero.</p>
+</blockquote>
+<p>top可以显示的关于内存的各种指标，参考手册如下：</p>
+<pre><code>%MEM - simply RES divided by total physical memory
+CODE - the `pgms&apos; portion of quadrant 3
+DATA - the entire quadrant 1 portion of VIRT plus all
+       explicit mmap file-backed pages of quadrant 3
+RES  - anything occupying physical memory which, beginning with
+       Linux-4.5, is the sum of the following three fields:
+       RSan - quadrant 1 pages, which include any
+              former quadrant 3 pages if modified
+       RSfd - quadrant 3 and quadrant 4 pages
+       RSsh - quadrant 2 pages
+RSlk - subset of RES which cannot be swapped out (any quadrant)
+SHR  - subset of RES (excludes 1, includes all 2 &amp; 4, some 3)
+SWAP - potentially any quadrant except 4
+USED - simply the sum of RES and SWAP
+VIRT - everything in-use and/or reserved (all quadrants)</code></pre><p>使用Go写一个简单的hello, world程序：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">"fmt"</span></span><br><span class="line">    <span class="string">"time"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">"hello, world"</span>)</span><br><span class="line">    time.Sleep(<span class="number">1</span> * time.Hour)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行后，通过top的mem视图可以观察该进程的内存情况：</p>
+<p><img src="../../../../Documents/notebook/img/image-20201205114259481.png" alt="image-20201205114259481"></p>
+<p>这里的VIRT, RES, CODE, DATA, SHR的单位是KiB。</p>
+<p>VIRT：虚拟内存占用大概是700MiB。（感觉有点反直觉）</p>
+<p>RES：实际的物理内存占用大概是1.8MiB。</p>
+<p>CODE：代码占用的内存是584KiB。</p>
+<p>DATA：运行栈和堆的数据大概是102MiB。</p>
+<p>SHR：共享内存大概是1MiB。</p>
+<p>我感觉实际的内存占用都有点大，能更细粒度地观察内存花在哪里的吗？分析一下。</p>
+<p>怎么分析该进程的内存情况呢？</p>
+<p>怎么理解这四种内存页呢？mmap这个函数的定义是什么？</p>
+<p>top如何保存视图？</p>
 <p>（未完待续）</p>
 
     </div>
@@ -335,14 +393,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">64</span>
+          <span class="site-state-item-count">65</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">46</span>
+        <span class="site-state-item-count">48</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -377,7 +435,7 @@
 <div class="copyright">
   
   &copy; 2018 – 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="male"></i>
   </span>
