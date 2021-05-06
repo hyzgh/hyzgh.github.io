@@ -28,7 +28,7 @@
 <meta property="og:site_name" content="hyz&#39;s blog">
 <meta property="og:description" content="最近一段时间学习了MySQL的锁，各种各样的锁，全局锁、表锁、MDL、行锁、间隙锁等等。 每种锁都有其存在的意义，都是为了解决某一种问题。假如没有锁，那么就会存在脏读、不可重复读、幻读等问题。为了学习MySQL的锁，我们首先需要了解事务存在的这几类并发问题。 脏读什么是脏读？脏读就是读到了其他未提交事务的数据。为了让这一过程更易理解，我们使用MySQL来复现。MySQL 5.7的事务默认隔离级别是">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2021-05-03T10:30:37.440Z">
+<meta property="og:updated_time" content="2021-05-06T15:58:18.395Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MySQL学习笔记1 锁">
 <meta name="twitter:description" content="最近一段时间学习了MySQL的锁，各种各样的锁，全局锁、表锁、MDL、行锁、间隙锁等等。 每种锁都有其存在的意义，都是为了解决某一种问题。假如没有锁，那么就会存在脏读、不可重复读、幻读等问题。为了学习MySQL的锁，我们首先需要了解事务存在的这几类并发问题。 脏读什么是脏读？脏读就是读到了其他未提交事务的数据。为了让这一过程更易理解，我们使用MySQL来复现。MySQL 5.7的事务默认隔离级别是">
@@ -253,6 +253,7 @@
 </blockquote>
 <p>session B:</p>
 <blockquote>
+<p>MySQL root@(none):my_db&gt; begin;<br>Query OK, 0 rows affected<br>Time: 0.000s</p>
 <p>MySQL root@(none):my_db&gt; update account set balance = balance - 100 where name = ‘A’;<br>Query OK, 1 row affected<br>Time: 0.007s</p>
 </blockquote>
 <p>session A:</p>
@@ -260,8 +261,48 @@
 <p>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 1000    |<br>+———+<br>1 row in set<br>Time: 0.004s</p>
 </blockquote>
 <p>可以发现session A读不到session B的更改了，解决了脏读问题。</p>
-<p>为了解决脏读问题，MySQL没有用到什么锁。</p>
-<h1 id="不可重复读"><a href="#不可重复读" class="headerlink" title="不可重复读"></a>不可重复读</h1><p>Todo</p>
+<p>总结：为了解决脏读问题，MySQL没有用到锁，而是使用了多版本控制机制，通过为每个事务开启一个视图来保持一致性。</p>
+<h1 id="不可重复读"><a href="#不可重复读" class="headerlink" title="不可重复读"></a>不可重复读</h1><p>什么是不可重复读？不可重复读就是一个事务在没有修改的情况下，同样的普通查询在不同时刻得到了不一样的结果。</p>
+<p>上面的实验看起来也是种不可重复读，但是实际上它不是。不可重复读，指的是其他已提交事务产生的影响，而不是未提交事务的影响。</p>
+<p>让我们做个实验复现一下，首先需要将session A的事务隔离级别设置为READ COMMITTED（读已提交）</p>
+<p>session A:</p>
+<blockquote>
+<p>MySQL root@(none):my_db&gt; SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED<br>Query OK, 0 rows affected<br>Time: 0.001s</p>
+<p>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 900     |<br>+———+<br>1 row in set<br>Time: 0.004s</p>
+</blockquote>
+<p>session B:</p>
+<blockquote>
+<p>MySQL root@(none):my_db&gt; update account set balance = balance - 100 where name = ‘A’;<br>Query OK, 1 row affected<br>Time: 0.001s</p>
+</blockquote>
+<p>session A:</p>
+<blockquote>
+<p>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 800     |<br>+———+</p>
+<p>1 row in set<br>Time: 0.004s</p>
+</blockquote>
+<p>可以发现两次session A读取的结果并不一致。</p>
+<p>让我们将隔离级别设置回可重复读，再实验一下：</p>
+<p>session A：</p>
+<blockquote>
+<p>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 600     |<br>+———+<br>1 row in set<br>Time: 0.008s<br>MySQL root@(none):my_db&gt; begin<br>Query OK, 0 rows affected<br>Time: 0.000s<br>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 600     |<br>+———+<br>1 row in set<br>Time: 0.004s</p>
+</blockquote>
+<p>session B:</p>
+<blockquote>
+<p>MySQL root@(none):my_db&gt; update account set balance = balance - 100 where name = ‘A’;<br>Query OK, 1 row affected<br>Time: 0.018s</p>
+</blockquote>
+<p>session A:</p>
+<blockquote>
+<p>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 600     |<br>+———+<br>1 row in set<br>Time: 0.005s</p>
+</blockquote>
+<p>可以发现在可重复读的隔离级别下，可以重复读。原理同样是MVCC。</p>
+<h1 id="幻读"><a href="#幻读" class="headerlink" title="幻读"></a>幻读</h1><p>Todo</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><p><a href="https://dev.mysql.com/doc/refman/5.6/en/set-transaction.html" target="_blank" rel="noopener">SET TRANSACTION Statement</a></p>
+</li>
+<li><p><a href="https://bytedance.feishu.cn/wiki/wikcnbPsHVuvGZF0YaakT6YC2lf" target="_blank" rel="noopener">InnoDB的事务和锁</a></p>
+</li>
+<li><p>《MySQL实战45讲》——极客时间</p>
+</li>
+</ol>
 
     </div>
 
@@ -343,7 +384,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#脏读"><span class="nav-number">1.</span> <span class="nav-text">脏读</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#不可重复读"><span class="nav-number">2.</span> <span class="nav-text">不可重复读</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#脏读"><span class="nav-number">1.</span> <span class="nav-text">脏读</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#不可重复读"><span class="nav-number">2.</span> <span class="nav-text">不可重复读</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#幻读"><span class="nav-number">3.</span> <span class="nav-text">幻读</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
