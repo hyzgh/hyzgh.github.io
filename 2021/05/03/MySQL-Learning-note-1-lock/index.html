@@ -20,18 +20,18 @@
     var CONFIG = {"hostname":"hyzgh.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="最近一段时间学习了MySQL的锁，各种各样的锁，全局锁、表锁、MDL、行锁、间隙锁等等。 每种锁都有其存在的意义，都是为了解决某一种问题。假如没有锁，那么就会存在脏读、不可重复读、幻读等问题。为了学习MySQL的锁，我们首先需要了解事务存在的这几类并发问题。 几类事务并发问题脏读什么是脏读？脏读就是读到了其他未提交事务的数据。为了让这一过程更易理解，我们使用MySQL来复现。MySQL 5.7的事">
+  <meta name="description" content="最近一段时间学习了MySQL的锁，各种各样的锁，全局锁、表锁、MDL、行锁、间隙锁等等。 每种锁都有其存在的意义，都是为了解决某一种问题。锁是解决事务并发问题的基本手段之一，除了锁，还有多版本控制等无锁手段。 假如不使用一些手段，那么并发事务会存在脏读、不可重复读、幻读等问题。为了学习MySQL的并发事务隔离手段，我们首先需要了解事务存在的这几类并发问题。 事务并发问题脏读什么是脏读？脏读就是读到">
 <meta name="keywords" content="MySQL">
 <meta property="og:type" content="article">
-<meta property="og:title" content="MySQL学习笔记1 锁">
+<meta property="og:title" content="MySQL学习笔记1 事务并发">
 <meta property="og:url" content="https://hyzgh.github.io/2021/05/03/MySQL-Learning-note-1-lock/index.html">
 <meta property="og:site_name" content="hyz&#39;s blog">
-<meta property="og:description" content="最近一段时间学习了MySQL的锁，各种各样的锁，全局锁、表锁、MDL、行锁、间隙锁等等。 每种锁都有其存在的意义，都是为了解决某一种问题。假如没有锁，那么就会存在脏读、不可重复读、幻读等问题。为了学习MySQL的锁，我们首先需要了解事务存在的这几类并发问题。 几类事务并发问题脏读什么是脏读？脏读就是读到了其他未提交事务的数据。为了让这一过程更易理解，我们使用MySQL来复现。MySQL 5.7的事">
+<meta property="og:description" content="最近一段时间学习了MySQL的锁，各种各样的锁，全局锁、表锁、MDL、行锁、间隙锁等等。 每种锁都有其存在的意义，都是为了解决某一种问题。锁是解决事务并发问题的基本手段之一，除了锁，还有多版本控制等无锁手段。 假如不使用一些手段，那么并发事务会存在脏读、不可重复读、幻读等问题。为了学习MySQL的并发事务隔离手段，我们首先需要了解事务存在的这几类并发问题。 事务并发问题脏读什么是脏读？脏读就是读到">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2021-05-06T16:29:40.836Z">
+<meta property="og:updated_time" content="2021-05-15T11:02:27.881Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="MySQL学习笔记1 锁">
-<meta name="twitter:description" content="最近一段时间学习了MySQL的锁，各种各样的锁，全局锁、表锁、MDL、行锁、间隙锁等等。 每种锁都有其存在的意义，都是为了解决某一种问题。假如没有锁，那么就会存在脏读、不可重复读、幻读等问题。为了学习MySQL的锁，我们首先需要了解事务存在的这几类并发问题。 几类事务并发问题脏读什么是脏读？脏读就是读到了其他未提交事务的数据。为了让这一过程更易理解，我们使用MySQL来复现。MySQL 5.7的事">
+<meta name="twitter:title" content="MySQL学习笔记1 事务并发">
+<meta name="twitter:description" content="最近一段时间学习了MySQL的锁，各种各样的锁，全局锁、表锁、MDL、行锁、间隙锁等等。 每种锁都有其存在的意义，都是为了解决某一种问题。锁是解决事务并发问题的基本手段之一，除了锁，还有多版本控制等无锁手段。 假如不使用一些手段，那么并发事务会存在脏读、不可重复读、幻读等问题。为了学习MySQL的并发事务隔离手段，我们首先需要了解事务存在的这几类并发问题。 事务并发问题脏读什么是脏读？脏读就是读到">
 
 <link rel="canonical" href="https://hyzgh.github.io/2021/05/03/MySQL-Learning-note-1-lock/">
 
@@ -46,7 +46,7 @@
   };
 </script>
 
-  <title>MySQL学习笔记1 锁 | hyz's blog</title>
+  <title>MySQL学习笔记1 事务并发 | hyz's blog</title>
   
 
 
@@ -202,7 +202,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          MySQL学习笔记1 锁
+          MySQL学习笔记1 事务并发
         </h1>
 
         <div class="post-meta">
@@ -227,20 +227,21 @@
 
       
         <p>最近一段时间学习了MySQL的锁，各种各样的锁，全局锁、表锁、MDL、行锁、间隙锁等等。</p>
-<p>每种锁都有其存在的意义，都是为了解决某一种问题。假如没有锁，那么就会存在脏读、不可重复读、幻读等问题。为了学习MySQL的锁，我们首先需要了解事务存在的这几类并发问题。</p>
-<h1 id="几类事务并发问题"><a href="#几类事务并发问题" class="headerlink" title="几类事务并发问题"></a>几类事务并发问题</h1><h2 id="脏读"><a href="#脏读" class="headerlink" title="脏读"></a>脏读</h2><p>什么是脏读？脏读就是读到了其他未提交事务的数据。为了让这一过程更易理解，我们使用MySQL来复现。MySQL 5.7的事务默认隔离级别是可重复读，该级别下不存在问题。所以需要将MySQL的隔离级别设置为READ UNCOMMITTED（读未提交），该级别下会存在脏读。具体过程如下：</p>
+<p>每种锁都有其存在的意义，都是为了解决某一种问题。锁是解决事务并发问题的基本手段之一，除了锁，还有多版本控制等无锁手段。</p>
+<p>假如不使用一些手段，那么并发事务会存在脏读、不可重复读、幻读等问题。为了学习MySQL的并发事务隔离手段，我们首先需要了解事务存在的这几类并发问题。</p>
+<h1 id="事务并发问题"><a href="#事务并发问题" class="headerlink" title="事务并发问题"></a>事务并发问题</h1><h2 id="脏读"><a href="#脏读" class="headerlink" title="脏读"></a>脏读</h2><p>什么是脏读？脏读就是读到了其他未提交事务的数据。为了让这一过程更易理解，我们使用MySQL来复现。MySQL 5.7的事务默认隔离级别是可重复读，该级别下不存在问题。所以需要将MySQL的隔离级别设置为READ UNCOMMITTED（读未提交），该级别下会存在脏读。具体过程如下：</p>
 <p>session A，读取记录:</p>
 <blockquote>
-<p>MySQL root@(none):my_db&gt; SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED<br>Query OK, 0 rows affected<br>Time: 0.001s<br>MySQL root@(none):my_db&gt; begin;</p>
-<p>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 1000    |<br>+———+<br>1 row in set<br>Time: 0.004s</p>
+<p>MySQL root@(none):my_db&gt; SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED<br>MySQL root@(none):my_db&gt; begin;</p>
+<p>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 1000    |<br>+———+</p>
 </blockquote>
 <p>session B，修改记录:</p>
 <blockquote>
-<p>MySQL root@(none):my_db&gt; begin;<br>Query OK, 0 rows affected<br>Time: 0.000s<br>MySQL root@(none):my_db&gt; update account set balance = balance + 100 where name = ‘A’;<br>Query OK, 1 row affected<br>Time: 0.001s</p>
+<p>MySQL root@(none):my_db&gt; begin;<br>MySQL root@(none):my_db&gt; update account set balance = balance + 100 where name = ‘A’;</p>
 </blockquote>
 <p>session A，读取记录:</p>
 <blockquote>
-<p>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 1100     |<br>+———+<br>1 row in set<br>Time: 0.004s</p>
+<p>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 1100     |<br>+———+</p>
 </blockquote>
 <p>可以发现，session A读到了尚未提交的session B的更新，属于脏读。</p>
 <p>脏读存在什么问题呢？假如session B回滚，那么这个数据就是脏数据，这会影响逻辑的正确性。举一个具体例子，客户A正在ATM机提款，这时候客户B想给他转了一笔钱，业务逻辑是先扣除B的余额，再给A加上钱。在给A加完钱后的一时刻，银行后台读取了A的账户余额，客户B的操作由于某些原因回滚了，这时候读取到的就是脏数据，造成的后果是多给A钱，而客户B没有损失。</p>
@@ -249,16 +250,16 @@
 <p>我们在将事务的隔离级别设置为可重复读，再实践一下：</p>
 <p>session A，读取记录:</p>
 <blockquote>
-<p>MySQL root@(none):my_db&gt; begin<br>Query OK, 0 rows affected<br>Time: 0.000s<br>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 1000    |<br>+———+<br>1 row in set<br>Time: 0.004s</p>
+<p>MySQL root@(none):my_db&gt; begin<br>Query OK, 0 rows affected<br>Time: 0.000s<br>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 1000    |<br>+———+</p>
 </blockquote>
 <p>session B，修改记录:</p>
 <blockquote>
-<p>MySQL root@(none):my_db&gt; begin;<br>Query OK, 0 rows affected<br>Time: 0.000s</p>
-<p>MySQL root@(none):my_db&gt; update account set balance = balance - 100 where name = ‘A’;<br>Query OK, 1 row affected<br>Time: 0.007s</p>
+<p>MySQL root@(none):my_db&gt; begin;</p>
+<p>MySQL root@(none):my_db&gt; update account set balance = balance - 100 where name = ‘A’;</p>
 </blockquote>
 <p>session A，读取记录:</p>
 <blockquote>
-<p>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 1000    |<br>+———+<br>1 row in set<br>Time: 0.004s</p>
+<p>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 1000    |<br>+———+</p>
 </blockquote>
 <p>可以发现session A读不到session B的更改了，解决了脏读问题。</p>
 <p>总结：为了解决脏读问题，MySQL没有用到锁，而是使用了多版本控制机制，通过为每个事务开启一个视图来保持一致性。</p>
@@ -313,21 +314,73 @@
 </blockquote>
 <p>可以发现出现了负值了，这是我们不允许出现的。</p>
 <p>问题：怎么解决这个问题呢？</p>
-<p>分析：使用行锁。假如session A依赖于第一次查询的结果，那么就应该对它加锁，防止在自己完成事务前被修改。在MySQL中，可以使用<code>for udpate</code>对查询加行锁。在session A对记录加锁后，其他事务不再允许修改相应的记录，直到session A的事务结束(commit或rollback)。在执行语句加锁，在事务结束释放锁，被称为两阶段锁协议。</p>
+<p>分析：使用记录锁。假如session A依赖于第一次查询的结果，那么就应该对它加锁，防止在自己完成事务前被修改。在MySQL中，可以使用<code>for udpate</code>对查询加记录所。在session A对记录加锁后，其他事务不再允许修改相应的记录，直到session A的事务结束(commit或rollback)。在执行语句加锁，在事务结束释放锁，被称为两阶段锁协议。</p>
 <p>问题：为什么要在结束的时候释放，提前释放会有问题么？</p>
-<p>假如提前释放其实可以提高并发度，但是MySQL似乎不支持提前释放。</p>
+<p>假如提前释放其实可以提高并发度，但是MySQL似乎不支持提前释放。有一种特殊的自增锁（auto-inc），会自动提前释放。它是用于给自增字段生成id，加锁是为了保证递增。</p>
+<p>问题：两阶段锁协议解决了什么问题？</p>
+<p>问题：如何验证加了什么锁？</p>
+<p>可以使用Innodb Lock Monitor，具体可以查看下面的教程。</p>
+<blockquote>
+<p>记录锁的事务数据在SHOW ENGINE INNODB STATUS和InnoDB监视器输出中看起来类似于以下内容：</p>
+<p>RECORD LOCKS space id 58 page no 3 n bits 72 index PRIMARY of table test.t trx id 10078 <strong>lock_mode X locks rec but not gap</strong></p>
+</blockquote>
+<p>我们分析下Monitor的输出信息，先执行一个简单的select … for update操作：</p>
+<blockquote>
+<p>MySQL root@(none):my_db&gt; begin<br>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’ for update;<br>+———+<br>| balance |<br>+———+<br>| 0       |<br>+———+</p>
+</blockquote>
+<p>查看输出信息：</p>
+<blockquote>
+<p>TRANSACTIONS<br>-———–<br>Trx id counter 2821<br>Purge done for trx’s n:o &lt; 0 undo n:o &lt; 0 state: running but idle<br>History list length 0<br>LIST OF TRANSACTIONS FOR EACH SESSION:<br>—TRANSACTION 421563048392544, not started<br>0 lock struct(s), heap size 1136, 0 row lock(s)<br>—TRANSACTION 2820, ACTIVE 6 sec<br>4 lock struct(s), heap size 1136, 3 row lock(s)<br>MySQL thread id 25, OS thread handle 140087744558848, query id 74 localhost root<br><strong>TABLE LOCK</strong> table <code>my_db</code>.<code>account</code> trx id 2820 <strong>lock mode IX</strong><br><strong>RECORD LOCKS</strong> space id 24 page no 4 n bits 72 index uniq_index_name of table <code>my_db</code>.<code>account</code> trx id 2820 <strong>lock_mode X</strong><br><strong>Record lock</strong>, heap no 2 PHYSICAL RECORD: n_fields 2; compact format; info bits 0<br> 0: len 1; hex 41; asc A;;<br> 1: len 8; hex 8000000000000001; asc         ;;</p>
+<p><strong>RECORD LOCKS</strong> space id 24 page no 3 n bits 72 <strong>index PRIMARY of table</strong> <code>my_db</code>.<code>account</code> trx id 2820 <strong>lock_mode X locks rec but not gap</strong><br>Record lock, heap no 2 PHYSICAL RECORD: n_fields 5; compact format; info bits 0<br> 0: len 8; hex 8000000000000001; asc         ;;<br> 1: len 6; hex 000000000921; asc      !;;<br> 2: len 7; hex 350000014f0110; asc 5   O  ;;<br> 3: len 1; hex 41; asc A;;<br> 4: len 4; hex 80000000; asc     ;;</p>
+<p><strong>RECORD LOCKS</strong> space id 24 page no 4 n bits 72 <strong>index uniq_index_name</strong> of table <code>my_db</code>.<code>account</code> trx id 2820 <strong>lock_mode X locks gap before rec</strong><br>Record lock, heap no 3 PHYSICAL RECORD: n_fields 2; compact format; info bits 0<br> 0: len 1; hex 42; asc B;;<br> 1: len 8; hex 8000000000000002; asc         ;;</p>
+</blockquote>
+<p>我将其中关键信息加粗了一下，可以发现该事务加了4个锁。包括1个TABLE LOCK和3个RECORD LOCKS：</p>
+<ul>
+<li>table lock<ul>
+<li>lock mode IX  意向锁，在添加行锁之前添加，不会和行级的X, S锁发生冲突，只会和表级的X, S锁发生冲突。</li>
+</ul>
+</li>
+<li>record locks<ul>
+<li>lock_mode X  对name=A的这行上写锁</li>
+<li>index PRIMARY of table, lock_mode X locks rec but not gap  是对主键索引加锁，对name=A这行加锁</li>
+<li>index uniq_index_name, lock_mode X locks gap before rec  是对二级索引uniq_index_name加锁，在记录前面加了gap锁</li>
+</ul>
+</li>
+</ul>
+<p>问题：lock_mode X和index PRIMARY of table, lock_mode X locks rec but not gap有什么区别？</p>
+<p>问题：行锁有哪些？</p>
+<p>记录所、gap锁。。。</p>
 <h2 id="幻读"><a href="#幻读" class="headerlink" title="幻读"></a>幻读</h2><p>幻读是什么？幻读是一个事务在没有修改的情况，在不同时刻的进行两次修改读，读取到了不同的结果。幻读是write query，而不可重复读是read query。</p>
 <p>Todo</p>
 <h1 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h1><p>Todo</p>
+<h2 id="Innodb-Lock-Monitor"><a href="#Innodb-Lock-Monitor" class="headerlink" title="Innodb Lock Monitor"></a>Innodb Lock Monitor</h2><p>为了观察SQL是被哪种锁锁住了，可以使用Innodb Lock Monitor。</p>
+<p>启用命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SET GLOBAL innodb_status_output=ON;</span><br><span class="line">SET GLOBAL innodb_status_output_locks=ON;</span><br></pre></td></tr></table></figure>
+
+<p>可以认为innodb_status_output是monitor的总开关，innodb_status_output_locks是lock monitor的开关，两者需要都打开才算启用成功。这两条命令的生命周期为server本次运行的周期，当server关闭后，下次启动会恢复成关闭状态。</p>
+<p>获取Monitor输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SHOW ENGINE INNODB STATUS\G</span><br></pre></td></tr></table></figure>
+
+<p>在终端上输出时，加上<code>\G</code>可以让输出的可读性更佳。输出的字段有许多，我们主要关注和锁相关的字段。主要是<code>LATEST DETECTED DEADLOCK</code>和<code>TRANSACTIONS</code>字段。关于这两个字段的官方解释：</p>
+<blockquote>
+<p><code>LATEST DETECTED DEADLOCK</code></p>
+<p>This section provides information about the most recent deadlock. It is not present if no deadlock has occurred. The contents show which transactions are involved, the statement each was attempting to execute, the locks they have and need, and which transaction <code>InnoDB</code> decided to roll back to break the deadlock. The lock modes reported in this section are explained in <a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-locking.html" target="_blank" rel="noopener">Section 14.7.1, “InnoDB Locking”</a>.</p>
+<p><code>TRANSACTIONS</code></p>
+<p>If this section reports lock waits, your applications might have lock contention. The output can also help to trace the reasons for transaction deadlocks.</p>
+</blockquote>
+<p>注意点：</p>
+<blockquote>
+<p>When <code>InnoDB</code> monitors are enabled for periodic output, <code>InnoDB</code> writes the output to <a href="https://dev.mysql.com/doc/refman/5.7/en/mysqld.html" target="_blank" rel="noopener"><strong>mysqld</strong></a> server standard error output (<code>stderr</code>) every 15 seconds, approximately.</p>
+</blockquote>
+<p>monitor的输出是周期性，大概15s会输出一次。</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li><p><a href="https://dev.mysql.com/doc/refman/5.6/en/set-transaction.html" target="_blank" rel="noopener">SET TRANSACTION Statement</a></p>
-</li>
-<li><p><a href="https://bytedance.feishu.cn/wiki/wikcnbPsHVuvGZF0YaakT6YC2lf" target="_blank" rel="noopener">InnoDB的事务和锁</a></p>
-</li>
-<li><p>《MySQL实战45讲》——极客时间</p>
-</li>
-<li><p><a href="https://www.percona.com/blog/2012/03/27/innodbs-gap-locks/" target="_blank" rel="noopener">InnoDB Gap Locks</a></p>
-</li>
+<li><a href="https://dev.mysql.com/doc/refman/5.6/en/set-transaction.html" target="_blank" rel="noopener">SET TRANSACTION Statement</a></li>
+<li><a href="https://bytedance.feishu.cn/wiki/wikcnbPsHVuvGZF0YaakT6YC2lf" target="_blank" rel="noopener">InnoDB的事务和锁</a></li>
+<li>《MySQL实战45讲》——极客时间</li>
+<li><a href="https://www.percona.com/blog/2012/03/27/innodbs-gap-locks/" target="_blank" rel="noopener">InnoDB Gap Locks</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-enabling-monitors.html" target="_blank" rel="noopener">Enabling InnoDB Monitors</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-standard-monitor.html" target="_blank" rel="noopener">InnoDB Standard Monitor and Lock Monitor Output</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-locking.html" target="_blank" rel="noopener">innodb-locking</a></li>
 <li></li>
 </ol>
 
@@ -351,7 +404,10 @@
     <a href="/2020/11/25/golang-source-code-learning-1-compile-source-code/" rel="prev" title="Golang源码学习1 源码编译">
       <i class="fa fa-chevron-left"></i> Golang源码学习1 源码编译
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2021/05/15/docker-proxy/" rel="next" title="Docker 代理">
+      Docker 代理 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -411,7 +467,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#几类事务并发问题"><span class="nav-number">1.</span> <span class="nav-text">几类事务并发问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#脏读"><span class="nav-number">1.1.</span> <span class="nav-text">脏读</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#不可重复读"><span class="nav-number">1.2.</span> <span class="nav-text">不可重复读</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#幻读"><span class="nav-number">1.3.</span> <span class="nav-text">幻读</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#锁"><span class="nav-number">2.</span> <span class="nav-text">锁</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#事务并发问题"><span class="nav-number">1.</span> <span class="nav-text">事务并发问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#脏读"><span class="nav-number">1.1.</span> <span class="nav-text">脏读</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#不可重复读"><span class="nav-number">1.2.</span> <span class="nav-text">不可重复读</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#幻读"><span class="nav-number">1.3.</span> <span class="nav-text">幻读</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#锁"><span class="nav-number">2.</span> <span class="nav-text">锁</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Innodb-Lock-Monitor"><span class="nav-number">2.1.</span> <span class="nav-text">Innodb Lock Monitor</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -427,14 +483,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">65</span>
+          <span class="site-state-item-count">66</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-count">49</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

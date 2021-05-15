@@ -183,7 +183,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2021/05/03/MySQL-Learning-note-1-lock/">
+    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2021/05/15/docker-proxy/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/hyzgh-128x128.png">
@@ -197,7 +197,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/05/03/MySQL-Learning-note-1-lock/" class="post-title-link" itemprop="url">MySQL学习笔记1 锁</a>
+            <a href="/2021/05/15/docker-proxy/" class="post-title-link" itemprop="url">Docker 代理</a>
         </h2>
 
         <div class="post-meta">
@@ -207,7 +207,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2021-05-03 17:35:37" itemprop="dateCreated datePublished" datetime="2021-05-03T17:35:37+08:00">2021-05-03</time>
+              <time title="创建时间：2021-05-15 22:30:14" itemprop="dateCreated datePublished" datetime="2021-05-15T22:30:14+08:00">2021-05-15</time>
             </span>
 
           
@@ -221,110 +221,27 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>最近一段时间学习了MySQL的锁，各种各样的锁，全局锁、表锁、MDL、行锁、间隙锁等等。</p>
-<p>每种锁都有其存在的意义，都是为了解决某一种问题。假如没有锁，那么就会存在脏读、不可重复读、幻读等问题。为了学习MySQL的锁，我们首先需要了解事务存在的这几类并发问题。</p>
-<h1 id="几类事务并发问题"><a href="#几类事务并发问题" class="headerlink" title="几类事务并发问题"></a>几类事务并发问题</h1><h2 id="脏读"><a href="#脏读" class="headerlink" title="脏读"></a>脏读</h2><p>什么是脏读？脏读就是读到了其他未提交事务的数据。为了让这一过程更易理解，我们使用MySQL来复现。MySQL 5.7的事务默认隔离级别是可重复读，该级别下不存在问题。所以需要将MySQL的隔离级别设置为READ UNCOMMITTED（读未提交），该级别下会存在脏读。具体过程如下：</p>
-<p>session A，读取记录:</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED<br>Query OK, 0 rows affected<br>Time: 0.001s<br>MySQL root@(none):my_db&gt; begin;</p>
-<p>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 1000    |<br>+———+<br>1 row in set<br>Time: 0.004s</p>
-</blockquote>
-<p>session B，修改记录:</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; begin;<br>Query OK, 0 rows affected<br>Time: 0.000s<br>MySQL root@(none):my_db&gt; update account set balance = balance + 100 where name = ‘A’;<br>Query OK, 1 row affected<br>Time: 0.001s</p>
-</blockquote>
-<p>session A，读取记录:</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 1100     |<br>+———+<br>1 row in set<br>Time: 0.004s</p>
-</blockquote>
-<p>可以发现，session A读到了尚未提交的session B的更新，属于脏读。</p>
-<p>脏读存在什么问题呢？假如session B回滚，那么这个数据就是脏数据，这会影响逻辑的正确性。举一个具体例子，客户A正在ATM机提款，这时候客户B想给他转了一笔钱，业务逻辑是先扣除B的余额，再给A加上钱。在给A加完钱后的一时刻，银行后台读取了A的账户余额，客户B的操作由于某些原因回滚了，这时候读取到的就是脏数据，造成的后果是多给A钱，而客户B没有损失。</p>
-<p>为了解决这个问题，MySQL引入了一致性视图的概念，在事务开启时给数据库的状态“拍”了个快照。</p>
-<p>具体来说，给每个事务设置了trx id，单调递增，是事务的唯一标志。当发生查询时，会查找小于等于自己trx id版本的记录。假设在session A开始时，trx id是1。在session B开启时，trx id是2。那么在session B更新记录时，这条记录的版本号是2。而在session A查询时，它查不到这条版本号为2的记录，会找到未更新前的那条记录。这就解决了上面提到的脏读问题。</p>
-<p>我们在将事务的隔离级别设置为可重复读，再实践一下：</p>
-<p>session A，读取记录:</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; begin<br>Query OK, 0 rows affected<br>Time: 0.000s<br>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 1000    |<br>+———+<br>1 row in set<br>Time: 0.004s</p>
-</blockquote>
-<p>session B，修改记录:</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; begin;<br>Query OK, 0 rows affected<br>Time: 0.000s</p>
-<p>MySQL root@(none):my_db&gt; update account set balance = balance - 100 where name = ‘A’;<br>Query OK, 1 row affected<br>Time: 0.007s</p>
-</blockquote>
-<p>session A，读取记录:</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 1000    |<br>+———+<br>1 row in set<br>Time: 0.004s</p>
-</blockquote>
-<p>可以发现session A读不到session B的更改了，解决了脏读问题。</p>
-<p>总结：为了解决脏读问题，MySQL没有用到锁，而是使用了多版本控制机制，通过为每个事务开启一个视图来保持一致性。</p>
-<h2 id="不可重复读"><a href="#不可重复读" class="headerlink" title="不可重复读"></a>不可重复读</h2><p>什么是不可重复读？不可重复读就是一个事务在没有修改的情况下，同样的普通查询在不同时刻得到了不一样的结果。</p>
-<p>上面的实验看起来也是种不可重复读，但是实际上它不是。不可重复读，指的是其他已提交事务产生的影响，而不是未提交事务的影响。这就是脏读和不可重复读的区别点。</p>
-<p>让我们做个实验复现一下，首先需要将session A的事务隔离级别设置为READ COMMITTED（读已提交）</p>
-<p>session A，设置隔离级别并读取记录:</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED</p>
-<p>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 900     |<br>+———+</p>
-</blockquote>
-<p>session B，修改记录:</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; update account set balance = balance - 100 where name = ‘A’;</p>
-</blockquote>
-<p>session A，读取记录:</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 800     |<br>+———+</p>
-</blockquote>
-<p>可以发现两次session A读取的结果并不一致。注意这里session B和脏读的实验不同，没有使用<code>begin</code>开启事务。假如没有使用<code>begin</code>开启事务，那么默认情况下事务会马上提交。</p>
-<p>让我们将隔离级别设置回可重复读，再实验一下：</p>
-<p>session A，读取记录：</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 600     |<br>+———+</p>
-<p>MySQL root@(none):my_db&gt; begin<br>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 600     |<br>+———+</p>
-</blockquote>
-<p>session B，修改记录:</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; update account set balance = balance - 100 where name = ‘A’;</p>
-</blockquote>
-<p>session A，读取记录:</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 600     |<br>+———+</p>
-</blockquote>
-<p>可以发现在可重复读的隔离级别下，可以重复读。原理同样是MVCC。</p>
-<p>问题：更新的时候会读到最新值，算不可重复读吗？</p>
-<p>不算，根据不可重复读的定义，只有在不修改只有读取的情况下才算不可重复读。实际上，在可重复读的级别下，更新的时候，读取到其他事务的值是符合预期的。</p>
-<p>问题：这样会存在问题吗？</p>
-<p>假设我们有这么一个业务场景，在扣除某个人的余额前，需要先判断它是否足额（保证非负），然后再执行更新操作。</p>
-<p>经过实验发现存在这样的情况：</p>
-<p>session A:</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; begin;<br>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 100     |<br>+———+</p>
-</blockquote>
-<p>session B:</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; update account set balance = 0 where name = ‘A’;</p>
-</blockquote>
-<p>session A:</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 100     |<br>+———+<br>MySQL root@(none):my_db&gt; update account set balance = balance - 100 where name = ‘A’;<br>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| -100     |<br>+———+</p>
-</blockquote>
-<p>可以发现出现了负值了，这是我们不允许出现的。</p>
-<p>问题：怎么解决这个问题呢？</p>
-<p>分析：使用行锁。假如session A依赖于第一次查询的结果，那么就应该对它加锁，防止在自己完成事务前被修改。在MySQL中，可以使用<code>for udpate</code>对查询加行锁。在session A对记录加锁后，其他事务不再允许修改相应的记录，直到session A的事务结束(commit或rollback)。在执行语句加锁，在事务结束释放锁，被称为两阶段锁协议。</p>
-<p>问题：为什么要在结束的时候释放，提前释放会有问题么？</p>
-<p>假如提前释放其实可以提高并发度，但是MySQL似乎不支持提前释放。</p>
-<h2 id="幻读"><a href="#幻读" class="headerlink" title="幻读"></a>幻读</h2><p>幻读是什么？幻读是一个事务在没有修改的情况，在不同时刻的进行两次修改读，读取到了不同的结果。幻读是write query，而不可重复读是read query。</p>
-<p>Todo</p>
-<h1 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h1><p>Todo</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li><p><a href="https://dev.mysql.com/doc/refman/5.6/en/set-transaction.html" target="_blank" rel="noopener">SET TRANSACTION Statement</a></p>
-</li>
-<li><p><a href="https://bytedance.feishu.cn/wiki/wikcnbPsHVuvGZF0YaakT6YC2lf" target="_blank" rel="noopener">InnoDB的事务和锁</a></p>
-</li>
-<li><p>《MySQL实战45讲》——极客时间</p>
-</li>
-<li><p><a href="https://www.percona.com/blog/2012/03/27/innodbs-gap-locks/" target="_blank" rel="noopener">InnoDB Gap Locks</a></p>
-</li>
-<li></li>
-</ol>
+          <p>最近在玩docker，由于众所周知的原因，在国内访问海外的网站速度会很慢，在docker内的表现是git clone和apt install缓慢。这个问题的常见解决方法是换源、挂代理。这里我使用了挂代理的方式解决，主要是考虑比较通用，不需要给每个工具配置一遍源。</p>
+<p>在container里面挂代理，需要确定container是如何和host的网络通信的。实际上，在host有一个docker0的虚拟网卡，用于container和host通信，可以这么查看：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># host</span></span><br><span class="line">$ ip addr show docker0</span><br><span class="line">4: docker0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default</span><br><span class="line">    link/ether 02:42:64:51:fb:47 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 fe80::42:64ff:fe51:fb47/64 scope link</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br></pre></td></tr></table></figure>
+
+<p>在container内，我们同样观察一下网络的路由配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># container</span></span><br><span class="line">$ ip route show</span><br><span class="line">default via 172.17.0.1 dev eth0 </span><br><span class="line">172.17.0.0/16 dev eth0  src 172.17.0.4</span><br></pre></td></tr></table></figure>
+
+<p>可以发现container的ip包默认会转发到172.17.0.1，这正是host的docker0网卡配置的ip。至此，我们确定了container和host通信的ip地址。</p>
+<p>为了让host允许container访问所有port，需要修改host的ip路由表：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># host</span></span><br><span class="line">iptables -A INPUT -i docker0 -j ACCEPT</span><br></pre></td></tr></table></figure>
+
+<p>假设在host已经配置了一个可用的代理地址127.0.0.1:7890，那么container访问这个代理就需要使用172.17.0.1:7890。</p>
+<p>在container可以如此配置代理：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> http_proxy=http://172.17.0.1:7890</span><br><span class="line"><span class="built_in">export</span> https_proxy=http://172.17.0.1:7890</span><br></pre></td></tr></table></figure>
+
+<p>这样设置后，运行<code>curl www.google.com</code>成功，就说明代理生效了。通过设置这两个变量后，apt install和git clone也成功挂上了代理。</p>
+<p>参考：</p>
+<ul>
+<li><a href="https://docs.docker.com/network/proxy/#configure-the-docker-client" target="_blank" rel="noopener">Configure Docker to use a proxy server</a></li>
+<li><a href="https://stackoverflow.com/questions/31324981/how-to-access-host-port-from-docker-container" target="_blank" rel="noopener"><a href="https://stackoverflow.com/questions/31324981/how-to-access-host-port-from-docker-container" target="_blank" rel="noopener">How to access host port from docker container</a></a></li>
+</ul>
 
       
     </div>
@@ -343,7 +260,7 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/65/">65</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/66/">66</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -411,14 +328,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">65</span>
+          <span class="site-state-item-count">66</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-count">49</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
