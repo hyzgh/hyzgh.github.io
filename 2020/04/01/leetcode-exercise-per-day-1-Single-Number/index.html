@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 3.9.0">
+<meta name="generator" content="Hexo 7.0.0-rc2">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/hyzgh-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/hyzgh-16x16.png">
@@ -21,17 +21,17 @@
   </script>
 
   <meta name="description" content="最近Leetcode举办了一个为期一个月的活动，每天会推出一道题目。最近这段时间正好有空，所以打算跟着参加一下，顺便写一下题解。使用的语言为C++。 题意  题目链接：Single Number  给一个非空的数组，其中有1个元素出现了1次，其他的都出现2次。时间要求为线性，不允许使用额外内存，求出现1次的元素。 思路题目保证数组非空，所以不需要特殊处理。 两个相同的数异或等于0，因此我们可以将数">
-<meta name="keywords" content="Leetcode">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Leetcode 每日一题01 Single Number">
 <meta property="og:url" content="https://hyzgh.github.io/2020/04/01/leetcode-exercise-per-day-1-Single-Number/index.html">
 <meta property="og:site_name" content="hyz&#39;s blog">
 <meta property="og:description" content="最近Leetcode举办了一个为期一个月的活动，每天会推出一道题目。最近这段时间正好有空，所以打算跟着参加一下，顺便写一下题解。使用的语言为C++。 题意  题目链接：Single Number  给一个非空的数组，其中有1个元素出现了1次，其他的都出现2次。时间要求为线性，不允许使用额外内存，求出现1次的元素。 思路题目保证数组非空，所以不需要特殊处理。 两个相同的数异或等于0，因此我们可以将数">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-04-02T08:35:50.929Z">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-04-01T09:03:20.000Z">
+<meta property="article:modified_time" content="2020-04-02T08:35:50.929Z">
+<meta property="article:author" content="hyz">
+<meta property="article:tag" content="Leetcode">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Leetcode 每日一题01 Single Number">
-<meta name="twitter:description" content="最近Leetcode举办了一个为期一个月的活动，每天会推出一道题目。最近这段时间正好有空，所以打算跟着参加一下，顺便写一下题解。使用的语言为C++。 题意  题目链接：Single Number  给一个非空的数组，其中有1个元素出现了1次，其他的都出现2次。时间要求为线性，不允许使用额外内存，求出现1次的元素。 思路题目保证数组非空，所以不需要特殊处理。 两个相同的数异或等于0，因此我们可以将数">
 
 <link rel="canonical" href="https://hyzgh.github.io/2020/04/01/leetcode-exercise-per-day-1-Single-Number/">
 
@@ -77,6 +77,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="hyz's blog" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -228,12 +229,12 @@
       
         <p>最近Leetcode举办了一个为期一个月的活动，每天会推出一道题目。最近这段时间正好有空，所以打算跟着参加一下，顺便写一下题解。使用的语言为C++。</p>
 <h1 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h1><blockquote>
-<p> 题目链接：<a href="https://leetcode.com/explore/featured/card/30-day-leetcoding-challenge/528/week-1/3283/" target="_blank" rel="noopener">Single Number</a></p>
+<p> 题目链接：<a href="https://leetcode.com/explore/featured/card/30-day-leetcoding-challenge/528/week-1/3283/">Single Number</a></p>
 </blockquote>
 <p>给一个非空的数组，其中有1个元素出现了1次，其他的都出现2次。时间要求为线性，不允许使用额外内存，求出现1次的元素。</p>
 <h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>题目保证数组非空，所以不需要特殊处理。</p>
 <p>两个相同的数异或等于0，因此我们可以将数组所有元素异或起来，最后得到的值即为出现1次的元素。</p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">singleNumber</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; nums.size(); i++) &#123;</span><br><span class="line">            nums[<span class="number">0</span>] ^= nums[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> nums[<span class="number">0</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">singleNumber</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; nums.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">            nums[<span class="number">0</span>] ^= nums[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> nums[<span class="number">0</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
 
     </div>
@@ -319,7 +320,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#题意"><span class="nav-number">1.</span> <span class="nav-text">题意</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#思路"><span class="nav-number">2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码"><span class="nav-number">3.</span> <span class="nav-text">代码</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A2%98%E6%84%8F"><span class="nav-number">1.</span> <span class="nav-text">题意</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-number">3.</span> <span class="nav-text">代码</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -335,24 +336,24 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">66</span>
+          <span class="site-state-item-count">68</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">49</span>
+        <span class="site-state-item-count">46</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
 </div>
   <div class="links-of-author motion-element">
       <span class="links-of-author-item">
-        <a href="https://github.com/hyzgh" title="GitHub → https://github.com/hyzgh" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+        <a href="https://github.com/hyzgh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hyzgh" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
       </span>
       <span class="links-of-author-item">
-        <a href="/atom.xml" title="RSS → /atom.xml"><i class="rss fa-fw"></i>RSS</a>
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="rss fa-fw"></i>RSS</a>
       </span>
   </div>
 
@@ -377,13 +378,13 @@
 <div class="copyright">
   
   &copy; 2018 – 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="male"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">hyz</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
 
         
@@ -403,9 +404,17 @@
   <script src="/lib/anime.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
 <script src="/js/schemes/pisces.js"></script>
+
+
 <script src="/js/next-boot.js"></script>
+
 
 
 
@@ -414,7 +423,9 @@
 
 
 
-  <script src="/js/local-search.js"></script>
+  
+<script src="/js/local-search.js"></script>
+
 
 
 

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 3.9.0">
+<meta name="generator" content="Hexo 7.0.0-rc2">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/hyzgh-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/hyzgh-16x16.png">
@@ -24,9 +24,9 @@
 <meta property="og:title" content="hyz&#39;s blog">
 <meta property="og:url" content="https://hyzgh.github.io/page/66/index.html">
 <meta property="og:site_name" content="hyz&#39;s blog">
-<meta property="og:locale" content="zh-CN">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="hyz">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hyz&#39;s blog">
 
 <link rel="canonical" href="https://hyzgh.github.io/page/66/">
 
@@ -72,6 +72,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="hyz's blog" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -183,7 +184,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2018/03/28/0/">
+    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2018/04/02/0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/hyzgh-128x128.png">
@@ -197,7 +198,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2018/03/28/0/" class="post-title-link" itemprop="url">HrbustOJ 2375: easy math problem</a>
+            <a href="/2018/04/02/0/" class="post-title-link" itemprop="url">Gym 101755G: Underpalindromity</a>
         </h2>
 
         <div class="post-meta">
@@ -207,7 +208,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2018-03-28 23:59:59" itemprop="dateCreated datePublished" datetime="2018-03-28T23:59:59+08:00">2018-03-28</time>
+              <time title="创建时间：2018-04-02 23:59:59" itemprop="dateCreated datePublished" datetime="2018-04-02T23:59:59+08:00">2018-04-02</time>
             </span>
 
           
@@ -221,10 +222,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="题目链接"><a href="#题目链接" class="headerlink" title="题目链接"></a>题目链接</h1><p><a href="http://acm.hrbust.edu.cn/index.php?m=ProblemSet&a=showProblem&problem_id=2375" target="_blank" rel="noopener">传送门</a></p>
-<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>题目需要我们求i的3次方(1&lt;= i &lt;= n)的和，由于n很大，无法暴力算。</p>
-<p>一般这种题的套路是利用二项式定理+求导，由于求的是i的3次方，所以我们可以通过连续”二项式方程左右两边求导乘x”3次，然后令x=1来构造出题目所求的式子，然后通过快速幂计算即可。<br>记得CF上有一道类似的题，从3变成了k，顺便给出<a href="http://codeforces.com/problemset/problem/932/E" target="_blank" rel="noopener">CF932E</a>。</p>
-<p>由于不会LaTeX，所以无法贴公式，留坑。。</p>
+          <h1 id="题目链接"><a href="#题目链接" class="headerlink" title="题目链接"></a>题目链接</h1><p><a href="http://codeforces.com/gym/101755/problem/G">Gym101755G</a></p>
+<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>首先来考虑一下这个样例：<br>8 4<br>8 8 7 6 9 5 8 2</p>
+<p>我们列出所有对答案产生贡献的元素对：</p>
+<p>1-4<br>2-3, 2-5<br>3-2, 3-4, 3-6<br>4-1, 4-3, 4-5, 4-7<br>…</p>
+<p>经过观察，我们发现对于某一个元素，它的贡献是有规律的。令i表示该元素的下标，则该元素对于[i-k+1, i+k-1]这个区间，每隔两个数就有一次贡献。因此，我们就将n*n个区间的贡献值转化为了n个点的贡献值。举个例子，上面那个样例中，第2个元素的贡献就是(8-7) + (9-8)。</p>
+<p>为了能够快速查询某一点的贡献值，我们必须用到某种数据结构来优化，对于区间问题，容易想到用线段树或者树状数组。为了能够用数据结构优化，我们需要将数组从小到大排序。排序后，当我们计算某一点的贡献时，这个点对于比这个点小的元素的贡献。举个例子，上面第2个元素的贡献就是(8-7)，至于(9-8)，就留给第5个元素才计算。因此，树状数组需要的维护的东西有元素个数以及区间和。</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> x first</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> y second</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ok puts(<span class="string">&quot;ok&quot;</span>);</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">typedef</span> <span class="type">long</span> <span class="type">long</span> ll;</span><br><span class="line"><span class="keyword">typedef</span> vector&lt;<span class="type">int</span>&gt; vi;</span><br><span class="line"><span class="keyword">typedef</span> pair&lt;<span class="type">int</span>, <span class="type">int</span>&gt; pii;</span><br><span class="line"><span class="keyword">typedef</span> pair&lt;ll, ll&gt; pll;</span><br><span class="line"><span class="type">const</span> <span class="type">double</span> PI = <span class="built_in">acos</span>(<span class="number">-1.0</span>);</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> INF=<span class="number">0x3f3f3f3f</span>;</span><br><span class="line"><span class="type">const</span> ll LINF=<span class="number">0x3f3f3f3f3f3f3f3f</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N=<span class="number">2e5</span>+<span class="number">9</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> shift=<span class="number">1e3</span>+<span class="number">9</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">double</span> Eps=<span class="number">1e-7</span>;</span><br><span class="line"></span><br><span class="line">ll sum[<span class="number">4</span>][N], n, k, ans;</span><br><span class="line">pii a[N];</span><br><span class="line"></span><br><span class="line"><span class="function">ll <span class="title">query</span><span class="params">(<span class="type">int</span> p, <span class="type">int</span> id)</span> </span>&#123;</span><br><span class="line">    ll ans = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(p &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        ans += sum[id][p];</span><br><span class="line">        p -= p &amp; -p;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">add</span><span class="params">(<span class="type">int</span> p, <span class="type">int</span> v, <span class="type">int</span> id)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(p &lt;= n) &#123;</span><br><span class="line">        sum[id][p] += v;</span><br><span class="line">        p += p &amp; -p;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">void</span>)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">fopen</span>(<span class="string">&quot;in&quot;</span>, <span class="string">&quot;r&quot;</span>)!=<span class="literal">NULL</span>) &#123;<span class="built_in">freopen</span>(<span class="string">&quot;in&quot;</span>, <span class="string">&quot;r&quot;</span>, stdin); <span class="built_in">freopen</span>(<span class="string">&quot;out&quot;</span>, <span class="string">&quot;w&quot;</span>, stdout);&#125;</span><br><span class="line">    <span class="keyword">while</span>(cin &gt;&gt; n &gt;&gt; k) &#123;</span><br><span class="line">        ans = <span class="number">0</span>;</span><br><span class="line">        <span class="built_in">memset</span>(sum, <span class="number">0</span>, <span class="keyword">sizeof</span> sum);</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;a[i].x);</span><br><span class="line">            a[i].y = i;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">sort</span>(a+<span class="number">1</span>, a+n+<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            <span class="type">int</span> id = a[i].y &amp; <span class="number">1</span>;</span><br><span class="line">            <span class="type">int</span> r = a[i].y + k - <span class="number">1</span>;</span><br><span class="line">            <span class="type">int</span> l = a[i].y - k + <span class="number">1</span>;</span><br><span class="line">            <span class="comment">//边界情况的处理</span></span><br><span class="line">            <span class="keyword">if</span>(l &lt; <span class="number">1</span>)</span><br><span class="line">                l = k - a[i].y + <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span>(r &gt; n)</span><br><span class="line">                r = <span class="number">2</span>*n - a[i].y - k + <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//计算某点对答案的贡献</span></span><br><span class="line">            <span class="keyword">if</span>(k &amp; <span class="number">1</span>)</span><br><span class="line">                ans += <span class="number">1LL</span> * a[i].x * (<span class="built_in">query</span>(r, id+<span class="number">2</span>) - <span class="built_in">query</span>(l<span class="number">-1</span>, id+<span class="number">2</span>)) - (<span class="built_in">query</span>(r, id) - <span class="built_in">query</span>(l<span class="number">-1</span>, id));</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                ans += <span class="number">1LL</span> * a[i].x * (<span class="built_in">query</span>(r, (id+<span class="number">2</span>)^<span class="number">1</span>) - <span class="built_in">query</span>(l<span class="number">-1</span>, (id+<span class="number">2</span>)^<span class="number">1</span>)) - (<span class="built_in">query</span>(r, id^<span class="number">1</span>) - <span class="built_in">query</span>(l<span class="number">-1</span>, id^<span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">            <span class="comment">//用该点更新树状数组</span></span><br><span class="line">            <span class="built_in">add</span>(a[i].y, a[i].x, id);</span><br><span class="line">            <span class="built_in">add</span>(a[i].y, <span class="number">1</span>, id + <span class="number">2</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%lld\n&quot;</span>, ans);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -243,7 +247,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/65/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/65/">65</a><span class="page-number current">66</span>
+    <a class="extend prev" rel="prev" href="/page/65/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/65/">65</a><span class="page-number current">66</span><a class="page-number" href="/page/67/">67</a><a class="page-number" href="/page/68/">68</a><a class="extend next" rel="next" href="/page/67/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -311,24 +315,24 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">66</span>
+          <span class="site-state-item-count">68</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">49</span>
+        <span class="site-state-item-count">46</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
 </div>
   <div class="links-of-author motion-element">
       <span class="links-of-author-item">
-        <a href="https://github.com/hyzgh" title="GitHub → https://github.com/hyzgh" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+        <a href="https://github.com/hyzgh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hyzgh" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
       </span>
       <span class="links-of-author-item">
-        <a href="/atom.xml" title="RSS → /atom.xml"><i class="rss fa-fw"></i>RSS</a>
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="rss fa-fw"></i>RSS</a>
       </span>
   </div>
 
@@ -353,13 +357,13 @@
 <div class="copyright">
   
   &copy; 2018 – 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="male"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">hyz</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
 
         
@@ -379,9 +383,17 @@
   <script src="/lib/anime.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
 <script src="/js/schemes/pisces.js"></script>
+
+
 <script src="/js/next-boot.js"></script>
+
 
 
 
@@ -390,7 +402,9 @@
 
 
 
-  <script src="/js/local-search.js"></script>
+  
+<script src="/js/local-search.js"></script>
+
 
 
 

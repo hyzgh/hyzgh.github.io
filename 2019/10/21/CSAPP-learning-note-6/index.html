@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 3.9.0">
+<meta name="generator" content="Hexo 7.0.0-rc2">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/hyzgh-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/hyzgh-16x16.png">
@@ -21,17 +21,18 @@
   </script>
 
   <meta name="description" content="最近看了CSAPP的第八章——异常控制流。 异常在计算机中，假如没有异常，那么指令是顺序执行的。当遇到异常时，会执行异常处理程序。异常有不同的种类，有中断、陷阱、故障、终止。 中断，是在CPU执行某条指令的时候，其他部件异步产生的，比如定时器芯片、磁盘控制器、网络适配器等。CPU检测到中断后，会把当前指令执行完，然后转去执行异常处理程序，接着再返回来执行下一条指令。 陷阱，是有意的异常，最常见的陷">
-<meta name="keywords" content="计算机系统,CSAPP">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CSAPP 学习笔记 6 异常控制流">
 <meta property="og:url" content="https://hyzgh.github.io/2019/10/21/CSAPP-learning-note-6/index.html">
 <meta property="og:site_name" content="hyz&#39;s blog">
 <meta property="og:description" content="最近看了CSAPP的第八章——异常控制流。 异常在计算机中，假如没有异常，那么指令是顺序执行的。当遇到异常时，会执行异常处理程序。异常有不同的种类，有中断、陷阱、故障、终止。 中断，是在CPU执行某条指令的时候，其他部件异步产生的，比如定时器芯片、磁盘控制器、网络适配器等。CPU检测到中断后，会把当前指令执行完，然后转去执行异常处理程序，接着再返回来执行下一条指令。 陷阱，是有意的异常，最常见的陷">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-08-29T09:16:28.468Z">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-10-21T11:16:38.000Z">
+<meta property="article:modified_time" content="2020-08-29T09:16:28.468Z">
+<meta property="article:author" content="hyz">
+<meta property="article:tag" content="计算机系统">
+<meta property="article:tag" content="CSAPP">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CSAPP 学习笔记 6 异常控制流">
-<meta name="twitter:description" content="最近看了CSAPP的第八章——异常控制流。 异常在计算机中，假如没有异常，那么指令是顺序执行的。当遇到异常时，会执行异常处理程序。异常有不同的种类，有中断、陷阱、故障、终止。 中断，是在CPU执行某条指令的时候，其他部件异步产生的，比如定时器芯片、磁盘控制器、网络适配器等。CPU检测到中断后，会把当前指令执行完，然后转去执行异常处理程序，接着再返回来执行下一条指令。 陷阱，是有意的异常，最常见的陷">
 
 <link rel="canonical" href="https://hyzgh.github.io/2019/10/21/CSAPP-learning-note-6/">
 
@@ -77,6 +78,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="hyz's blog" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -229,7 +231,7 @@
         <p>最近看了CSAPP的第八章——异常控制流。</p>
 <h1 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h1><p>在计算机中，假如没有异常，那么指令是顺序执行的。当遇到异常时，会执行异常处理程序。异常有不同的种类，有中断、陷阱、故障、终止。</p>
 <p>中断，是在CPU执行某条指令的时候，其他部件异步产生的，比如定时器芯片、磁盘控制器、网络适配器等。CPU检测到中断后，会把当前指令执行完，然后转去执行异常处理程序，接着再返回来执行下一条指令。</p>
-<p>陷阱，是有意的异常，最常见的陷阱是系统调用。系统调用，是指从用户模式转为内核模式，以执行一些特殊的指令，比如操作I/O设备。执行完系统调用后，会返回来执行下一条指令。</p>
+<p>陷阱，是有意的异常，最常见的陷阱是系统调用。系统调用，是指从用户模式转为内核模式，以执行一些特殊的指令，比如操作I&#x2F;O设备。执行完系统调用后，会返回来执行下一条指令。</p>
 <p>故障，是指执行指令的时候遇到了意外，比如遇到了缺页、访问了未定义的虚拟内存区域等。根据故障的不同，异常处理程序执行完后可能会返回执行当前指令，也有可能会终止程序。在写程序时常常遇到的<code>Floating point exception</code>和<code>Segmentation fault</code>就属于故障，且在Linux中的处理是程序被终止。</p>
 <p>终止，是指遇到了致命的硬件错误，必须结束程序。</p>
 <p>因为异常种类繁多，所以计算机中有一张异常表，用来记录不同的异常及对应的异常处理程序。在CPU中，有一个特殊的寄存器——异常表基址寄存器，用来存放异常表在内存中的基址。当CPU遇到一种异常的时候，会拿到一个异常号。CPU拿着这个异常号及寄存器中的基址，便可以找到对应的异常处理程序了。</p>
@@ -253,7 +255,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/计算机系统/" rel="tag"># 计算机系统</a>
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/" rel="tag"># 计算机系统</a>
               <a href="/tags/CSAPP/" rel="tag"># CSAPP</a>
           </div>
 
@@ -329,7 +331,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#异常"><span class="nav-number">1.</span> <span class="nav-text">异常</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#进程"><span class="nav-number">2.</span> <span class="nav-text">进程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#操作进程的工具"><span class="nav-number">3.</span> <span class="nav-text">操作进程的工具</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8"><span class="nav-number">1.</span> <span class="nav-text">异常</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">进程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%B7%A5%E5%85%B7"><span class="nav-number">3.</span> <span class="nav-text">操作进程的工具</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -345,24 +347,24 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">66</span>
+          <span class="site-state-item-count">68</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">49</span>
+        <span class="site-state-item-count">46</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
 </div>
   <div class="links-of-author motion-element">
       <span class="links-of-author-item">
-        <a href="https://github.com/hyzgh" title="GitHub → https://github.com/hyzgh" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+        <a href="https://github.com/hyzgh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hyzgh" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
       </span>
       <span class="links-of-author-item">
-        <a href="/atom.xml" title="RSS → /atom.xml"><i class="rss fa-fw"></i>RSS</a>
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="rss fa-fw"></i>RSS</a>
       </span>
   </div>
 
@@ -387,13 +389,13 @@
 <div class="copyright">
   
   &copy; 2018 – 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="male"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">hyz</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
 
         
@@ -413,9 +415,17 @@
   <script src="/lib/anime.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
 <script src="/js/schemes/pisces.js"></script>
+
+
 <script src="/js/next-boot.js"></script>
+
 
 
 
@@ -424,7 +434,9 @@
 
 
 
-  <script src="/js/local-search.js"></script>
+  
+<script src="/js/local-search.js"></script>
+
 
 
 

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 3.9.0">
+<meta name="generator" content="Hexo 7.0.0-rc2">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/hyzgh-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/hyzgh-16x16.png">
@@ -24,9 +24,9 @@
 <meta property="og:title" content="hyz&#39;s blog">
 <meta property="og:url" content="https://hyzgh.github.io/page/5/index.html">
 <meta property="og:site_name" content="hyz&#39;s blog">
-<meta property="og:locale" content="zh-CN">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="hyz">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hyz&#39;s blog">
 
 <link rel="canonical" href="https://hyzgh.github.io/page/5/">
 
@@ -72,6 +72,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="hyz's blog" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -183,7 +184,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2020/08/29/CSAPP-learning-note-7/">
+    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2020/11/25/golang-source-code-learning-1-compile-source-code/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/hyzgh-128x128.png">
@@ -197,7 +198,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/08/29/CSAPP-learning-note-7/" class="post-title-link" itemprop="url">CSAPP 学习笔记 7 虚拟内存</a>
+            <a href="/2020/11/25/golang-source-code-learning-1-compile-source-code/" class="post-title-link" itemprop="url">Golang源码学习1 源码编译</a>
         </h2>
 
         <div class="post-meta">
@@ -207,7 +208,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-08-29 17:13:37" itemprop="dateCreated datePublished" datetime="2020-08-29T17:13:37+08:00">2020-08-29</time>
+              <time title="创建时间：2020-11-25 08:40:12" itemprop="dateCreated datePublished" datetime="2020-11-25T08:40:12+08:00">2020-11-25</time>
             </span>
 
           
@@ -221,69 +222,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>好久没看CSAPP这本书了。最近在学习redis的AOF重写过程，发现对于涉及的一些概念有些模糊，比如fork、页表、虚拟内存、物理内存等。而且，最近在工作中也经常遇到和内存相关的问题，在利用top命令来排查内存问题的过程中，发现手册里提到的一些内存的概念，自己都不甚清晰。</p>
-<p>于是很有必要重新捡起这本书看看，梳理一下书中第9章虚拟内存的相关知识，巩固一下基础。</p>
-<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>操作系统的内存是由许多进程共享的，假如进程之间内存没有独立开来，那么很有可能导致进程崩溃。</p>
-<p>虚拟内存是现代系统提供的一种对主存的抽象概念，用于将进程间的内存空间相互独立开来。</p>
-<blockquote>
-<p> 现代操作系统都使用的是按需页面调度的方式。</p>
-</blockquote>
-<p>从top的manual中可以查看Linux的多种内存类型的定义。</p>
-<blockquote>
-<p>physical memory: a limited resource where code and data must reside when executed or referenced.</p>
-<p>optional swap file: where modified (dirty) memory can be saved and later retrieved if too many demands are made on physical memory.</p>
-<p>virtual memory: a  nearly  unlimited resource.</p>
-</blockquote>
-<p>其中，虚拟内存是近似无限大的，它的意义在于：</p>
-<blockquote>
-<ol>
-<li>abstraction, free from physical memory addresses/limits</li>
-<li>isolation, every process in a separate address space</li>
-<li>sharing, a single mapping can serve multiple needs</li>
-<li>flexibility, assign a virtual address to a file</li>
-</ol>
-</blockquote>
-<p>对于第一点和第二点，就是CSAPP中提到的进程内存之间抽象和隔离。</p>
-<p>第三点和第四点是什么意思呢？</p>
-<p>另外，手册中也提到了不管是哪种内存类型，都是以页面的方式进行管理，通常是4KB。当然，在某些场景可以将页面设置得大一些，称为big pgae.</p>
-<p>对于每一个page，在Linux中，都可以划分到某一类中。具体类别如下：</p>
-<p><img src="../../../../Documents/notebook/img/image-20201129171849191.png" alt="image-20201129171849191"></p>
-<p>对于物理内存和虚拟内存，可以划分到这四类中任意一个。而对于swap file的内存，只能划分到#1和#3.</p>
-<p>Anonymous和File-backed有什么区别：</p>
-<blockquote>
-<p><strong>File</strong>-<strong>backed</strong> mapping maps an area of the process’s virtual memory to <strong>files</strong>; i.e. reading those areas of memory causes the <strong>file</strong> to be read. It is the default mapping type. <strong>Anonymous</strong> mapping maps an area of the process’s virtual memory not <strong>backed</strong> by any <strong>file</strong>. The contents are initialized to zero.</p>
-</blockquote>
-<p>top可以显示的关于内存的各种指标，参考手册如下：</p>
-<pre><code>%MEM - simply RES divided by total physical memory
-CODE - the `pgms&apos; portion of quadrant 3
-DATA - the entire quadrant 1 portion of VIRT plus all
-       explicit mmap file-backed pages of quadrant 3
-RES  - anything occupying physical memory which, beginning with
-       Linux-4.5, is the sum of the following three fields:
-       RSan - quadrant 1 pages, which include any
-              former quadrant 3 pages if modified
-       RSfd - quadrant 3 and quadrant 4 pages
-       RSsh - quadrant 2 pages
-RSlk - subset of RES which cannot be swapped out (any quadrant)
-SHR  - subset of RES (excludes 1, includes all 2 &amp; 4, some 3)
-SWAP - potentially any quadrant except 4
-USED - simply the sum of RES and SWAP
-VIRT - everything in-use and/or reserved (all quadrants)</code></pre><p>使用Go写一个简单的hello, world程序：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">"fmt"</span></span><br><span class="line">    <span class="string">"time"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">"hello, world"</span>)</span><br><span class="line">    time.Sleep(<span class="number">1</span> * time.Hour)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>运行后，通过top的mem视图可以观察该进程的内存情况：</p>
-<p><img src="../../../../Documents/notebook/img/image-20201205114259481.png" alt="image-20201205114259481"></p>
-<p>这里的VIRT, RES, CODE, DATA, SHR的单位是KiB。</p>
-<p>VIRT：虚拟内存占用大概是700MiB。（感觉有点反直觉）</p>
-<p>RES：实际的物理内存占用大概是1.8MiB。</p>
-<p>CODE：代码占用的内存是584KiB。</p>
-<p>DATA：运行栈和堆的数据大概是102MiB。</p>
-<p>SHR：共享内存大概是1MiB。</p>
-<p>我感觉实际的内存占用都有点大，能更细粒度地观察内存花在哪里的吗？分析一下。</p>
-<p>怎么分析该进程的内存情况呢？</p>
-<p>怎么理解这四种内存页呢？mmap这个函数的定义是什么？</p>
-<p>top如何保存视图？</p>
-<p>（未完待续）</p>
+          <p>前些天在工作中用Go写出了一个内存泄露的bug，原因是没有认真阅读文档，使用姿势不对。根据官方文档纠正使用姿势后，解决掉了这个bug。但是，对于为什么会内存泄露我还不是很明白，于是打算对源码研究一番，就有了这篇博文。</p>
+<p>我的电脑操作系统是Linux，之前安装Go的方式是根据<a href="https://golang.org/dl/">官网教程</a>下载的二进制，在<code>$GOROOT</code>有编译好的二进制文件，也有源代码。通常在写项目代码时，会跳转标准库的函数说明，就是跳转到这里的源代码。这里的源代码用来参考还好，但是不适合折腾。我选择了从github拷贝最新的源代码来阅读。一是不会影响正常项目的编译，二是能拉取到最新的源代码，三是可以看到整个项目各个大佬的commit。</p>
+<p>下载源代码，直接<code>git clone</code>即可。</p>
+<p>下载了源代码后，开始尝试阅读源码。发现一个问题，IDE会对一些Go标准库的函数标红，提示没有这个函数的引用。经过查看commit，发现这个函数是新增加的，而自己IDE使用的sdk还是老旧的、之前下载的二进制文件。为了让GoLand认识这些新函数，需要使用这份新的源码编译。</p>
+<p>对源码的编译。我参考了<a href="https://golang.org/doc/install/source">Installing Go from source</a>，这里不再赘述。</p>
+<p>学习Golang的源码，就是跟顶尖程序员学习编程，是一件蛮有意义的事情。后面会写一些Golang源码学习相关的博文。</p>
+<p>（全文完）</p>
 
       
     </div>
@@ -302,7 +247,7 @@ VIRT - everything in-use and/or reserved (all quadrants)</code></pre><p>使用Go
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/66/">66</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/68/">68</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -370,24 +315,24 @@ VIRT - everything in-use and/or reserved (all quadrants)</code></pre><p>使用Go
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">66</span>
+          <span class="site-state-item-count">68</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">49</span>
+        <span class="site-state-item-count">46</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
 </div>
   <div class="links-of-author motion-element">
       <span class="links-of-author-item">
-        <a href="https://github.com/hyzgh" title="GitHub → https://github.com/hyzgh" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+        <a href="https://github.com/hyzgh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hyzgh" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
       </span>
       <span class="links-of-author-item">
-        <a href="/atom.xml" title="RSS → /atom.xml"><i class="rss fa-fw"></i>RSS</a>
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="rss fa-fw"></i>RSS</a>
       </span>
   </div>
 
@@ -412,13 +357,13 @@ VIRT - everything in-use and/or reserved (all quadrants)</code></pre><p>使用Go
 <div class="copyright">
   
   &copy; 2018 – 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="male"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">hyz</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
 
         
@@ -438,9 +383,17 @@ VIRT - everything in-use and/or reserved (all quadrants)</code></pre><p>使用Go
   <script src="/lib/anime.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
 <script src="/js/schemes/pisces.js"></script>
+
+
 <script src="/js/next-boot.js"></script>
+
 
 
 
@@ -449,7 +402,9 @@ VIRT - everything in-use and/or reserved (all quadrants)</code></pre><p>使用Go
 
 
 
-  <script src="/js/local-search.js"></script>
+  
+<script src="/js/local-search.js"></script>
+
 
 
 

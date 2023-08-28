@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 3.9.0">
+<meta name="generator" content="Hexo 7.0.0-rc2">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/hyzgh-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/hyzgh-16x16.png">
@@ -24,9 +24,9 @@
 <meta property="og:title" content="hyz&#39;s blog">
 <meta property="og:url" content="https://hyzgh.github.io/page/53/index.html">
 <meta property="og:site_name" content="hyz&#39;s blog">
-<meta property="og:locale" content="zh-CN">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="hyz">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hyz&#39;s blog">
 
 <link rel="canonical" href="https://hyzgh.github.io/page/53/">
 
@@ -72,6 +72,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="hyz's blog" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -183,7 +184,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2018/05/09/0/">
+    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2018/07/18/0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/hyzgh-128x128.png">
@@ -197,7 +198,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2018/05/09/0/" class="post-title-link" itemprop="url">CF 980D: Perfect Groups</a>
+            <a href="/2018/07/18/0/" class="post-title-link" itemprop="url">截止于180718的AOBO补题汇总</a>
         </h2>
 
         <div class="post-meta">
@@ -207,7 +208,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2018-05-09 11:57:40" itemprop="dateCreated datePublished" datetime="2018-05-09T11:57:40+08:00">2018-05-09</time>
+              <time title="创建时间：2018-07-18 00:00:00" itemprop="dateCreated datePublished" datetime="2018-07-18T00:00:00+08:00">2018-07-18</time>
             </span>
 
           
@@ -221,11 +222,32 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h1><p>给一个数组，让你给这个数组分组，使得组内的元素两两相乘都是平方数，记最少分组数为d。</p>
-<p>现在给你一个数组a，求出它所有连续子序列的d，然后输出每个d(1&lt;= d &lt;= n)的计数。</p>
-<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>用唯一分解定理分解平方数，可以发现它的某一素因子的个数为偶数个。若两个数相乘是平方数，则两者的所有素因子中，要么两个数都具有偶数个，要么都具有奇数个。因此，我们可以将一个数表示成它那些奇数个数的素因子的乘积。然后，若两个数相同，则可以组成平方数，否则不可以。于是，问题就转化成了求连续子序列中出现不同数字的个数，容易想到用set来维护，但是由于我们需要用$ O(n^{2}) $的时间来枚举连续子序列的起点和终点，再用上个set会超时。所以，结合数组a的元素很大，我们需要将其离散化，然后用一个桶来维护。</p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> x first</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> y second</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ok cout &lt;&lt; <span class="meta-string">"ok"</span> &lt;&lt; endl;</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">long</span> ll;</span><br><span class="line"><span class="keyword">typedef</span> <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; vi;</span><br><span class="line"><span class="keyword">typedef</span> pair&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt; pii;</span><br><span class="line"><span class="keyword">typedef</span> pair&lt;ll, ll&gt; pll;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">double</span> PI = <span class="built_in">acos</span>(<span class="number">-1.0</span>);</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> INF=<span class="number">0x3f3f3f3f</span>;</span><br><span class="line"><span class="keyword">const</span> ll LINF=<span class="number">0x3f3f3f3f3f3f3f3f</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N=<span class="number">1e5</span>+<span class="number">9</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> shift=<span class="number">1e3</span>+<span class="number">9</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">double</span> Eps=<span class="number">1e-7</span>;</span><br><span class="line"></span><br><span class="line">vi pri;</span><br><span class="line"><span class="keyword">int</span> n, a[N], ans[N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">pre</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> up = <span class="number">10000</span>;</span><br><span class="line">    <span class="keyword">bool</span> vis[N];</span><br><span class="line">    <span class="built_in">memset</span>(vis, <span class="number">0</span>, <span class="keyword">sizeof</span> vis);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">2</span>; i &lt;= up; i++)</span><br><span class="line">        <span class="keyword">if</span>(!vis[i])</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">2</span> * i; j &lt;= up; j += i)</span><br><span class="line">                vis[j] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">2</span>; i &lt;= up; i++)</span><br><span class="line">        <span class="keyword">if</span>(!vis[i])</span><br><span class="line">            pri.push_back(i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">fac</span><span class="params">(<span class="keyword">int</span> d)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(d == <span class="number">0</span>) <span class="keyword">return</span> d;</span><br><span class="line">    <span class="keyword">int</span> ans = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span>(d &lt; <span class="number">0</span>) ans *= <span class="number">-1</span>, d *= <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">int</span> p = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(d != <span class="number">1</span> &amp;&amp; p &lt; pri.size()) &#123;</span><br><span class="line">        <span class="keyword">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(d % pri[p] == <span class="number">0</span>)</span><br><span class="line">            cnt++, d /= pri[p];</span><br><span class="line">        <span class="keyword">if</span>(cnt &amp; <span class="number">1</span>)</span><br><span class="line">            ans *= pri[p];</span><br><span class="line">        p++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(d != <span class="number">1</span>)</span><br><span class="line">        ans *= d;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">lisanhua</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">set</span>&lt;<span class="keyword">int</span>&gt; se;</span><br><span class="line">    <span class="built_in">map</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt; m;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">        se.insert(a[i]);</span><br><span class="line">    <span class="keyword">int</span> cnt = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">auto</span> i: se) &#123;</span><br><span class="line">        <span class="keyword">if</span>(i == <span class="number">0</span>)</span><br><span class="line">            m[i] = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            m[i] = cnt++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">        a[i] = m[a[i]];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(fopen(<span class="string">"in"</span>, <span class="string">"r"</span>)!=<span class="literal">NULL</span>) &#123;freopen(<span class="string">"in"</span>, <span class="string">"r"</span>, <span class="built_in">stdin</span>); freopen(<span class="string">"out"</span>, <span class="string">"w"</span>, <span class="built_in">stdout</span>);&#125;</span><br><span class="line">    pre();</span><br><span class="line">    <span class="keyword">while</span>(<span class="built_in">cin</span> &gt;&gt; n) &#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            <span class="built_in">scanf</span>(<span class="string">"%d"</span>, a + i);</span><br><span class="line">            a[i] = fac(a[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">memset</span>(ans, <span class="number">0</span>, <span class="keyword">sizeof</span> ans);</span><br><span class="line">        lisanhua();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            <span class="keyword">int</span> cnt = <span class="number">0</span>, zeroFlag = <span class="number">0</span>, b[N];</span><br><span class="line">            <span class="built_in">memset</span>(b, <span class="number">0</span>, <span class="keyword">sizeof</span> b);</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j = i; j &lt; n; j++) &#123;</span><br><span class="line">                <span class="keyword">if</span>(a[j] == <span class="number">0</span>)</span><br><span class="line">                    zeroFlag = <span class="number">1</span>;</span><br><span class="line">                <span class="keyword">if</span>(b[a[j]]++ == <span class="number">0</span>)</span><br><span class="line">                    cnt++;</span><br><span class="line">                <span class="keyword">if</span>(zeroFlag &amp;&amp; cnt != <span class="number">1</span>)</span><br><span class="line">                    ans[cnt<span class="number">-1</span>]++;</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                    ans[cnt]++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"%d%c"</span>, ans[i], i == n ? <span class="string">'\n'</span>: <span class="string">' '</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+          <p>待补题目按AC数降序排列。</p>
+<h2 id="180429（浙江省赛）"><a href="#180429（浙江省赛）" class="headerlink" title="180429（浙江省赛）"></a>180429（浙江省赛）</h2><p><a href="http://acm.zju.edu.cn/onlinejudge/showContestProblems.do?contestId=378">补题传送门</a><br>待补：<br>D题：Sequence Swapping<br>E题：LIS<br>I题：Magic Points</p>
+<h2 id="180426（2017杭州亚洲区域赛）"><a href="#180426（2017杭州亚洲区域赛）" class="headerlink" title="180426（2017杭州亚洲区域赛）"></a>180426（2017杭州亚洲区域赛）</h2><p><a href="https://vjudge.net/contest/225282">补题传送门</a><br>待补：</p>
+<ul>
+<li><del>K题：Master of Sequence</del></li>
+<li><del>B题：Master of Phi</del></li>
+</ul>
+<h2 id="180422（2018-ACM-ICPC-中国大学生程序设计竞赛线上赛）"><a href="#180422（2018-ACM-ICPC-中国大学生程序设计竞赛线上赛）" class="headerlink" title="180422（2018 ACM-ICPC 中国大学生程序设计竞赛线上赛）"></a>180422（2018 ACM-ICPC 中国大学生程序设计竞赛线上赛）</h2><p><a href="https://www.jisuanke.com/contest/1227">补题传送门</a><br>待补：</p>
+<ul>
+<li><del>G题：Trouble of Tyrant</del></li>
+<li><del>F题：Clever King</del></li>
+<li><del>H题：Rock Paper Scissors Lizard Spock</del></li>
+</ul>
+<h2 id="180419（2017中国大学生程序设计竞赛-女生专场）"><a href="#180419（2017中国大学生程序设计竞赛-女生专场）" class="headerlink" title="180419（2017中国大学生程序设计竞赛 - 女生专场）"></a>180419（2017中国大学生程序设计竞赛 - 女生专场）</h2><p><a href="https://vjudge.net/contest/223275#overview">补题传送门</a><br>待补：</p>
+<ul>
+<li><del>J题：Judicious Strategy</del></li>
+<li><del>I题：Innumerable Ancestors</del></li>
+</ul>
+<h2 id="180412（OI题目）"><a href="#180412（OI题目）" class="headerlink" title="180412（OI题目）"></a>180412（OI题目）</h2><p><a href="http://10.21.32.116/contest.php?cid=1010">补题传送门</a><br>待补：</p>
+<ul>
+<li>H题：以撒</li>
+<li>I题：永恒</li>
+<li><del>A题：动物朋友</del></li>
+<li><del>D题：永恒的史诗</del></li>
+<li><del>E题：中二病也要浪漫!</del></li>
+</ul>
 
       
     </div>
@@ -244,7 +266,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/52/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/52/">52</a><span class="page-number current">53</span><a class="page-number" href="/page/54/">54</a><span class="space">&hellip;</span><a class="page-number" href="/page/66/">66</a><a class="extend next" rel="next" href="/page/54/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/52/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/52/">52</a><span class="page-number current">53</span><a class="page-number" href="/page/54/">54</a><span class="space">&hellip;</span><a class="page-number" href="/page/68/">68</a><a class="extend next" rel="next" href="/page/54/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -312,24 +334,24 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">66</span>
+          <span class="site-state-item-count">68</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">49</span>
+        <span class="site-state-item-count">46</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
 </div>
   <div class="links-of-author motion-element">
       <span class="links-of-author-item">
-        <a href="https://github.com/hyzgh" title="GitHub → https://github.com/hyzgh" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+        <a href="https://github.com/hyzgh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hyzgh" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
       </span>
       <span class="links-of-author-item">
-        <a href="/atom.xml" title="RSS → /atom.xml"><i class="rss fa-fw"></i>RSS</a>
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="rss fa-fw"></i>RSS</a>
       </span>
   </div>
 
@@ -354,13 +376,13 @@
 <div class="copyright">
   
   &copy; 2018 – 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="male"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">hyz</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
 
         
@@ -380,9 +402,17 @@
   <script src="/lib/anime.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
 <script src="/js/schemes/pisces.js"></script>
+
+
 <script src="/js/next-boot.js"></script>
+
 
 
 
@@ -391,7 +421,9 @@
 
 
 
-  <script src="/js/local-search.js"></script>
+  
+<script src="/js/local-search.js"></script>
+
 
 
 

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 3.9.0">
+<meta name="generator" content="Hexo 7.0.0-rc2">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/hyzgh-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/hyzgh-16x16.png">
@@ -21,18 +21,19 @@
   </script>
 
   <meta name="description" content="这两周看了第三章的前面五节，对机器指令有了更进一步的认识。  历史观点Intel处理器系列俗称x86，它有着一段进化之旅。从最初的8086到i386，再到i5和i7。那么它究竟有哪些方面的提升呢？  晶体管数量增加。Core i7的1.4G个晶体管，是8086芯片29K个晶体管的4.8万倍。晶体管越多，意味着芯片的电路越复杂，能力越强。 指令集变大，支持更多指令。8087在8086的基础上，建立了">
-<meta name="keywords" content="计算机系统,CSAPP">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CSAPP 学习笔记 3 程序的机器级表示">
 <meta property="og:url" content="https://hyzgh.github.io/2019/09/29/CSAPP-learning-note-3/index.html">
 <meta property="og:site_name" content="hyz&#39;s blog">
 <meta property="og:description" content="这两周看了第三章的前面五节，对机器指令有了更进一步的认识。  历史观点Intel处理器系列俗称x86，它有着一段进化之旅。从最初的8086到i386，再到i5和i7。那么它究竟有哪些方面的提升呢？  晶体管数量增加。Core i7的1.4G个晶体管，是8086芯片29K个晶体管的4.8万倍。晶体管越多，意味着芯片的电路越复杂，能力越强。 指令集变大，支持更多指令。8087在8086的基础上，建立了">
-<meta property="og:locale" content="zh-CN">
+<meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://s2.ax1x.com/2019/09/29/uGR19e.png">
-<meta property="og:updated_time" content="2020-08-29T09:17:22.329Z">
+<meta property="article:published_time" content="2019-09-29T14:38:59.000Z">
+<meta property="article:modified_time" content="2020-08-29T09:17:22.329Z">
+<meta property="article:author" content="hyz">
+<meta property="article:tag" content="计算机系统">
+<meta property="article:tag" content="CSAPP">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CSAPP 学习笔记 3 程序的机器级表示">
-<meta name="twitter:description" content="这两周看了第三章的前面五节，对机器指令有了更进一步的认识。  历史观点Intel处理器系列俗称x86，它有着一段进化之旅。从最初的8086到i386，再到i5和i7。那么它究竟有哪些方面的提升呢？  晶体管数量增加。Core i7的1.4G个晶体管，是8086芯片29K个晶体管的4.8万倍。晶体管越多，意味着芯片的电路越复杂，能力越强。 指令集变大，支持更多指令。8087在8086的基础上，建立了">
 <meta name="twitter:image" content="https://s2.ax1x.com/2019/09/29/uGR19e.png">
 
 <link rel="canonical" href="https://hyzgh.github.io/2019/09/29/CSAPP-learning-note-3/">
@@ -79,6 +80,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="hyz's blog" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -304,7 +306,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/计算机系统/" rel="tag"># 计算机系统</a>
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/" rel="tag"># 计算机系统</a>
               <a href="/tags/CSAPP/" rel="tag"># CSAPP</a>
           </div>
 
@@ -380,7 +382,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#历史观点"><span class="nav-number">1.</span> <span class="nav-text">历史观点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#程序编码"><span class="nav-number">2.</span> <span class="nav-text">程序编码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据格式"><span class="nav-number">3.</span> <span class="nav-text">数据格式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#访问信息"><span class="nav-number">4.</span> <span class="nav-text">访问信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#算术和逻辑操作"><span class="nav-number">5.</span> <span class="nav-text">算术和逻辑操作</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%86%E5%8F%B2%E8%A7%82%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">历史观点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E7%BC%96%E7%A0%81"><span class="nav-number">2.</span> <span class="nav-text">程序编码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">数据格式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E4%BF%A1%E6%81%AF"><span class="nav-number">4.</span> <span class="nav-text">访问信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%97%E6%9C%AF%E5%92%8C%E9%80%BB%E8%BE%91%E6%93%8D%E4%BD%9C"><span class="nav-number">5.</span> <span class="nav-text">算术和逻辑操作</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -396,24 +398,24 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">66</span>
+          <span class="site-state-item-count">68</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">49</span>
+        <span class="site-state-item-count">46</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
 </div>
   <div class="links-of-author motion-element">
       <span class="links-of-author-item">
-        <a href="https://github.com/hyzgh" title="GitHub → https://github.com/hyzgh" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+        <a href="https://github.com/hyzgh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hyzgh" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
       </span>
       <span class="links-of-author-item">
-        <a href="/atom.xml" title="RSS → /atom.xml"><i class="rss fa-fw"></i>RSS</a>
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="rss fa-fw"></i>RSS</a>
       </span>
   </div>
 
@@ -438,13 +440,13 @@
 <div class="copyright">
   
   &copy; 2018 – 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="male"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">hyz</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
 
         
@@ -464,9 +466,17 @@
   <script src="/lib/anime.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
 <script src="/js/schemes/pisces.js"></script>
+
+
 <script src="/js/next-boot.js"></script>
+
 
 
 
@@ -475,7 +485,9 @@
 
 
 
-  <script src="/js/local-search.js"></script>
+  
+<script src="/js/local-search.js"></script>
+
 
 
 

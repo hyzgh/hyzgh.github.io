@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 3.9.0">
+<meta name="generator" content="Hexo 7.0.0-rc2">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/hyzgh-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/hyzgh-16x16.png">
@@ -24,9 +24,9 @@
 <meta property="og:title" content="hyz&#39;s blog">
 <meta property="og:url" content="https://hyzgh.github.io/page/2/index.html">
 <meta property="og:site_name" content="hyz&#39;s blog">
-<meta property="og:locale" content="zh-CN">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="hyz">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hyz&#39;s blog">
 
 <link rel="canonical" href="https://hyzgh.github.io/page/2/">
 
@@ -72,6 +72,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="hyz's blog" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -183,7 +184,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2021/05/03/MySQL-Learning-note-1-lock/">
+    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2021/06/05/The-Willpower-Instinct-readingNote/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/hyzgh-128x128.png">
@@ -197,7 +198,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/05/03/MySQL-Learning-note-1-lock/" class="post-title-link" itemprop="url">MySQL学习笔记1 事务并发</a>
+            <a href="/2021/06/05/The-Willpower-Instinct-readingNote/" class="post-title-link" itemprop="url">《自控力》阅读笔记</a>
         </h2>
 
         <div class="post-meta">
@@ -207,7 +208,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2021-05-03 17:35:37" itemprop="dateCreated datePublished" datetime="2021-05-03T17:35:37+08:00">2021-05-03</time>
+              <time title="创建时间：2021-06-05 16:25:01" itemprop="dateCreated datePublished" datetime="2021-06-05T16:25:01+08:00">2021-06-05</time>
             </span>
 
           
@@ -221,164 +222,75 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>最近一段时间学习了MySQL的锁，各种各样的锁，全局锁、表锁、MDL、行锁、间隙锁等等。</p>
-<p>每种锁都有其存在的意义，都是为了解决某一种问题。锁是解决事务并发问题的基本手段之一，除了锁，还有多版本控制等无锁手段。</p>
-<p>假如不使用一些手段，那么并发事务会存在脏读、不可重复读、幻读等问题。为了学习MySQL的并发事务隔离手段，我们首先需要了解事务存在的这几类并发问题。</p>
-<h1 id="事务并发问题"><a href="#事务并发问题" class="headerlink" title="事务并发问题"></a>事务并发问题</h1><h2 id="脏读"><a href="#脏读" class="headerlink" title="脏读"></a>脏读</h2><p>什么是脏读？脏读就是读到了其他未提交事务的数据。为了让这一过程更易理解，我们使用MySQL来复现。MySQL 5.7的事务默认隔离级别是可重复读，该级别下不存在问题。所以需要将MySQL的隔离级别设置为READ UNCOMMITTED（读未提交），该级别下会存在脏读。具体过程如下：</p>
-<p>session A，读取记录:</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED<br>MySQL root@(none):my_db&gt; begin;</p>
-<p>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 1000    |<br>+———+</p>
-</blockquote>
-<p>session B，修改记录:</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; begin;<br>MySQL root@(none):my_db&gt; update account set balance = balance + 100 where name = ‘A’;</p>
-</blockquote>
-<p>session A，读取记录:</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 1100     |<br>+———+</p>
-</blockquote>
-<p>可以发现，session A读到了尚未提交的session B的更新，属于脏读。</p>
-<p>脏读存在什么问题呢？假如session B回滚，那么这个数据就是脏数据，这会影响逻辑的正确性。举一个具体例子，客户A正在ATM机提款，这时候客户B想给他转了一笔钱，业务逻辑是先扣除B的余额，再给A加上钱。在给A加完钱后的一时刻，银行后台读取了A的账户余额，客户B的操作由于某些原因回滚了，这时候读取到的就是脏数据，造成的后果是多给A钱，而客户B没有损失。</p>
-<p>为了解决这个问题，MySQL引入了一致性视图的概念，在事务开启时给数据库的状态“拍”了个快照。</p>
-<p>具体来说，给每个事务设置了trx id，单调递增，是事务的唯一标志。当发生查询时，会查找小于等于自己trx id版本的记录。假设在session A开始时，trx id是1。在session B开启时，trx id是2。那么在session B更新记录时，这条记录的版本号是2。而在session A查询时，它查不到这条版本号为2的记录，会找到未更新前的那条记录。这就解决了上面提到的脏读问题。</p>
-<p>我们在将事务的隔离级别设置为可重复读，再实践一下：</p>
-<p>session A，读取记录:</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; begin<br>Query OK, 0 rows affected<br>Time: 0.000s<br>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 1000    |<br>+———+</p>
-</blockquote>
-<p>session B，修改记录:</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; begin;</p>
-<p>MySQL root@(none):my_db&gt; update account set balance = balance - 100 where name = ‘A’;</p>
-</blockquote>
-<p>session A，读取记录:</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 1000    |<br>+———+</p>
-</blockquote>
-<p>可以发现session A读不到session B的更改了，解决了脏读问题。</p>
-<p>总结：为了解决脏读问题，MySQL没有用到锁，而是使用了多版本控制机制，通过为每个事务开启一个视图来保持一致性。</p>
-<h2 id="不可重复读"><a href="#不可重复读" class="headerlink" title="不可重复读"></a>不可重复读</h2><p>什么是不可重复读？不可重复读就是一个事务在没有修改的情况下，同样的普通查询在不同时刻得到了不一样的结果。</p>
-<p>上面的实验看起来也是种不可重复读，但是实际上它不是。不可重复读，指的是其他已提交事务产生的影响，而不是未提交事务的影响。这就是脏读和不可重复读的区别点。</p>
-<p>让我们做个实验复现一下，首先需要将session A的事务隔离级别设置为READ COMMITTED（读已提交）</p>
-<p>session A，设置隔离级别并读取记录:</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED</p>
-<p>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 900     |<br>+———+</p>
-</blockquote>
-<p>session B，修改记录:</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; update account set balance = balance - 100 where name = ‘A’;</p>
-</blockquote>
-<p>session A，读取记录:</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 800     |<br>+———+</p>
-</blockquote>
-<p>可以发现两次session A读取的结果并不一致。注意这里session B和脏读的实验不同，没有使用<code>begin</code>开启事务。假如没有使用<code>begin</code>开启事务，那么默认情况下事务会马上提交。</p>
-<p>让我们将隔离级别设置回可重复读，再实验一下：</p>
-<p>session A，读取记录：</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 600     |<br>+———+</p>
-<p>MySQL root@(none):my_db&gt; begin<br>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 600     |<br>+———+</p>
-</blockquote>
-<p>session B，修改记录:</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; update account set balance = balance - 100 where name = ‘A’;</p>
-</blockquote>
-<p>session A，读取记录:</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 600     |<br>+———+</p>
-</blockquote>
-<p>可以发现在可重复读的隔离级别下，可以重复读。原理同样是MVCC。</p>
-<p>问题：更新的时候会读到最新值，算不可重复读吗？</p>
-<p>不算，根据不可重复读的定义，只有在不修改只有读取的情况下才算不可重复读。实际上，在可重复读的级别下，更新的时候，读取到其他事务的值是符合预期的。</p>
-<p>问题：这样会存在问题吗？</p>
-<p>假设我们有这么一个业务场景，在扣除某个人的余额前，需要先判断它是否足额（保证非负），然后再执行更新操作。</p>
-<p>经过实验发现存在这样的情况：</p>
-<p>session A:</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; begin;<br>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 100     |<br>+———+</p>
-</blockquote>
-<p>session B:</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; update account set balance = 0 where name = ‘A’;</p>
-</blockquote>
-<p>session A:</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| 100     |<br>+———+<br>MySQL root@(none):my_db&gt; update account set balance = balance - 100 where name = ‘A’;<br>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’;<br>+———+<br>| balance |<br>+———+<br>| -100     |<br>+———+</p>
-</blockquote>
-<p>可以发现出现了负值了，这是我们不允许出现的。</p>
-<p>问题：怎么解决这个问题呢？</p>
-<p>分析：使用记录锁。假如session A依赖于第一次查询的结果，那么就应该对它加锁，防止在自己完成事务前被修改。在MySQL中，可以使用<code>for udpate</code>对查询加记录所。在session A对记录加锁后，其他事务不再允许修改相应的记录，直到session A的事务结束(commit或rollback)。在执行语句加锁，在事务结束释放锁，被称为两阶段锁协议。</p>
-<p>问题：为什么要在结束的时候释放，提前释放会有问题么？</p>
-<p>假如提前释放其实可以提高并发度，但是MySQL似乎不支持提前释放。有一种特殊的自增锁（auto-inc），会自动提前释放。它是用于给自增字段生成id，加锁是为了保证递增。</p>
-<p>问题：两阶段锁协议解决了什么问题？</p>
-<p>问题：如何验证加了什么锁？</p>
-<p>可以使用Innodb Lock Monitor，具体可以查看下面的教程。</p>
-<blockquote>
-<p>记录锁的事务数据在SHOW ENGINE INNODB STATUS和InnoDB监视器输出中看起来类似于以下内容：</p>
-<p>RECORD LOCKS space id 58 page no 3 n bits 72 index PRIMARY of table test.t trx id 10078 <strong>lock_mode X locks rec but not gap</strong></p>
-</blockquote>
-<p>我们分析下Monitor的输出信息，先执行一个简单的select … for update操作：</p>
-<blockquote>
-<p>MySQL root@(none):my_db&gt; begin<br>MySQL root@(none):my_db&gt; select balance from account where name = ‘A’ for update;<br>+———+<br>| balance |<br>+———+<br>| 0       |<br>+———+</p>
-</blockquote>
-<p>查看输出信息：</p>
-<blockquote>
-<p>TRANSACTIONS<br>-———–<br>Trx id counter 2821<br>Purge done for trx’s n:o &lt; 0 undo n:o &lt; 0 state: running but idle<br>History list length 0<br>LIST OF TRANSACTIONS FOR EACH SESSION:<br>—TRANSACTION 421563048392544, not started<br>0 lock struct(s), heap size 1136, 0 row lock(s)<br>—TRANSACTION 2820, ACTIVE 6 sec<br>4 lock struct(s), heap size 1136, 3 row lock(s)<br>MySQL thread id 25, OS thread handle 140087744558848, query id 74 localhost root<br><strong>TABLE LOCK</strong> table <code>my_db</code>.<code>account</code> trx id 2820 <strong>lock mode IX</strong><br><strong>RECORD LOCKS</strong> space id 24 page no 4 n bits 72 index uniq_index_name of table <code>my_db</code>.<code>account</code> trx id 2820 <strong>lock_mode X</strong><br><strong>Record lock</strong>, heap no 2 PHYSICAL RECORD: n_fields 2; compact format; info bits 0<br> 0: len 1; hex 41; asc A;;<br> 1: len 8; hex 8000000000000001; asc         ;;</p>
-<p><strong>RECORD LOCKS</strong> space id 24 page no 3 n bits 72 <strong>index PRIMARY of table</strong> <code>my_db</code>.<code>account</code> trx id 2820 <strong>lock_mode X locks rec but not gap</strong><br>Record lock, heap no 2 PHYSICAL RECORD: n_fields 5; compact format; info bits 0<br> 0: len 8; hex 8000000000000001; asc         ;;<br> 1: len 6; hex 000000000921; asc      !;;<br> 2: len 7; hex 350000014f0110; asc 5   O  ;;<br> 3: len 1; hex 41; asc A;;<br> 4: len 4; hex 80000000; asc     ;;</p>
-<p><strong>RECORD LOCKS</strong> space id 24 page no 4 n bits 72 <strong>index uniq_index_name</strong> of table <code>my_db</code>.<code>account</code> trx id 2820 <strong>lock_mode X locks gap before rec</strong><br>Record lock, heap no 3 PHYSICAL RECORD: n_fields 2; compact format; info bits 0<br> 0: len 1; hex 42; asc B;;<br> 1: len 8; hex 8000000000000002; asc         ;;</p>
-</blockquote>
-<p>我将其中关键信息加粗了一下，可以发现该事务加了4个锁。包括1个TABLE LOCK和3个RECORD LOCKS：</p>
+          <p>最近阅读完了《自控力》这本书，书里讲的一些内容挺有道理和依据的，能解释生活中的一些行为。读完本书可以明白自己为何失控、如何失控，以及如何更好地避免失控，更好地掌控自己的生活。本博文以总结技巧为主，知识点为辅，说明该如何提高自己的自控力。</p>
+<p>当我们觉得自己的自控力很差时，其实其他大多数人也存在和我们一样的问题。这本书教给我一个很重要的道理，即任何人都是普通人，都会受生理的限制，会产生普通人面对诱惑时该有的表现。我们首先应该有自知之明，明白人类的自控力系统很孱弱，需要我们好好地运用技巧来“提高”自控力。</p>
+<h1 id="第一章-意志力是什么"><a href="#第一章-意志力是什么" class="headerlink" title="第一章 意志力是什么"></a>第一章 意志力是什么</h1><p>我理解文中提到的意志力和自控力是同义词，都表示对自己生活的掌控能力。</p>
+<p>生活中的事情，可以归为三类：我要做，我不要，我想要。意志力就是驾驭这三种事情，在这三者中寻得平衡。</p>
+<p>“我想要”是自己的目标和欲望，它越强大，越能让自己做该做的事情，并让自己不做不应该做的事情。</p>
+<p>每个人都会有积极的欲望和消极的欲望。积极欲望通常是更长期的目标，比如拥有规律的作息、健壮的身体、良好的学习习惯、向上的职业规划。而消极欲望，通常是短期的放纵，比如玩游戏、刷短视频、刷朋友圈。<strong>这里有个核心问题是怎么让自己的积极欲望更强大， 而消极欲望更渺小？</strong></p>
+<p>书中提到，每个会有两个自我，一个会控制自己，另一个则充满冲动。前者是多做积极事情的推动者，而后者则比较本能。</p>
+<p>技巧：给两个自我起个名字，以更好地认清两个自我的存在。比如可以将控制自我称为mage，而将冲动的自我称为monster。通过分别赋予前者积极的语义，后者消极的语义，以利于在做决策时，更好地唤醒明智的自己。</p>
+<p>通常来说，我们做决定时，通常都像开了自动挡，或者说，我们大多数时候会被过去的习惯所驱动。</p>
+<p><strong>这里有个核心问题，如何在做决定时唤醒自己？</strong></p>
+<p>技巧：集中注意力。比如在做决定时，关闭电子设备，闭上眼睛，做几个深呼吸。</p>
+<p>技巧：回忆做过的决定。比如可以在睡前，回忆一下今天没有去健身房健身的场景，受到了什么因素的干扰，下次应该怎么集中注意力。</p>
+<p>前额皮质：大脑中用于控制行为的区域。分成三部分，分别对应三类事情。</p>
+<p>技巧：练习冥想。冥想可以让更多的血液流进前额皮质，帮助自己做正确的事情。</p>
+<h1 id="第二章-意志力本能"><a href="#第二章-意志力本能" class="headerlink" title="第二章 意志力本能"></a>第二章 意志力本能</h1><p>本能是指人类先天携带的应对外界刺激时的反应。有些本能是先天携带的，比如生存、进食、应对危险等。</p>
+<p>本能、习惯其实都是在描述人类应对某一类事情如何表现。通常我们会说如何培养习惯，而不会说如何培养本能，因为本能是不可更改的。我们可以通过更改自己的习惯，来改变自己。</p>
+<p>多巴胺：一种让自己觉得做得某件事情会很快乐的化学物质。</p>
+<p>比如，在面对食物诱惑时，大脑会分泌一些多巴胺，让自己产生进食的冲动。这个应该因人而异，笔者面对食物诱惑时，多巴胺似乎分泌不足，因为自己总是不太想吃东西。另外，还有个例子是让很多人深受其恼的熬夜刷短视频，在我们想再刷几分钟就睡觉时，大脑总会分泌多巴胺让这个行为继续下去。</p>
+<p>本能相对应的自控表现，称之为“三思而后行”反应，即让自己慢下来，先想想，再做行动。在这个时代，我们应该做的是多做“三思而后行”反应，少依本能行事。</p>
+<p><strong>这里有个核心问题，如何让自己三思而后行？</strong></p>
+<p>技巧：将时间分块，强制事情执行前先思考。假如处于诱惑中，则应先强制中断当前的事情，先远离诱惑。</p>
+<p>心率变异度：反映意志力情况。越高，越能抵抗诱惑。</p>
+<p><strong>问题：怎么提高心意变异率？</strong></p>
 <ul>
-<li>table lock<ul>
-<li>lock mode IX  意向锁，在添加行锁之前添加，不会和行级的X, S锁发生冲突，只会和表级的X, S锁发生冲突。</li>
+<li>快速有效的方法，将呼吸频率降低到每分钟4~6次，也就是每分钟呼吸用10~15秒时间。</li>
+<li>长期坚持的方法，每周锻炼三次。这里的锻炼包括健身房、游泳、伸展运动、公园散步、打扫房间等活动。只要让自己离开床和沙发的活动，就有所帮助。</li>
+<li>充足、规律的晚上睡眠，以及适当的午休、小憩。</li>
 </ul>
-</li>
-<li>record locks<ul>
-<li>lock_mode X  对name=A的这行上写锁</li>
-<li>index PRIMARY of table, lock_mode X locks rec but not gap  是对主键索引加锁，对name=A这行加锁</li>
-<li>index uniq_index_name, lock_mode X locks gap before rec  是对二级索引uniq_index_name加锁，在记录前面加了gap锁</li>
+<p>素材：在网上搜索了一个问题，跳转到了知乎，看完了回答，刷起了短视频，本来打算查完问题就午休一会的，结果浪费了两个小时在刷视频上。睡了一觉后， 把手机扔在一边，才得以开始干活。</p>
+<p>素材：晚上，特别是周五的晚上，就会感觉很兴奋，想玩手机，打游戏、刷短视频、刷消息等。不知不觉就熬夜了。</p>
+<p>应对方法？</p>
+<ul>
+<li>属于“我不要”的挑战。</li>
+<li>不是强迫自己去睡觉，而是远离那些让自己没法睡觉的东西。并且在这个过程增强自己的控制力，比如用深呼吸大法。</li>
 </ul>
-</li>
+<h1 id="第三章-意志力极限"><a href="#第三章-意志力极限" class="headerlink" title="第三章 意志力极限"></a>第三章 意志力极限</h1><p>意志力像肌肉一样，是有极限的。</p>
+<p>例子：当自己学习了一段时间后，不应该做的事情是玩手机，因为很有可能这会触发自己陷入一段很长的无意义行为中。正确的做法是脱离工作区域，随便做点和成瘾无关的事情，让自己的身心放松下来，以便迎接下一阶段的事情。</p>
+<p>例子：遇到不爽的事情应该马上解决，不然会一直消耗自己的意志力，是一个debuff。</p>
+<p>持续使用意志力会让它消耗，应该让它恢复。</p>
+<p>问题：如何补充意志力？</p>
+<ul>
+<li>放松</li>
+<li>补充能量</li>
 </ul>
-<p>问题：lock_mode X和index PRIMARY of table, lock_mode X locks rec but not gap有什么区别？</p>
-<p>问题：行锁有哪些？</p>
-<p>记录所、gap锁。。。</p>
-<h2 id="幻读"><a href="#幻读" class="headerlink" title="幻读"></a>幻读</h2><p>幻读是什么？幻读是一个事务在没有修改的情况，在不同时刻的进行两次修改读，读取到了不同的结果。幻读是write query，而不可重复读是read query。</p>
-<p>Todo</p>
-<h1 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h1><p>Todo</p>
-<h2 id="Innodb-Lock-Monitor"><a href="#Innodb-Lock-Monitor" class="headerlink" title="Innodb Lock Monitor"></a>Innodb Lock Monitor</h2><p>为了观察SQL是被哪种锁锁住了，可以使用Innodb Lock Monitor。</p>
-<p>启用命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SET GLOBAL innodb_status_output=ON;</span><br><span class="line">SET GLOBAL innodb_status_output_locks=ON;</span><br></pre></td></tr></table></figure>
-
-<p>可以认为innodb_status_output是monitor的总开关，innodb_status_output_locks是lock monitor的开关，两者需要都打开才算启用成功。这两条命令的生命周期为server本次运行的周期，当server关闭后，下次启动会恢复成关闭状态。</p>
-<p>获取Monitor输出：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SHOW ENGINE INNODB STATUS\G</span><br></pre></td></tr></table></figure>
-
-<p>在终端上输出时，加上<code>\G</code>可以让输出的可读性更佳。输出的字段有许多，我们主要关注和锁相关的字段。主要是<code>LATEST DETECTED DEADLOCK</code>和<code>TRANSACTIONS</code>字段。关于这两个字段的官方解释：</p>
-<blockquote>
-<p><code>LATEST DETECTED DEADLOCK</code></p>
-<p>This section provides information about the most recent deadlock. It is not present if no deadlock has occurred. The contents show which transactions are involved, the statement each was attempting to execute, the locks they have and need, and which transaction <code>InnoDB</code> decided to roll back to break the deadlock. The lock modes reported in this section are explained in <a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-locking.html" target="_blank" rel="noopener">Section 14.7.1, “InnoDB Locking”</a>.</p>
-<p><code>TRANSACTIONS</code></p>
-<p>If this section reports lock waits, your applications might have lock contention. The output can also help to trace the reasons for transaction deadlocks.</p>
-</blockquote>
-<p>注意点：</p>
-<blockquote>
-<p>When <code>InnoDB</code> monitors are enabled for periodic output, <code>InnoDB</code> writes the output to <a href="https://dev.mysql.com/doc/refman/5.7/en/mysqld.html" target="_blank" rel="noopener"><strong>mysqld</strong></a> server standard error output (<code>stderr</code>) every 15 seconds, approximately.</p>
-</blockquote>
-<p>monitor的输出是周期性，大概15s会输出一次。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li><a href="https://dev.mysql.com/doc/refman/5.6/en/set-transaction.html" target="_blank" rel="noopener">SET TRANSACTION Statement</a></li>
-<li><a href="https://bytedance.feishu.cn/wiki/wikcnbPsHVuvGZF0YaakT6YC2lf" target="_blank" rel="noopener">InnoDB的事务和锁</a></li>
-<li>《MySQL实战45讲》——极客时间</li>
-<li><a href="https://www.percona.com/blog/2012/03/27/innodbs-gap-locks/" target="_blank" rel="noopener">InnoDB Gap Locks</a></li>
-<li><a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-enabling-monitors.html" target="_blank" rel="noopener">Enabling InnoDB Monitors</a></li>
-<li><a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-standard-monitor.html" target="_blank" rel="noopener">InnoDB Standard Monitor and Lock Monitor Output</a></li>
-<li><a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-locking.html" target="_blank" rel="noopener">innodb-locking</a></li>
-<li></li>
-</ol>
-
+<p>虽然短期吃点东西能补充能量，提高意志力，但是这长远来看，血糖的突然波动会影响身体使用糖分的能力，即身体中的含糖量很高却没有多少能量可用。一种更好的方法是保证身体有足够的食物供应，以实现更持久稳定的能量供应。</p>
+<p>实践：尝试低血糖饮食，让自己的血糖更稳定。低血糖食物包括瘦肉蛋白、坚果、豆类、粗纤维谷类、麦片、水果、蔬菜等。</p>
+<p>在一些小事上持续自控会提高整体的意志力。</p>
+<p>实践：以前不太记录时间的话，可以尝试增强自我监控能力，可以记录每天的时间花在哪里上了。做好这件小事，可以帮助自己认识自己到底浪费了多少时间。</p>
+<p>问题：当自己觉得意志力告急，控制不了自己时，可以怎么挽救一下？</p>
+<p>很多时候意志力告急可能就像跑步跑不下去一样，可以通过逼自己一把来实现突破。</p>
+<p>假如是“我想要”的事情，可以假想一下挑战成功后获得的奖励是什么，我会有什么回报，是更健康、更靠谱、更幸福、更自由、更有钱，还是更成功？另外，假如挑战成功，还有谁会获益？假如是自己的榜样，他会建议自己怎么做？假如是自己讨厌的人，他会放弃吗，自己能做得比他更好吗？</p>
+<p>假如是“我不要”的事情，可以假想一下持续做了这些事情带来的可怕后果，越形象越好。假如自己喜欢的人发现自己做了不该做的事情，会怎么看自己？自己讨厌的人也陷入了这些事情，自己是和他一样的吗？</p>
+<h1 id="第四章-道德许可"><a href="#第四章-道德许可" class="headerlink" title="第四章 道德许可"></a>第四章 道德许可</h1><p>道德许可：在做了好事或者以为自己会做好事后，纵容自己做坏事的现象。</p>
+<p>例子：</p>
+<ul>
+<li>在晚上进行健身后，更容易导致晚上不学习</li>
+<li>在学习一段时间后，更可能纵容自己打很久的游戏，导致游戏时间远远大于学习时间</li>
+<li>当为复习考试花了很多时间后，自我感觉相当良好，更可能花整晚时间和朋友打游戏“放松”</li>
+<li>假想了一个很完美的计划后，很容易感觉良好，本想让自己短暂“放松”，但最终导致计划一点也没有执行</li>
+<li>今天犯错了，信誓旦旦地保证明天好好补救，实际上明天还是这样</li>
+</ul>
+<p>道德许可意味着在前进一小步后，很可能也会退一小步，假如能克服这一点，那么就能前进一大步。</p>
+<p>问题：如何克服道德许可？</p>
+<ul>
+<li>牢记目标，而不是行动。即关注为什么，而不是做了什么。</li>
+<li>将自己做过的好事用于证明自己对目标有多坚定，而不盘点自己取得了多少进步。</li>
+<li>告诉自己明天和今天毫无区别。假想一下以后每天都像今天这样放纵，会有什么可怕后果。</li>
+</ul>
+<h1 id="第五章-渴望不是幸福"><a href="#第五章-渴望不是幸福" class="headerlink" title="第五章 渴望不是幸福"></a>第五章 渴望不是幸福</h1>
       
     </div>
 
@@ -396,7 +308,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/66/">66</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/68/">68</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -464,24 +376,24 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">66</span>
+          <span class="site-state-item-count">68</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">49</span>
+        <span class="site-state-item-count">46</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
 </div>
   <div class="links-of-author motion-element">
       <span class="links-of-author-item">
-        <a href="https://github.com/hyzgh" title="GitHub → https://github.com/hyzgh" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+        <a href="https://github.com/hyzgh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hyzgh" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
       </span>
       <span class="links-of-author-item">
-        <a href="/atom.xml" title="RSS → /atom.xml"><i class="rss fa-fw"></i>RSS</a>
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="rss fa-fw"></i>RSS</a>
       </span>
   </div>
 
@@ -506,13 +418,13 @@
 <div class="copyright">
   
   &copy; 2018 – 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="male"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">hyz</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
 
         
@@ -532,9 +444,17 @@
   <script src="/lib/anime.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
 <script src="/js/schemes/pisces.js"></script>
+
+
 <script src="/js/next-boot.js"></script>
+
 
 
 
@@ -543,7 +463,9 @@
 
 
 
-  <script src="/js/local-search.js"></script>
+  
+<script src="/js/local-search.js"></script>
+
 
 
 
