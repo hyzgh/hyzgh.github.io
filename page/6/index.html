@@ -184,7 +184,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2020/09/13/life-record-wisdom-tooth/">
+    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2020/11/25/golang-source-code-learning-1-compile-source-code/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/hyzgh-128x128.png">
@@ -198,7 +198,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/09/13/life-record-wisdom-tooth/" class="post-title-link" itemprop="url">生活记录-拔智齿</a>
+            <a href="/2020/11/25/golang-source-code-learning-1-compile-source-code/" class="post-title-link" itemprop="url">Golang源码学习1 源码编译</a>
         </h2>
 
         <div class="post-meta">
@@ -208,7 +208,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-09-13 17:20:30" itemprop="dateCreated datePublished" datetime="2020-09-13T17:20:30+08:00">2020-09-13</time>
+              <time title="创建时间：2020-11-25 08:40:12" itemprop="dateCreated datePublished" datetime="2020-11-25T08:40:12+08:00">2020-11-25</time>
             </span>
 
           
@@ -222,35 +222,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>前段时间去体检的时候，医生建议我把左边的下智齿给拔了，原因是长得不好，牙齿间有较大空隙，会藏食物，不好清理。其实之前去洁牙的时候有拍片，也建议我把它拔了，但是由于某些原因没有拔。一是因为除了清理比较麻烦外，暂时没有造成实际的影响（比如疼痛）。二是因为在深圳广州拔牙很贵，那时不确定学校的医保给不给报销，就拖到了现在。</p>
-<p>前些天深圳的社保卡刚办理好，于是打算去把这颗智齿拔了，防止它藏食物所造成的潜在口腔疾病风险。</p>
-<p>在出发前，查了一些资料，以及从同事那里获取了一些信息。得知拔阻生齿是可以走医保统筹报销以及商业保险的，但是实际上并不是所有拔牙都可以这样。事后推测同事应该是因为是手术才可以走医保统筹报销。正常的话，拔牙只能走医保个人账户以及商业保险。</p>
-<p>在深圳，医保根据缴纳比例的不同，分成一二三档。对于不同档的参保者，有不同的医保待遇。通过查询公司的文档，我得知公司给我缴纳的是一档医保。</p>
-<p>通过查询资料，学习了一下针对深圳一档参保者的知识点，摘抄如下：</p>
-<ul>
-<li>需要到定点医疗机构就医才能享受医疗保险待遇。</li>
-<li>走统筹报销的，由市社会保险机构与定点医疗机构或定点零售药店按协议约定结算。</li>
-<li>走个人账户支付的，由本市定点医疗机构或定点零售药店从参保人的个人账户中划扣，个人账户不足支付的，应当由参保人现金支付。</li>
-<li>在非本市定点医疗机构发生的医疗费用，由参保人先行支付后向市社会保险机构申请报销，市社会保险机构按本办法的规定予以审核，符合条件的予以支付。参保人先行支付医疗费用的，应在费用发生或出院之日起十二个月内申请报销，逾期不予报销。</li>
-<li>参保单位、参保人中断缴交医疗保险费的，自中断缴交的次月1日起，停止享受医疗保险统筹基金支付的医疗保险待遇，但其个人账户余额可继续使用。<strong>注意不要断保。</strong></li>
-<li>基本医疗保险药品、诊疗项目、服务设施标准的目录按照国家及广东省公布的目录执行。可参考：<a href="http://www.nhsa.gov.cn/art/2019/8/20/art_37_1666.html">《国家基本医疗保险、工伤保险和生育保险药品目录》</a>。<strong>一般也不需要特别关注这个目录，假如能走统筹报销的话，支持的时候自然也会走报销。假如想要省钱的话，可以在就医时，告诉医生尽量用目录里的药物。另外在去药店买药时，也可以查一查这个目录，在这个目录再去买，否则网上买可能实惠些。</strong></li>
-<li>基本医疗保险一档参保人个人账户用于支付参保人门诊基本医疗费用、地方补充医疗费用、在定点零售药店凭本市市内定点医疗机构医生开具的处方购买医疗保险目录范围内药品的费用，个人账户不足支付部分由个人自付。基本医疗保险一档参保人连续参保满一年，在同一医疗保险年度内个人自付的门诊基本医疗费用和地方补充医疗费用超过本市上年度在岗职工平均工资5%的，超过部分由基本医疗保险大病统筹基金或地方补充医疗保险基金按规定支付70%，参保人年满70周岁以上的支付80%。</li>
-<li>基本医疗保险一档参保人个人账户积累额超过本市上年度在岗职工平均工资5%的，超过部分可以用于买药、给家人用等。</li>
-<li>基本医疗保险一档参保人在本市定点社康中心发生的基本医疗费用和地方补充医疗费用，70%由其个人账户支付，30%由基本医疗保险大病统筹基金、地方补充医疗保险基金按规定支付。但不包括<strong>口腔科治疗费用</strong>、康复理疗费用、大型医疗设备检查治疗费用等。</li>
-<li>基本医疗保险一档参保人在本市定点医疗机构门诊做大型医疗设备检查和治疗所发生的基本医疗费用、地方补充医疗费用，80%由基本医疗保险大病统筹基金、地方补充医疗保险基金按规定支付。</li>
-<li>统筹基金、地方补充医疗保险基金存在支付限额，连续参保时间越久，限额越高。连续三个月断保需要重新计算，<strong>因此注意不要断保。</strong></li>
-</ul>
-<p>我这次选择了去北京大学深圳医院的口腔科拔牙，在深圳，这家医院的实力是最顶尖的之一。口腔科下也细分了许多科室，需要注意不要挂错科室了。拔牙需要挂牙槽外科。因为新冠病毒的原因，需要在医护人员的引导下填写一张表单。中途等号的时候有点担心需要做完新冠病毒检测才能拔牙，时间可能不够。实际上并不需要做检测就可以拔牙了。</p>
-<p>就诊医生有点迟到，但是我来得比较早，很快就排到我了。医生肉眼检查了一下我的智齿，发现看得不是很清楚，并且我也无法提供拍片的照片，因此建议我先去拍片。于是我听从医生的吩咐，排了较长的队拍了个片。回来后医生很快就根据拍片单做出判断，跟我说明下面的左右各一颗智齿都需要拔掉，因为继续长的话会顶到其他牙齿，建议这次只拔一颗。我选择了拔左下角的那颗智齿。医生很专业，给我的左下角口腔打上麻醉，然后上电钻、钳子等各种工具，行云流水地一顿操作，感觉不到十分钟就拔完了。结束时，医生还让我看了眼自己的牙齿，挺大的完整两瓣，含着血丝。不知道能不能带走纪念，本来想问问的，但是口腔上了麻醉说话有点困难，就没问了。最后，医生问我有没有布洛芬、头孢这些药，那时候我不知道这是啥药，当然回答没有。他给我开了一些药，然后我记了下注意事项后就去付款了。感觉自己对于常见的药物并不熟悉，家里也没有备药的习惯，以后有空可以了解一下常用的药。另外做得不好的一点是，忘了询问医生药要吃多久了，以后就医的时候要问清楚用药持续时间。</p>
-<p>接下来到了手术付款时间，花了大概1300元，不能走统筹，全部走了个人医保账户。第一次用医保，当时也不是很清楚个人账户和统筹账户的区别，后来查资料发现，统筹才是医保报销，个人医保是个人支付的。</p>
-<p>虽然是走的个人支付，但是好在公司有商业保险，能报销90%，最后相当于自己花了100多拔了一颗智齿。感觉商业保险还是很有用的，有空可以给家人看看有什么保险可以购买，提高家庭的抗风险能力。</p>
-<p>接下来还有另外一颗智齿要拔，由于医保账户的余额不是很够，假如现在拔的话需要走现金支付，考虑到医保一般用不完，所以有点亏。于是打算医保余额足够了，再去拔另外一颗智齿吧。</p>
-<p>北京大学深圳医院虽然离自己住的地方有点远，并且挂号困难，但是还是值得的，因为它拥有很专业的医生。专业度这点是非常珍贵的，假如经验不足，那么可能需要花费更多的时间、做出不合适的判断、甚至在手术过程造成失误等。这一点我深有感触，由于拔完牙后还需要再去拆线，这次给我拆线的是一个实习生，给我的感觉是拆得有点艰难，耗费的时间比拔牙还要久&#x3D; &#x3D;、</p>
-<p>这次拔牙，还学到了一个生活经验，即有疑问可以找有关部门咨询，这样获取信息的效率很高。比如我对于拔牙不能走统筹保险这一点比较疑惑，通过网上一顿搜索都没有找到合理的解释，最后在网上发现可以打社保局的电话（12333）咨询，于是就打电话问问。最终得到了满意的答复，解答了心中的疑惑，发现去医院做门诊一般是需要个人账户支付的，除非门诊一年累计支付超过了一定额度，才能走70%的统筹报销。其实生活中是有许多部门很有用的，包括社保局、监管部门、工信部、公安局等，有空可以多了解一下他们的职责，以便在需要的时候用上。</p>
-<p>参考：</p>
-<ul>
-<li><a href="http://www.gd.gov.cn/zwgk/wjk/zcfgk/content/post_2530804.html">深圳市社会医疗保险办法</a></li>
-</ul>
+          <p>前些天在工作中用Go写出了一个内存泄露的bug，原因是没有认真阅读文档，使用姿势不对。根据官方文档纠正使用姿势后，解决掉了这个bug。但是，对于为什么会内存泄露我还不是很明白，于是打算对源码研究一番，就有了这篇博文。</p>
+<p>我的电脑操作系统是Linux，之前安装Go的方式是根据<a href="https://golang.org/dl/">官网教程</a>下载的二进制，在<code>$GOROOT</code>有编译好的二进制文件，也有源代码。通常在写项目代码时，会跳转标准库的函数说明，就是跳转到这里的源代码。这里的源代码用来参考还好，但是不适合折腾。我选择了从github拷贝最新的源代码来阅读。一是不会影响正常项目的编译，二是能拉取到最新的源代码，三是可以看到整个项目各个大佬的commit。</p>
+<p>下载源代码，直接<code>git clone</code>即可。</p>
+<p>下载了源代码后，开始尝试阅读源码。发现一个问题，IDE会对一些Go标准库的函数标红，提示没有这个函数的引用。经过查看commit，发现这个函数是新增加的，而自己IDE使用的sdk还是老旧的、之前下载的二进制文件。为了让GoLand认识这些新函数，需要使用这份新的源码编译。</p>
+<p>对源码的编译。我参考了<a href="https://golang.org/doc/install/source">Installing Go from source</a>，这里不再赘述。</p>
+<p>学习Golang的源码，就是跟顶尖程序员学习编程，是一件蛮有意义的事情。后面会写一些Golang源码学习相关的博文。</p>
+<p>（全文完）</p>
 
       
     </div>
@@ -269,7 +247,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/68/">68</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/69/">69</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -337,14 +315,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">69</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">46</span>
+        <span class="site-state-item-count">47</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

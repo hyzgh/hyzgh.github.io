@@ -6,7 +6,7 @@
   <link href="https://hyzgh.github.io/atom.xml" rel="self"/>
   
   <link href="https://hyzgh.github.io/"/>
-  <updated>2023-08-28T15:38:29.603Z</updated>
+  <updated>2023-09-17T16:38:44.586Z</updated>
   <id>https://hyzgh.github.io/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>2023.09.18周报</title>
+    <link href="https://hyzgh.github.io/2023/09/18/2023-09-18-weekly-report/"/>
+    <id>https://hyzgh.github.io/2023/09/18/2023-09-18-weekly-report/</id>
+    <published>2023-09-17T16:01:41.000Z</published>
+    <updated>2023-09-17T16:38:44.586Z</updated>
+    
+    <content type="html"><![CDATA[<p>前段时间做ES的技术调研，发现作者会用<a href="https://www.manjusaka.blog/weekly/">周报的形式</a>记录自己生活和工作。我觉得还挺有意思的，效仿写一下周报。最近打算重新捡起写博客的习惯，但是不知道写什么，就先水一水周报吧~</p><h1 id="生活"><a href="#生活" class="headerlink" title="生活"></a>生活</h1><ol><li>最近还是感觉很迷茫，感觉想法很多，但是成不了体系。记录在滴答清单的任务也越来越多，之前500多个任务觉得已经很多了，现在已经620+。慢慢来吧。</li><li>恢复了上进一些。前几周的工作日晚上和周末总是沉迷于瓦罗兰特，非常堕落。这周，把瓦罗兰特卸载了，在公司加班几天来让时间过得更有意义。周六找了学习搭子，周日独自学习，满分10分可以打5分。慢慢来吧。</li><li>关于娱乐<ol><li>网游太让人上头了，以后玩游戏只玩单机游戏。有机会可以研究一下网游为什么那么容易让人上头，感觉蛮有意思的。</li><li>玩了王国之泪。上次玩已是两月前。准备去打最终boss但是路上打不过人马就没玩了哈哈。</li><li>玩了会八方旅人2。上次玩是半年前，这次玩其实也没什么兴致。</li><li>看了两部豆瓣top250电影：<a href="https://movie.douban.com/subject/1297192/?_dtcc=1">《致命ID》</a>、<a href="https://movie.douban.com/subject/11525673/?_dtcc=1">《布达佩斯大饭店》</a>。这周之前自己看电影的频率很低，这周一口气看了两部，也是一个改变。之前，花了很多时间在看碎片化的短视频，最近重新捡起来看一些电影，不然大脑要坏掉了。就像阅读一样，我希望我以后看的视频是成体系的，而不是很碎片化的、多巴胺化的。</li></ol></li><li>关于阅读<ol><li>这周看完了《蛤蟆先生去看心理医生》，很短的一本书，有启发。看完它并不难，难的是怎么像蛤蟆先生那样能发现自我，难的是怎么完成到成人状态的转变。慢慢来吧。</li><li>这周开始看《认知觉醒》。看了目录感觉讲的东西很吸引人，希望看完能转化成落地的一些改变吧。知易行难。</li></ol></li><li>关于运动：这周六晚上去打了羽毛球，打完腰酸背痛。最近重新捡起来习惯，还打算去下周一公司的羽毛球。运动多一点吧。</li><li>关于信息：刷了脉脉、一亩三分地、抖音、哔哩哔哩、微信公众号、inoreader、Discord等等。感觉蛮碎片化的，待改进，慢慢来吧。</li><li>关于饮食：最近开始逐渐尝试吃多点，比如周日17点吃了一顿，22点再吃了一顿宵夜。慢慢长胖吧。</li></ol><h1 id="技术"><a href="#技术" class="headerlink" title="技术"></a>技术</h1><ol><li>ES<ol><li>写了异构数据的同步代码。</li><li>使用ES实现了模糊查询的功能。</li><li>整理了一下ES的学习笔记，想准备一下数据结构的分享，但还没什么干货，慢慢来吧。</li><li>这周看了一下别人的ES分享，也看了一些博文，感觉差点意思。感性上倾向于看官方博文，但是感觉自己效率太低了，于是思考了一下官网的食用方式。</li></ol></li><li>AI：玩了一下chatGPT的插件，GPT4All、replit。其中和浏览器集成的插件还有点用。感觉大模型中，还是chatGPT比较牛。慢慢提升使用AI的能力吧。</li></ol><p>技术上的进展太少了，下周好好努力吧~</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;前段时间做ES的技术调研，发现作者会用&lt;a href=&quot;https://www.manjusaka.blog/weekly/&quot;&gt;周报的形式&lt;/a&gt;记录自己生活和工作。我觉得还挺有意思的，效仿写一下周报。最近打算重新捡起写博客的习惯，但是不知道写什么，就先水一水周报吧~&lt;/p</summary>
+      
+    
+    
+    
+    
+    <category term="周报" scheme="https://hyzgh.github.io/tags/%E5%91%A8%E6%8A%A5/"/>
+    
+  </entry>
   
   <entry>
     <title>《代码整洁之道》阅读笔记</title>
@@ -456,31 +478,6 @@
     
     
     <category term="文件格式" scheme="https://hyzgh.github.io/tags/%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>CSAPP 学习笔记 6 异常控制流</title>
-    <link href="https://hyzgh.github.io/2019/10/21/CSAPP-learning-note-6/"/>
-    <id>https://hyzgh.github.io/2019/10/21/CSAPP-learning-note-6/</id>
-    <published>2019-10-21T11:16:38.000Z</published>
-    <updated>2020-08-29T09:16:28.468Z</updated>
-    
-    <content type="html"><![CDATA[<p>最近看了CSAPP的第八章——异常控制流。</p><h1 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h1><p>在计算机中，假如没有异常，那么指令是顺序执行的。当遇到异常时，会执行异常处理程序。异常有不同的种类，有中断、陷阱、故障、终止。</p><p>中断，是在CPU执行某条指令的时候，其他部件异步产生的，比如定时器芯片、磁盘控制器、网络适配器等。CPU检测到中断后，会把当前指令执行完，然后转去执行异常处理程序，接着再返回来执行下一条指令。</p><p>陷阱，是有意的异常，最常见的陷阱是系统调用。系统调用，是指从用户模式转为内核模式，以执行一些特殊的指令，比如操作I&#x2F;O设备。执行完系统调用后，会返回来执行下一条指令。</p><p>故障，是指执行指令的时候遇到了意外，比如遇到了缺页、访问了未定义的虚拟内存区域等。根据故障的不同，异常处理程序执行完后可能会返回执行当前指令，也有可能会终止程序。在写程序时常常遇到的<code>Floating point exception</code>和<code>Segmentation fault</code>就属于故障，且在Linux中的处理是程序被终止。</p><p>终止，是指遇到了致命的硬件错误，必须结束程序。</p><p>因为异常种类繁多，所以计算机中有一张异常表，用来记录不同的异常及对应的异常处理程序。在CPU中，有一个特殊的寄存器——异常表基址寄存器，用来存放异常表在内存中的基址。当CPU遇到一种异常的时候，会拿到一个异常号。CPU拿着这个异常号及寄存器中的基址，便可以找到对应的异常处理程序了。</p><h1 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h1><p>进程，是执行中的程序实例，是操作系统对于程序的一种抽象。这种抽象，使得看起来进程是独占cpu和内存的。为了实现这种抽象，需要操作系统保存好进程的上下文，进行进程调度。</p><p>进程的上下文，是指进程执行的状态，包括CPU中的状态、用户模式中的状态、内核模式中的状态。具体来说，cpu中的状态，包括各种寄存器，比如通用寄存器，用来保存指令执行用到的数据，还有程序计数器，用来指明程序执行的进度。用户模式下的状态，包括用户栈等。内核模式中的状态，包括内核栈、进程已打开文件的信息的文件表、有关当前进程的信息的进程表等。</p><p>什么时候会触发进程调度呢？主要有两种情况。一种是进程执行了系统调用，阻塞住了，比如读写文件、sleep等。另一种是中断，包括IO操作完成以及时钟中断等。</p><h1 id="操作进程的工具"><a href="#操作进程的工具" class="headerlink" title="操作进程的工具"></a>操作进程的工具</h1><ul><li><code>PS</code>：列出当前系统中的进程。</li><li><code>TOP</code>：打印出关于当前进程资源使用的进程。</li><li><code>PMAP</code>：显示进程的内存映射。</li><li><code>STRACE</code>：打印一个正在运行的程序和它的子进程调用的每个系统调用的轨迹。<code>-static</code>是个实用的参数。</li><li><code>/proc</code>：一个虚拟文件系统，以ASCII文件格式输出大量内核数据结构的内容。</li></ul><p>（全文完）</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;最近看了CSAPP的第八章——异常控制流。&lt;/p&gt;
-&lt;h1 id=&quot;异常&quot;&gt;&lt;a href=&quot;#异常&quot; class=&quot;headerlink&quot; title=&quot;异常&quot;&gt;&lt;/a&gt;异常&lt;/h1&gt;&lt;p&gt;在计算机中，假如没有异常，那么指令是顺序执行的。当遇到异常时，会执行异常处理程序。</summary>
-      
-    
-    
-    
-    
-    <category term="计算机系统" scheme="https://hyzgh.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/"/>
-    
-    <category term="CSAPP" scheme="https://hyzgh.github.io/tags/CSAPP/"/>
     
   </entry>
   
