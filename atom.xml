@@ -6,7 +6,7 @@
   <link href="https://hyzgh.github.io/atom.xml" rel="self"/>
   
   <link href="https://hyzgh.github.io/"/>
-  <updated>2023-09-17T16:43:09.574Z</updated>
+  <updated>2023-09-24T16:03:21.528Z</updated>
   <id>https://hyzgh.github.io/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>2023.09.25周报</title>
+    <link href="https://hyzgh.github.io/2023/09/24/2023-09-25-weekly-report/"/>
+    <id>https://hyzgh.github.io/2023/09/24/2023-09-25-weekly-report/</id>
+    <published>2023-09-24T15:35:41.000Z</published>
+    <updated>2023-09-24T16:03:21.528Z</updated>
+    
+    <content type="html"><![CDATA[<p>这周整体比较慵懒，整体只能打6分。理智脑上线得不多，很多时刻是本能脑和情绪脑在上线。还有很多待改进的地方，慢慢来吧。</p><p>时间周期：09.18-09.24</p><h1 id="生活"><a href="#生活" class="headerlink" title="生活"></a>生活</h1><ol><li>阅读：<ol><li>看完了《认知觉醒》，其中一个观点很受启发。阅读的本质是为了改变，阅读 -&gt; 思考 -&gt; 行动 -&gt; 改变。本来想这周写一下读书笔记，但是高估了自己的精力。</li><li>感觉没什么专注力看微信公众号之类的长文，可能大脑被碎片信息搞坏了。慢慢来吧。</li></ol></li><li>健康：<ol><li>打了两场羽毛球。感觉公司的羽毛球局强度不够，俱乐部的强度也参差不齐。打羽毛球也是棋逢对手才好玩。</li><li>三次火影，不好。</li><li>晚上吃零食比较多又不刷牙，对牙齿不好，正在纠正坏习惯。</li><li>开始尝试冥想，有点小收益。</li></ol></li><li>娱乐：<ol><li>看完了《漫长的季节》，不错的一部剧。</li><li>看了三集《人生切割术》，将工作和生活进行记忆上完全分割的想法挺有意思。但是剧情有点慢，没有引起我的兴趣不打算继续追了。</li><li>看了一集《去有风的地方》，感觉刘亦菲演这部剧相对她的其他剧不是那么美，可能她比较适合古装剧。第一集略显悲情和突兀。剧中有一个小装饰品写着亚里士多德的名言：“幸福是人一生追求的最终目的”，引发了我对幸福的一点点思考。</li></ol></li><li>习惯：<ol><li>周六去了图书馆，去得比较晚，没有抢到座位也没有用上电脑。但是也学习收获满满，静下心来看了会书。这是最近几个月第一次去图书馆，是个好的开始，继续保持~</li><li>开始培养早睡早起的习惯，慢慢来吧。</li></ol></li></ol><h1 id="技术"><a href="#技术" class="headerlink" title="技术"></a>技术</h1><ol><li>看完了《k8s修炼手册》，但是感觉看过就看过了，没什么深刻的认识，更别谈和自己的知识体系整合了。也打算写写读书笔记，但是高估了自己的精力。</li><li>开始看《凤凰架构》，看完了第一章。感觉作者挺牛的，值得学习。</li><li>工作上，没什么大的突破，感觉在重复之前的经验。另外感觉工作效率不高，一个原因是工作线程开得太多，不够聚焦。慢慢来吧。</li><li>AI: 尝试了MiniGPT-4，一个支持图片输入的GPT。尝试的场景是给衣服生成宣传文案，简单试了一下效果一般，可能有改进方法。之前就看过chatGPT即将支持图片输入的信息，有空调研一下。慢慢提升自己使用工具的能力吧~</li></ol>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;这周整体比较慵懒，整体只能打6分。理智脑上线得不多，很多时刻是本能脑和情绪脑在上线。还有很多待改进的地方，慢慢来吧。&lt;/p&gt;
+&lt;p&gt;时间周期：09.18-09.24&lt;/p&gt;
+&lt;h1 id=&quot;生活&quot;&gt;&lt;a href=&quot;#生活&quot; class=&quot;headerlink&quot; title</summary>
+      
+    
+    
+    
+    
+    <category term="周报" scheme="https://hyzgh.github.io/tags/%E5%91%A8%E6%8A%A5/"/>
+    
+  </entry>
   
   <entry>
     <title>2023.09.18周报</title>
@@ -454,30 +478,6 @@
     
     
     <category term="编程语言" scheme="https://hyzgh.github.io/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>图片文件格式 学习笔记</title>
-    <link href="https://hyzgh.github.io/2019/12/07/null/"/>
-    <id>https://hyzgh.github.io/2019/12/07/null/</id>
-    <published>2019-12-07T08:07:02.000Z</published>
-    <updated>2019-12-07T08:32:39.020Z</updated>
-    
-    <content type="html"><![CDATA[<p>在互联网中，常见的图片文件格式有jpeg, png, bmp, gif等。</p><p>一副图片，具有很多的属性，比如分辨率，色彩空间等。可以通过<code>ImageMagick</code>这个程序来解析图片文件。</p><p>分辨率，比如1920x1080，是指图片的一行具有1920个像素，一列具有1080个像素。</p><p>色彩空间，是指描述一个像素点的方式。比如RGB，是指一个像素点用red, green, blue各8bit一共24bit来描述。而YUV，是指Y表示亮度，U和V一起表示色调和饱和度。</p><p>在互联网上最常见的大概是jpeg类的文件。jpeg文件之所以适合在互联网上传播，是因为它的压缩比较高，且能在压缩和图片还原度上保持平衡，使得一张图片既有小巧的体积，又能在肉眼级别上有良好的清晰度。</p><p>但是jpeg文件并不适合保存图标等图像内容，因为它不具有alpha通道，不能用来表示透明的背景。一般会用png来保存图标。由于png是无损压缩存储图片的，所以会比jpeg文件要大一些，也适合对于图像质量要求较高的情况。</p><p>bmp文件，它也是无损不压缩的，所以会比较大，比较少见。</p><p>git文件，可以存储动图，但是由于它只用了8bit来描述一个像素点，所以可用的色彩并不多，色彩丰富度低。</p><p>（全文完）</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;在互联网中，常见的图片文件格式有jpeg, png, bmp, gif等。&lt;/p&gt;
-&lt;p&gt;一副图片，具有很多的属性，比如分辨率，色彩空间等。可以通过&lt;code&gt;ImageMagick&lt;/code&gt;这个程序来解析图片文件。&lt;/p&gt;
-&lt;p&gt;分辨率，比如1920x1080，是指图</summary>
-      
-    
-    
-    
-    
-    <category term="文件格式" scheme="https://hyzgh.github.io/tags/%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/"/>
     
   </entry>
   

@@ -184,7 +184,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2018/09/07/word-count/">
+    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2018/09/30/arithmetic-problems-generator/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/hyzgh-128x128.png">
@@ -198,7 +198,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2018/09/07/word-count/" class="post-title-link" itemprop="url">wc项目折腾笔记</a>
+            <a href="/2018/09/30/arithmetic-problems-generator/" class="post-title-link" itemprop="url">四则运算项目折腾笔记</a>
         </h2>
 
         <div class="post-meta">
@@ -208,7 +208,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2018-09-07 15:09:53" itemprop="dateCreated datePublished" datetime="2018-09-07T15:09:53+08:00">2018-09-07</time>
+              <time title="创建时间：2018-09-30 10:00:00" itemprop="dateCreated datePublished" datetime="2018-09-30T10:00:00+08:00">2018-09-30</time>
             </span>
 
           
@@ -222,100 +222,93 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><a href="https://github.com/hyzgh/wordCount">Github项目地址传送门</a></p>
-<h1 id="项目相关要求"><a href="#项目相关要求" class="headerlink" title="项目相关要求"></a>项目相关要求</h1><ul>
-<li><p>基本功能</p>
-<ul>
-<li>统计C语言源文件的字符数（完成）</li>
-<li>统计C语言源文件的词的数目（完成）</li>
-<li>统计C语言源文件的行数（完成）</li>
-</ul>
-</li>
-<li><p>拓展功能</p>
-<ul>
-<li>递归处理目录下符合条件的文件（完成）</li>
-<li>返回更复杂的数据（代码行 &#x2F; 空行 &#x2F; 注释行）（完成）</li>
-<li>支持各种文件的通配符（*,?）（完成）</li>
-</ul>
-</li>
-<li><p>高级功能</p>
-<ul>
-<li>实现图形界面（待完成）</li>
-</ul>
-</li>
-</ul>
-<p>首先，我们需要明确一下“字符”，“词”，“行”，“代码行”，“空行”，“注释行”的定义。<br>字符：一个ASCII字符，包括控制字符和可打印字符。<br>词：一个由空白字符（不仅指空格，还指’\f’,’\v’,’\n’,’\r’这些控制字符）分隔的非空字符串。<br>行：一个由换行符分隔的字符串，可以为空。一行结束的标志是换行符。</p>
-<blockquote>
+          <p><a href="https://github.com/hyzgh/arithmetic-problems-generator">Github项目地址传送门</a></p>
+<h1 id="项目相关要求"><a href="#项目相关要求" class="headerlink" title="项目相关要求"></a>项目相关要求</h1><blockquote>
+<ol>
+<li>(完成)使用 -n 参数控制生成题目的个数。</li>
+<li>(完成)使用 -r 参数控制题目中数值（自然数、真分数和真分数分母）的范围。该参数可以设置为1或其他自然数。该参数必须给定，否则程序报错并给出帮助信息。</li>
+<li>(完成)生成的题目中计算过程不能产生负数，也就是说算术表达式中如果存在形如e1 − e2的子表达式，那么e1 ≥ e2。</li>
+<li>(完成)生成的题目中如果存在形如e1 ÷ e2的子表达式，那么其结果应是真分数。</li>
+<li>(完成)每道题目中出现的运算符个数不超过3个。</li>
+<li>(完成)程序一次运行生成的题目不能重复，即任何两道题目不能通过有限次交换+和×左右的算术表达式变换为同一道题目。例如，23 + 45 &#x3D; 和45 + 23 &#x3D; 是重复的题目，6 × 8 &#x3D; 和8 × 6 &#x3D; 也是重复的题目。3+(2+1)和1+2+3这两个题目是重复的，由于+是左结合的，1+2+3等价于(1+2)+3，也就是3+(1+2)，也就是3+(2+1)。但是1+2+3和3+2+1是不重复的两道题，因为1+2+3等价于(1+2)+3，而3+2+1等价于(3+2)+1，它们之间不能通过有限次交换变成同一个题目。生成的题目存入执行程序的当前目录下的Exercises.txt文件。</li>
+<li>(完成)在生成题目的同时，计算出所有题目的答案，并存入执行程序的当前目录下的Answers.txt文件。</li>
+<li>(完成)程序应能支持一万道题目的生成。</li>
+<li>(完成)程序支持对给定的题目文件和答案文件，判定答案中的对错并进行数量统计， 统计结果输出到文件Grade.txt。</li>
+</ol>
 </blockquote>
-<p>代码行：本行包括多于一个字符的代码。<br>空行：本行全部是空格或格式控制字符，如果包括代码，则只有不超过一个可显示的字符，例如“{”。<br>注释行：本行不是代码行，并且本行包括注释。</p>
-<p>以上代码行、空行、注释行的说明摘自项目说明。</p>
-<p>为了消除歧义，特提出以下补充说明：<br>1.项目说明指出了下面第一行是注释行，类似的，第二行和第三行也是项目行。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#125; <span class="comment">//注释</span></span><br><span class="line">&#123; <span class="comment">//注释</span></span><br><span class="line">; <span class="comment">//注释</span></span><br></pre></td></tr></table></figure>
-
-<p>2.按照定义，下面这一行是代码行，但不是注释行。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;Hello, world&quot;</span>); <span class="comment">//say &quot;Hello, world&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>3.按照定义，第一行是代码行，但不是注释行。第二行和第三行是注释行。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;Hello, world&quot;</span>); <span class="comment">/*say &quot;Hello, world&quot;</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">                         */</span></span><br></pre></td></tr></table></figure>
-
-<p>4.第二行不是空白行。第一行到第三行都是注释行。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* The next line is a comment line.</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>对于字符数的统计，每读取一个字符，让<code>chracters</code>加一即可。<br>对于词数的统计，需要一个标记，用于记录前面一个字符是不是空白字符，假如前面一个字符是空白字符且当前字符是可显示字符，那么让<code>words</code>加一。<br>对于行数的统计，每读取到一个换行符，让<code>lines</code>加一即可。<br>对于空白行、代码行、注释行的统计，需要用到一个块注释标记和一些正则表达式，具体如下：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">bool</span> blockCommentFlag = <span class="literal">false</span>;</span><br><span class="line">string blankLineRegex = <span class="string">&quot;(\\s*)([&#123;&#125;;]?)(\\s*)&quot;</span>;</span><br><span class="line">string lineCommentRegex = <span class="string">&quot;(\\s*)([&#123;&#125;;]?)(\\s*)(//)(.*)&quot;</span>;</span><br><span class="line">string blockCommentStartFlagRegex = <span class="string">&quot;(\\s*)([&#123;&#125;;]?)(\\s*)(/&#123;1&#125;)(\\*&#123;1&#125;)(.*)&quot;</span>;</span><br><span class="line">string blockCommentStartFlag1Regex = <span class="string">&quot;(.*)(/&#123;1&#125;)(\\*&#123;1&#125;)(.*)&quot;</span>;</span><br><span class="line">string blockCommentCloseFlagRegex = <span class="string">&quot;(.*)(\\*&#123;1&#125;)(/&#123;1&#125;)(\\s*)&quot;</span>;</span><br></pre></td></tr></table></figure>
-
+<h1 id="代码规范"><a href="#代码规范" class="headerlink" title="代码规范"></a>代码规范</h1><p>本次项目的代码遵循了谷歌代码规范(C++)，但由于谷歌代码规范篇幅太多，所以我们目前只遵循了其中的部分规范，具体如下：</p>
 <ol>
-<li>每读取一行，首先需要判断当前行是不是位于块注释中，假如是，让注释行加一，否则进行2</li>
-<li>使用blankLineRegex这个正则表达式判断当前行是不是空白行，假如是，让空白行加一，否则进行3</li>
-<li>使用lineCommentRegex判断当前行是不是行注释，假如是，让注释行加一，否则进行4</li>
-<li>使用blockCommentStartFlagRegex判断当前行是不是含有块注释开始的标志且为注释行，假如是，把blockCommentFlag改为true，并将注释行加一，否则进行5</li>
-<li>使用blockCommentStartFlag1Regex判断当前行是不是含有块注释开始的标志且为代码行，假如是，把blockCommentFlag改为true，并将代码行加一，否则进行6</li>
-<li>假如以上情况都不是，那么说明该行是代码行，让代码行加一，并结束该行的判断</li>
+<li>禁止使用宏</li>
+<li>分号以前不加空格</li>
+<li>行宽原则上不超过80</li>
+<li>一行只定义一个变量</li>
+<li>左大括号前保留一个空格</li>
+<li>if, else前后都要一个空格</li>
+<li>for, while后要有一个空格</li>
+<li>return 后面的数值不加 ( )</li>
+<li>每个文件应该含有版权信息及作者</li>
+<li>左圆括号之后和右圆括号之前无空格</li>
+<li>函数参数过多时，每行的参数变量对齐</li>
+<li>一目运算符与变量之间不加空格符隔开</li>
+<li>禁止使用 using 指示（using-directive） </li>
+<li>禁止使用C++的流，而是用printf之类的替代</li>
+<li>要么函数名与参数同行，要么所有参数并排分行</li>
+<li>换行代码缩进2个空格，并且使用两个空格符取代制表符</li>
+<li>二目以上的运算符与变量，常量之间用空格隔开（各类括号除外）</li>
+<li>不论控制语句，循环语句后面的循环体有多少行，都必须使用花括号</li>
+<li>普通函数，类型（含类与结构体，枚举类型），常量等使用大小写混合，不含下划线</li>
+<li>除函数定义的左大括号可置于行首以外，包括函数&#x2F;类&#x2F;结构体&#x2F;枚举声明，各种语句的左大括号必须置于行末，所有右大括号独立成行</li>
 </ol>
-<h1 id="设计"><a href="#设计" class="headerlink" title="设计"></a>设计</h1><p>File类：</p>
-<ul>
-<li>变量：<code>characters, words, lines, blankLines, codeLines, commentLines</code>.</li>
-<li>方法：<ul>
-<li><code>countBasic</code>：统计字符数、词数、行数。</li>
-<li><code>countSpecialLines</code>：统计空白行、代码行、注释行。</li>
-<li><code>print</code>：输出统计结果。</li>
-</ul>
-</li>
-</ul>
-<p><code>setMode</code>函数：根据输入参数设置模式。<br><code>readFile</code>函数：处理一个文件。<br><code>recursiveReadFiles</code>函数：处理一个目录。</p>
-<p>主要流程就是读取命令行参数，然后调用<code>setMode</code>设置参数，接着根据对象是文件还是目录，分别调用<code>readFile</code>或<code>recursiveReadFiles</code>。<br><code>readFile</code>接着又会调用<code>countBasic</code>和<code>countSpecialLines</code>，执行程序的核心部分，进行统计。接着调用print输出结果。</p>
-<h1 id="关键代码"><a href="#关键代码" class="headerlink" title="关键代码"></a>关键代码</h1><p>1.统计字符、词、行</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">countBasic</span><span class="params">(FILE *pFile)</span> </span>&#123;</span><br><span class="line">    <span class="type">char</span> c;</span><br><span class="line">    <span class="type">bool</span> spaceFlag = <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">while</span>((c = <span class="built_in">fgetc</span>(pFile)) != EOF) &#123;</span><br><span class="line">        characters++;</span><br><span class="line"></span><br><span class="line">        words += (spaceFlag == <span class="literal">true</span> &amp;&amp; <span class="built_in">isgraph</span>(c));</span><br><span class="line">        spaceFlag = <span class="built_in">isspace</span>(c);</span><br><span class="line"></span><br><span class="line">        lines += c == <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="设计思路"><a href="#设计思路" class="headerlink" title="设计思路"></a>设计思路</h1><p><img src="https://img2018.cnblogs.com/blog/1484352/201809/1484352-20180930145059141-655290070.png"></p>
+<h1 id="具体设计-关键代码"><a href="#具体设计-关键代码" class="headerlink" title="具体设计&amp;关键代码"></a>具体设计&amp;关键代码</h1><h2 id="ImproperFraction类"><a href="#ImproperFraction类" class="headerlink" title="ImproperFraction类"></a>ImproperFraction类</h2><p>构建一个ImproperFraction的类，然后重载这个类的四种运算 <strong>+-x÷</strong> 以及以及六种逻辑关系**’&lt;’  ‘&#x3D;&#x3D;’  ‘&lt;&#x3D;’  ‘!&#x3D;’  ‘&gt;’  ‘&gt;&#x3D;’**判断，在后续的代码编写之中都是基于这个类进行运算</p>
+<p>核心代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ImproperFraction</span> &#123;</span><br><span class="line"> <span class="keyword">public</span> :</span><br><span class="line">  <span class="built_in">ImproperFraction</span>()&#123;&#125;</span><br><span class="line">  <span class="built_in">ImproperFraction</span> (<span class="type">int</span> Mole, <span class="type">int</span> Deno, <span class="type">int</span> Coef = <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="type">int</span> g = std::__gcd (Mole, Deno);</span><br><span class="line">    g = std::<span class="built_in">max</span>(g, <span class="number">1</span>);</span><br><span class="line">    mole = (Mole + Coef * Deno) / g;</span><br><span class="line">    deno = Deno / g;</span><br><span class="line">  &#125;</span><br><span class="line">  ImproperFraction <span class="keyword">operator</span> + (<span class="type">const</span> ImproperFraction &amp; rhs ) <span class="type">const</span> &#123;</span><br><span class="line">    <span class="type">int</span> DENO = deno * rhs.deno;</span><br><span class="line">    <span class="type">int</span> MOLE = mole * rhs.deno + rhs.mole * deno;</span><br><span class="line">    ImproperFraction res = <span class="built_in">ImproperFraction</span> (MOLE, DENO);</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">  &#125;</span><br><span class="line">  ImproperFraction <span class="keyword">operator</span> - (<span class="type">const</span> ImproperFraction &amp; rhs ) <span class="type">const</span> &#123;</span><br><span class="line">    <span class="type">int</span> DENO = deno * rhs.deno;</span><br><span class="line">    <span class="type">int</span> MOLE = mole * rhs.deno - rhs.mole * deno;</span><br><span class="line">    ImproperFraction res = <span class="built_in">ImproperFraction</span> (MOLE, DENO);</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">  &#125;</span><br><span class="line">  ImproperFraction <span class="keyword">operator</span> * (<span class="type">const</span> ImproperFraction &amp; rhs ) <span class="type">const</span> &#123;</span><br><span class="line">    <span class="type">int</span> DENO = deno * rhs.deno;</span><br><span class="line">    <span class="type">int</span> MOLE = mole * rhs.mole;</span><br><span class="line">    ImproperFraction res = <span class="built_in">ImproperFraction</span> (MOLE, DENO);</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">  &#125;</span><br><span class="line">  ImproperFraction <span class="keyword">operator</span> / (<span class="type">const</span> ImproperFraction &amp; rhs ) <span class="type">const</span> &#123;</span><br><span class="line">    <span class="type">int</span> DENO = deno * rhs.mole;</span><br><span class="line">    <span class="type">int</span> MOLE = mole * rhs.deno;</span><br><span class="line">    ImproperFraction res = <span class="built_in">ImproperFraction</span> (MOLE, DENO);</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="type">bool</span> <span class="keyword">operator</span> &lt; (<span class="type">const</span> ImproperFraction &amp; rhs ) <span class="type">const</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> mole * rhs.deno &lt; rhs.mole * deno;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="type">bool</span> <span class="keyword">operator</span> == (<span class="type">const</span> ImproperFraction &amp; rhs ) <span class="type">const</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> mole * rhs.deno == rhs.mole * deno;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="type">bool</span> <span class="keyword">operator</span> != (<span class="type">const</span> ImproperFraction &amp; rhs ) <span class="type">const</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> !(mole * rhs.deno == rhs.mole * deno);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="type">bool</span> <span class="keyword">operator</span> &lt;= (<span class="type">const</span> ImproperFraction &amp; rhs ) <span class="type">const</span> &#123;</span><br><span class="line">    <span class="built_in">return</span> (*<span class="keyword">this</span>) &lt; rhs || (*<span class="keyword">this</span>) == rhs;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="type">bool</span> <span class="keyword">operator</span> &gt; (<span class="type">const</span> ImproperFraction &amp; rhs ) <span class="type">const</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> !((*<span class="keyword">this</span>) &lt;= rhs);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="type">bool</span> <span class="keyword">operator</span> &gt;= (<span class="type">const</span> ImproperFraction &amp; rhs ) <span class="type">const</span> &#123;</span><br><span class="line">    <span class="built_in">return</span> (*<span class="keyword">this</span>) &gt; rhs || (*<span class="keyword">this</span>) == rhs;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">private</span> :</span><br><span class="line">  <span class="type">int</span> mole = <span class="number">0</span>; <span class="comment">// 分子</span></span><br><span class="line">  <span class="type">int</span> deno = <span class="number">1</span>; <span class="comment">// 分母 </span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="题集的生成"><a href="#题集的生成" class="headerlink" title="题集的生成"></a>题集的生成</h2><h3 id="表达式的生成"><a href="#表达式的生成" class="headerlink" title="表达式的生成"></a>表达式的生成</h3><p>在这里选择的是rand() 随机生成 运算符个数，类型以及每个被运算的数值。</p>
+<h3 id="表达式的合法性判断"><a href="#表达式的合法性判断" class="headerlink" title="表达式的合法性判断"></a><strong>表达式的合法性判断</strong></h3><p> 在生成过程之中，有两个要点会导致表达式非法<br>1.运算过程中出现负值<br>2.在÷运算后面出现0</p>
+<p><strong>解决办法：</strong>两个特殊判断即可</p>
+<h3 id="表达式的去重"><a href="#表达式的去重" class="headerlink" title="表达式的去重"></a><strong>表达式的去重</strong></h3><p>表达式的重复有两种情况:<br>1.完完全全的重复，如出现两个1 + 2 + 3 的表达式<br>2.运算顺序上的重复，如:</p>
+<blockquote>
+<p>1 + 2 + 3 和 2 + 1 + 3重复<br>2 + 3 x 4 和 4 x 3 + 2重复</p>
+</blockquote>
+<p><strong>解决办法：</strong><br>对于(1)的情况只需要将生成的表达式保存进C++STL的set之中即可自动去重。<br>对于(2)的情况，则是按照一定规则生成表达式来避免这一情况，规则如下：</p>
+<blockquote>
+<p>1.默认左边的运算符的优先度高于右边<br>2.第一个数字一定不小于第二个数值<br>因此1 + 2 + 3和2 + 3 x 4不会被生成，而只会生成2 + 1 + 3和4 x 3 + 2</p>
+</blockquote>
+<h3 id="题集无法生成要求的数量"><a href="#题集无法生成要求的数量" class="headerlink" title="题集无法生成要求的数量"></a><strong>题集无法生成要求的数量</strong></h3><p> 例如：<br>传入的参数是 -n 10000 -r 1 的时候，很明显无法生成10000道题目，因此陷入死循环的生成中</p>
+<p><strong>解决办法：</strong><br>设置一个时间戳time，当生成表达式的部分循环了1000000次之后自动跳出循环，终止生成表达式 </p>
+<h3 id="答案的生成"><a href="#答案的生成" class="headerlink" title="答案的生成"></a><strong>答案的生成</strong></h3><p> 在表的是合法性判断的时候，会判断最终的数值是否小于0，在这里就已经计算标准答案，保存并打印到answer.txt即可</p>
+<p>核心代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">questionSetGenerate</span> <span class="params">(<span class="type">int</span> limit, <span class="type">int</span> number)</span> </span>&#123;</span><br><span class="line">  std::set&lt;std::string&gt;expressions;</span><br><span class="line">  std::vector&lt;std::string&gt;exercise;</span><br><span class="line">  std::vector&lt;ImproperFraction&gt;answer;</span><br><span class="line">  ImproperFraction zero = <span class="built_in">ImproperFraction</span>(<span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">  <span class="comment">// 时间戳</span></span><br><span class="line">  <span class="type">int</span> time = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">while</span> (expressions.<span class="built_in">size</span>() &lt; number &amp;&amp; time &lt; <span class="number">1000000</span>) &#123;</span><br><span class="line">    time ++;</span><br><span class="line">    <span class="type">int</span> sz = expressions.<span class="built_in">size</span>();</span><br><span class="line">    <span class="comment">// 运算符的个数</span></span><br><span class="line">    <span class="type">int</span> opnumber = <span class="built_in">rand</span>() % <span class="number">3</span> + <span class="number">1</span>;</span><br><span class="line">    ImproperFraction a[<span class="number">5</span>];</span><br><span class="line">    ImproperFraction res = <span class="built_in">ImproperFraction</span>(<span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">    <span class="type">const</span> ImproperFraction zero = <span class="built_in">ImproperFraction</span>(<span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">    <span class="type">char</span> op[<span class="number">4</span>];</span><br><span class="line">    <span class="comment">// 随机生成数值和运算符</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt;= opnumber; i++) &#123;</span><br><span class="line">      a[i] = <span class="built_in">ImproperFraction</span>(<span class="built_in">rand</span>() % (limit * limit), std::<span class="built_in">max</span>(<span class="number">1</span>, <span class="built_in">rand</span>() % limit));</span><br><span class="line">      <span class="keyword">if</span> (i) &#123;</span><br><span class="line">        op[i] = oper[<span class="built_in">rand</span>() % <span class="number">4</span>];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    std::string exp = <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="type">bool</span> flag = <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">if</span> (a[<span class="number">0</span>] &lt; a[<span class="number">1</span>]) &#123;</span><br><span class="line">      std::<span class="built_in">swap</span> (a[<span class="number">0</span>], a[<span class="number">1</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 计算答案,并检查中途出现非法情况</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt;= opnumber; i++) &#123;</span><br><span class="line">      <span class="keyword">if</span> (i) &#123;</span><br><span class="line">        <span class="keyword">if</span> (op[i] == <span class="string">&#x27;+&#x27;</span>) &#123;</span><br><span class="line">          res = res + a[i];</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (op[i] == <span class="string">&#x27;*&#x27;</span>) &#123;</span><br><span class="line">          res = res * a[i];</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (op[i] == <span class="string">&#x27;-&#x27;</span>) &#123;</span><br><span class="line">          res = res - a[i];</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="keyword">if</span> (a[i] == zero) &#123;</span><br><span class="line">            flag = <span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">          &#125;</span><br><span class="line">          res = res / a[i];</span><br><span class="line">        &#125;</span><br><span class="line">        exp = exp + <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">        exp = exp + op[i];</span><br><span class="line">        exp = exp + <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        res = res + a[i];</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// 将分数转化为字符串</span></span><br><span class="line">      <span class="built_in">fractionToString</span>(a[i], exp);</span><br><span class="line">      <span class="keyword">if</span> (res.<span class="built_in">getdeno</span>() &lt; <span class="number">0</span> || res.<span class="built_in">getmole</span>() &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        flag = <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (flag) &#123;</span><br><span class="line">      expressions.<span class="built_in">insert</span>(exp);</span><br><span class="line">      <span class="keyword">if</span> (expressions.<span class="built_in">size</span>() &gt; sz) &#123;</span><br><span class="line">        <span class="comment">//保存题集和答案</span></span><br><span class="line">        exercise.<span class="built_in">push_back</span>(<span class="built_in">addbrackets</span>(exp));</span><br><span class="line">        answer.<span class="built_in">push_back</span>(res);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="答案正确性的检测"><a href="#答案正确性的检测" class="headerlink" title="答案正确性的检测"></a>答案正确性的检测</h2><p>用户通过参数-e exercises.txt -a answers.txt，传进来了题目文件的名称和答案文件的名称。<br>首先，由于文件可能不存在或者没有访问的权限，我们需要对此进行检查，假如有错误，则进行报错，没有异常才进行下一步。<br>第二步，我们需要对exercises.txt文件中的题目计算一遍，然后再和answers.txt文件中的答案进行比较。题目的计算分两步进行，即先将中缀表达式转化为后缀表达式，然后计算后缀表达式的答案。<br>对于这个函数，我们考虑了exercises.txt行数和answers.txt行数不相等的情况，此时我们将以exercises.txt的行数为准，假如answers.txt行数过少，那么将视为错误答案，假如过多，那么将被忽略。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 检查答案</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">checkAnswer</span><span class="params">(FILE *exerciseFile, FILE *answerFile)</span> </span>&#123;</span><br><span class="line">  FILE *pFile = <span class="built_in">getPointerToGradeFile</span>();</span><br><span class="line">  <span class="type">int</span> problemID = <span class="number">0</span>;</span><br><span class="line">  <span class="type">char</span> answer[<span class="number">256</span>];</span><br><span class="line">  <span class="type">char</span> exercise[<span class="number">256</span>];</span><br><span class="line">  std::vector&lt;<span class="type">int</span>&gt; wrongID;</span><br><span class="line">  std::vector&lt;<span class="type">int</span>&gt; correctID;</span><br><span class="line">  <span class="comment">// 答案的行数可能不等于题目的行数</span></span><br><span class="line">  <span class="keyword">while</span> (<span class="built_in">fgets</span>(answer, <span class="number">256</span>, answerFile)) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">fgets</span>(exercise, <span class="number">256</span>, exerciseFile)) &#123;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    problemID++;</span><br><span class="line">    <span class="built_in">removeRedundantPart</span>(answer, exercise);</span><br><span class="line">    <span class="built_in">handleDivideEncoding</span>(exercise);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">getInfixExpressionAnswer</span>(exercise) == <span class="built_in">stringToImproperFraction</span>(answer)</span><br><span class="line">       ) &#123;</span><br><span class="line">      correctID.<span class="built_in">push_back</span>(problemID);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      wrongID.<span class="built_in">push_back</span>(problemID);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">while</span> (<span class="built_in">fgets</span>(exercise, <span class="number">256</span>, exerciseFile)) &#123;</span><br><span class="line">    problemID++;</span><br><span class="line">    wrongID.<span class="built_in">push_back</span>(problemID);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">printID</span>(pFile, <span class="built_in">const_cast</span>&lt;<span class="type">char</span>*&gt;(<span class="string">&quot;Correct&quot;</span>), correctID);</span><br><span class="line">  <span class="built_in">printID</span>(pFile, <span class="built_in">const_cast</span>&lt;<span class="type">char</span>*&gt;(<span class="string">&quot;Wrong&quot;</span>), wrongID);</span><br><span class="line">  <span class="built_in">fclose</span>(pFile);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;Check answer done!\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 将中缀表达式转化为后缀表达式</span></span><br><span class="line"><span class="function">std::queue&lt;std::string&gt; <span class="title">transformInfixExprToSuffixExpr</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> std::string &amp;InfixExpression)</span> </span>&#123;</span><br><span class="line">  std::stack&lt;<span class="type">char</span>&gt; temp;</span><br><span class="line">  std::queue&lt;std::string&gt; result;</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; InfixExpression.<span class="built_in">length</span>(); i++) &#123;</span><br><span class="line">    <span class="type">char</span> cc = InfixExpression[i];</span><br><span class="line">    <span class="keyword">if</span> (cc == <span class="string">&#x27; &#x27;</span>) &#123;  <span class="comment">// 假如遇到空格就跳过</span></span><br><span class="line">      <span class="keyword">continue</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (cc == <span class="string">&#x27;(&#x27;</span>) &#123;  <span class="comment">// 遇到左括号就直接入栈</span></span><br><span class="line">      temp.<span class="built_in">push</span>(cc);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (cc == <span class="string">&#x27;)&#x27;</span>) &#123;  <span class="comment">// 遇到右括号就弹出栈里面的所有运算符，直到遇到左括号</span></span><br><span class="line">      <span class="type">char</span> c;</span><br><span class="line">      <span class="keyword">do</span> &#123;</span><br><span class="line">        c = temp.<span class="built_in">top</span>();</span><br><span class="line">        temp.<span class="built_in">pop</span>();</span><br><span class="line">        <span class="keyword">if</span> (c != <span class="string">&#x27;(&#x27;</span>) &#123;</span><br><span class="line">          result.<span class="built_in">push</span>(<span class="built_in">charToString</span>(c));</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; <span class="keyword">while</span> (c != <span class="string">&#x27;(&#x27;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (cc == <span class="string">&#x27;+&#x27;</span> || cc == <span class="string">&#x27;-&#x27;</span>) &#123;</span><br><span class="line">      <span class="comment">// 遇到加号减号也弹出栈顶的所有运算符，直到遇到左括号或者为栈为空</span></span><br><span class="line">      <span class="keyword">while</span> (!temp.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">        <span class="type">char</span> c = temp.<span class="built_in">top</span>();</span><br><span class="line">        <span class="keyword">if</span> (c != <span class="string">&#x27;(&#x27;</span>) &#123;</span><br><span class="line">          result.<span class="built_in">push</span>(<span class="built_in">charToString</span>(c));</span><br><span class="line">          temp.<span class="built_in">pop</span>();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      temp.<span class="built_in">push</span>(cc);  <span class="comment">// 然后将加号入栈</span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (cc == <span class="string">&#x27;x&#x27;</span> || cc == <span class="string">&#x27;\xc3&#x27;</span>) &#123;</span><br><span class="line">      <span class="comment">// 假如遇到所有乘号除号，就弹出栈顶的乘号除号，知道遇到加号减号或者左括号或者栈为空</span></span><br><span class="line">      i += cc == <span class="string">&#x27;\xc3&#x27;</span>;</span><br><span class="line">      <span class="keyword">while</span> (!temp.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">        <span class="type">char</span> c = temp.<span class="built_in">top</span>();</span><br><span class="line">        <span class="keyword">if</span> (c == <span class="string">&#x27;x&#x27;</span>) &#123;</span><br><span class="line">          result.<span class="built_in">push</span>(<span class="built_in">charToString</span>(c));</span><br><span class="line">          temp.<span class="built_in">pop</span>();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (c == <span class="string">&#x27;\xc3&#x27;</span>) &#123;</span><br><span class="line">          result.<span class="built_in">push</span>(<span class="built_in">charToString</span>(c));</span><br><span class="line">          temp.<span class="built_in">pop</span>();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      temp.<span class="built_in">push</span>(cc);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// 假如遇到数字，那就直接输出</span></span><br><span class="line">      std::string s;</span><br><span class="line">      <span class="keyword">while</span> (i &lt; InfixExpression.<span class="built_in">length</span>()) &#123;</span><br><span class="line">        <span class="type">char</span> c = InfixExpression[i];</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">isdigit</span>(c) || c == <span class="string">&#x27;/&#x27;</span> || c == <span class="string">&#x27;\&#x27;&#x27;</span>) &#123;</span><br><span class="line">          s += c;</span><br><span class="line">          i++;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          i--;</span><br><span class="line">          <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      result.<span class="built_in">push</span>(s);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 把栈里面剩余的东西输出</span></span><br><span class="line">  <span class="keyword">while</span> (!temp.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">    <span class="type">char</span> c = temp.<span class="built_in">top</span>();</span><br><span class="line">    temp.<span class="built_in">pop</span>();</span><br><span class="line">    result.<span class="built_in">push</span>(<span class="built_in">charToString</span>(c));</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>2.统计空白行、代码行、注释行</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 要确定一行是不是空白行，只要通过判断该行的可打印字符个数是否不超过1个即可。另外还要注意，该行不能在块注释中。</span></span><br><span class="line"><span class="comment"> * 要确定一行是不是代码行，只要判断该行的可打印字符个数是否超过1个即可。另外还要注意，改行不在块注释中。</span></span><br><span class="line"><span class="comment"> * 假如一行是注释行，那么该行首先必须不是代码行，其次，需要有注释标志。</span></span><br><span class="line"><span class="comment"> * 根据以上信息，可写出正则表达式进行匹配。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">countSpecialLines</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    string line;</span><br><span class="line">    <span class="function">ifstream <span class="title">file</span><span class="params">(fileName)</span></span>;</span><br><span class="line">    <span class="type">bool</span> blockCommentFlag = <span class="literal">false</span>;</span><br><span class="line">    string blankLineRegex = <span class="string">&quot;(\\s*)([&#123;&#125;;]?)(\\s*)&quot;</span>;</span><br><span class="line">    string lineCommentRegex = <span class="string">&quot;(\\s*)([&#123;&#125;;]?)(\\s*)(//)(.*)&quot;</span>;</span><br><span class="line">    string blockCommentStartFlagRegex = <span class="string">&quot;(\\s*)([&#123;&#125;;]?)(\\s*)(/&#123;1&#125;)(\\*&#123;1&#125;)(.*)&quot;</span>;</span><br><span class="line">    string blockCommentStartFlag1Regex = <span class="string">&quot;(.*)(/&#123;1&#125;)(\\*&#123;1&#125;)(.*)&quot;</span>;</span><br><span class="line">    string blockCommentCloseFlagRegex = <span class="string">&quot;(.*)(\\*&#123;1&#125;)(/&#123;1&#125;)(\\s*)&quot;</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="built_in">getline</span>(file, line)) &#123; <span class="keyword">if</span>(blockCommentFlag) &#123;</span><br><span class="line">            commentLines++;</span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">regex_match</span>(line, <span class="built_in">regex</span>(blockCommentCloseFlagRegex))) &#123;</span><br><span class="line">                blockCommentFlag = <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(<span class="built_in">regex_match</span>(line, <span class="built_in">regex</span>(blankLineRegex))) &#123;</span><br><span class="line">            blankLines++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(<span class="built_in">regex_match</span>(line, <span class="built_in">regex</span>(lineCommentRegex))) &#123;</span><br><span class="line">            commentLines++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(<span class="built_in">regex_match</span>(line, <span class="built_in">regex</span>(blockCommentStartFlagRegex))) &#123;</span><br><span class="line">            commentLines++;</span><br><span class="line">            blockCommentFlag = <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(<span class="built_in">regex_match</span>(line, <span class="built_in">regex</span>(blockCommentStartFlag1Regex))) &#123;</span><br><span class="line">            codeLines++;</span><br><span class="line">            blockCommentFlag = <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            codeLines++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    file.<span class="built_in">close</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 计算后缀表达式的答案</span></span><br><span class="line"><span class="function">ImproperFraction <span class="title">getSuffixExpressionAnswer</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    std::queue&lt;std::string&gt; suffixExpression)</span> </span>&#123;</span><br><span class="line">  std::stack&lt;ImproperFraction&gt; sta;</span><br><span class="line">  <span class="keyword">while</span> (!suffixExpression.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">    std::string s = suffixExpression.<span class="built_in">front</span>();</span><br><span class="line">    suffixExpression.<span class="built_in">pop</span>();</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">isOperator</span>(s)) &#123;</span><br><span class="line">      <span class="comment">// 假如遇到运算符，就取出栈顶元素进行计算</span></span><br><span class="line">      ImproperFraction a = sta.<span class="built_in">top</span>();</span><br><span class="line">      sta.<span class="built_in">pop</span>();</span><br><span class="line">      ImproperFraction b = sta.<span class="built_in">top</span>();</span><br><span class="line">      sta.<span class="built_in">pop</span>();</span><br><span class="line">      <span class="keyword">if</span> (s[<span class="number">0</span>] == <span class="string">&#x27;x&#x27;</span>) &#123;</span><br><span class="line">        sta.<span class="built_in">push</span>(a * b);</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (s[<span class="number">0</span>] == <span class="string">&#x27;\xc3&#x27;</span>) &#123;</span><br><span class="line">        sta.<span class="built_in">push</span>(b / a);</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (s[<span class="number">0</span>] == <span class="string">&#x27;+&#x27;</span>) &#123;</span><br><span class="line">        sta.<span class="built_in">push</span>(a + b);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        sta.<span class="built_in">push</span>(b - a);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// 假如遇到数字，就直接进栈</span></span><br><span class="line">      sta.<span class="built_in">push</span>(<span class="built_in">stringToImproperFraction</span>(s));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> sta.<span class="built_in">top</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p>3.根据参数输出统计结果，注意输出顺序是有规律的，依次为字符数 词数 行数 空白行数 代码行数 注释行数。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">(map&lt;<span class="type">char</span>, <span class="type">bool</span>&gt; mode)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(mode[<span class="string">&#x27;c&#x27;</span>])</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%6d&quot;</span>, characters);</span><br><span class="line">    <span class="keyword">if</span>(mode[<span class="string">&#x27;w&#x27;</span>])</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%6d&quot;</span>, words);</span><br><span class="line">    <span class="keyword">if</span>(mode[<span class="string">&#x27;l&#x27;</span>])</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%6d&quot;</span>, lines);</span><br><span class="line">    <span class="keyword">if</span>(mode[<span class="string">&#x27;a&#x27;</span>])</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%6d%6d%6d&quot;</span>, blankLines, codeLines, commentLines);</span><br><span class="line">    <span class="built_in">putchar</span>(<span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="测试报告"><a href="#测试报告" class="headerlink" title="测试报告"></a>测试报告</h1><p>首先我制作了几个经典的测试样例以及对应的参考统计结果，另外，为了节省测试时间，我还写了一个脚本来进行自动化测试。<br>假如所有的测试样例都通过了，则会提示ok，如下：<br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911205421076-284872409.png" alt="ok"><br>假如有些样例没有通过，则会提示wrong，并指出错在哪里，如下：<br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911205428881-788451626.png" alt="wrong"><br>我构造的测试样例及测试结果如下：</p>
+<h1 id="测试报告"><a href="#测试报告" class="headerlink" title="测试报告"></a>测试报告</h1><h2 id="首先是各种参数错误的测试"><a href="#首先是各种参数错误的测试" class="headerlink" title="首先是各种参数错误的测试"></a><strong>首先是各种参数错误的测试</strong></h2><p><img src="https://img2018.cnblogs.com/blog/1484352/201809/1484352-20180930145152174-840362064.png"><br><img src="https://img2018.cnblogs.com/blog/1484352/201809/1484352-20180930145220286-2085095778.png"><br><img src="https://img2018.cnblogs.com/blog/1484352/201809/1484352-20180930145231725-1173918739.png"><br><img src="https://img2018.cnblogs.com/blog/1484352/201809/1484352-20180930145237511-1881695301.png"></p>
+<h2 id="接着是传入正确的参数的测试"><a href="#接着是传入正确的参数的测试" class="headerlink" title="接着是传入正确的参数的测试"></a><strong>接着是传入正确的参数的测试</strong></h2><p>生成题集的测试：<br><img src="https://img2018.cnblogs.com/blog/1484352/201809/1484352-20180930145300636-1176994323.png"><br><img src="https://img2018.cnblogs.com/blog/1484352/201809/1484352-20180930145309201-925214622.png"></p>
+<p>给定的题目文件和答案文件，判定答案中的对错测试：<br><img src="https://img2018.cnblogs.com/blog/1484352/201809/1484352-20180930145337222-2053419510.png"><br><img src="https://img2018.cnblogs.com/blog/1484352/201809/1484352-20180930145345693-634194743.png"></p>
+<h1 id="效能分析"><a href="#效能分析" class="headerlink" title="效能分析"></a>效能分析</h1><p>本程序主要由生成运算题目和检查答案正确性两个模块，因此效能分析也主要针对这两个模块进行。<br><strong>1. 生成运算题目</strong><br>生成一百万条题目时候的时间占比情况：<br><img src="https://img2018.cnblogs.com/blog/1484352/201809/1484352-20180930145401885-266275327.png"></p>
+<p>由上图看出了，占用时间最多的前五个函数为</p>
 <ol>
-<li>空文件<br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911205439689-254256383.png" alt="空文件"><br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911205923166-1878202581.png"><br><strong>这里输出的依次是字符数、词数、行数、空行数、代码行数、注释行数。下面的也一样。</strong><br>之所以这么输出，是模仿了Linux系统下自带的wc命令。一开始我也不太理解wc命令输出的东西哪个是字符数、哪个是单词数，所以阅读了一下文档，找到了输出的规则，理解了输出的含义。<br>所以，我这里也用了这种实现方式，这样做能减少输出冗余信息，减少用户的阅读负担，让用户更快地获得想要的信息。</li>
-<li>一个字符的文件<br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911205912825-488820294.png"><br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911205958319-1399208864.png"></li>
-<li>一个单词的文件<br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210007243-239773037.png"><br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210013271-1946409668.png"></li>
-<li>一行的文件<br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210114455-1151020509.png"><br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210119963-1429841711.png"></li>
-<li>典型的C源文件<br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210126528-40224607.png"><br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210131462-486603797.png"></li>
-<li>另一个典型的C源文件<br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210153931-1158546205.png"><br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210159342-1826726136.png"></li>
+<li>questionSetGenerate</li>
+<li>gcd</li>
+<li>addbrackets</li>
+<li>digToString</li>
+<li>ImproperFraction</li>
 </ol>
-<p>除了测试这些样例，我还测试了非法输入的情况，如下：</p>
+<p>其中，questionSetGenerate是生成运算题目的函数入口，占用时间最长。gcd是在题目运算过程，分数通分时进行调用的，具体实现是辗转相除法。addbrackets是在生成题目的过程给表达式添加括号。digTostring是在生成题目的过程将数字转化为字符串。ImproperFraction是真分数的类名，由于生成的表达式中普遍含有真分数，所以多次调用了它的构造函数。</p>
+<p><strong>2. 检查答案正确性</strong><br>检查五十万条题目时的时间占比情况：<br><img src="https://img2018.cnblogs.com/blog/1484352/201809/1484352-20180930145411370-99124462.png"></p>
+<p>由上图可以看出，占用时间最多的前五个函数为：</p>
 <ol>
-<li>没有输入参数<br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210210247-1688868089.png"></li>
-<li>参数非法<br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210225526-1188622487.png"></li>
-<li>文件或目录不存在<br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210231620-1867302132.png"></li>
-<li>在未输入s参数的情况下查询目录<br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210246330-568258736.png"></li>
+<li>gcd</li>
+<li>stringToImproperFraction</li>
+<li>__deque_buf_size</li>
+<li>transformInfixExprToSuffixExpr</li>
+<li>_Deque_base</li>
 </ol>
-<p>拓展功能的查询更复杂信息和查询目录的测试：<br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911210335631-1210398873.png"></p>
-<p>支持各种文件的通配符（*,?）的测试：<br><img src="https://img2018.cnblogs.com/blog/1484352/201809/1484352-20180915090044777-1329710180.png"><br><img src="https://img2018.cnblogs.com/blog/1484352/201809/1484352-20180915090113262-414065472.png"></p>
-<h1 id="代码覆盖率"><a href="#代码覆盖率" class="headerlink" title="代码覆盖率"></a>代码覆盖率</h1><p>博主使用了gcov与lcov进行代码覆盖率的测试。经过测试发现，行覆盖率为91.5%，函数覆盖率为100%。<br><img src="https://images2018.cnblogs.com/blog/1484352/201809/1484352-20180911234128799-238501992.png"></p>
-<h1 id="遇到的困难及解决方法"><a href="#遇到的困难及解决方法" class="headerlink" title="遇到的困难及解决方法"></a>遇到的困难及解决方法</h1><ol>
-<li>之前很少用C++写与文件操作相关的代码，所以对于实现-s这个参数的时候无从下手，最后，通过搜索引擎，查阅官方文档和他人的博客，学习到了新知识，顺利地解决了这个问题。</li>
-<li>实现-a这个参数，需要统计空行、代码行、注释行。一开始，我的想法是逐个读取字符，进行相关变量的更新，并进行状态转化。但是，这样实现的话，会需要很多的标记，让代码晦涩难懂。而且由于这个状态机的状态很多，状态之间的转化也相当复杂。所以，最后我放弃了这种实现方式，改用正则表达式来实现，这样会简单很多。这启发我，在具体实现前，最好先比较一下各种实现方式的难易程度，再选择一种比较容易的来写。</li>
-</ol>
+<p>其中，gcd用于运算过程的通分，stringToImproperFraction用于将字符串转化为真分数， transformInfixExprToSuffixExpr用于将中缀表达式转化为后缀表达式。另外两个函数是系统函数。</p>
+<p>因此，假如要优化效能的话，可以优先在源代码追踪一下上述函数，看能否减少这些函数的调用或者优化其实现方式。</p>
 <h1 id="PSP"><a href="#PSP" class="headerlink" title="PSP"></a>PSP</h1><table>
 <thead>
 <tr>
@@ -328,80 +321,80 @@
 <tbody><tr>
 <td>Planning</td>
 <td>计划</td>
-<td>25</td>
+<td>60</td>
 <td>50</td>
 </tr>
 <tr>
 <td>· Estimate</td>
 <td>· 估计这个任务需要多少时间</td>
-<td>25</td>
+<td>60</td>
 <td>50</td>
 </tr>
 <tr>
 <td>Development</td>
 <td>开发</td>
-<td>525</td>
-<td>600</td>
+<td>965</td>
+<td>1545</td>
 </tr>
 <tr>
 <td>· Analysis</td>
 <td>· 需求分析 (包括学习新技术)</td>
-<td>75</td>
-<td>75</td>
+<td>50</td>
+<td>100</td>
 </tr>
 <tr>
 <td>· Design Spec</td>
 <td>· 生成设计文档</td>
 <td>25</td>
-<td>0</td>
+<td>35</td>
 </tr>
 <tr>
 <td>· Design Review</td>
 <td>· 设计复审 (和同事审核设计文档)</td>
-<td>0</td>
-<td>0</td>
+<td>25</td>
+<td>35</td>
 </tr>
 <tr>
 <td>· Coding Standard</td>
 <td>· 代码规范 (为目前的开发制定合适的规范)</td>
 <td>25</td>
-<td>0</td>
+<td>65</td>
 </tr>
 <tr>
 <td>· Design</td>
 <td>· 具体设计</td>
-<td>25</td>
-<td>50</td>
+<td>60</td>
+<td>80</td>
 </tr>
 <tr>
 <td>· Coding</td>
 <td>· 具体编码</td>
-<td>325</td>
-<td>425</td>
+<td>360</td>
+<td>415</td>
 </tr>
 <tr>
 <td>· Code Review</td>
 <td>· 代码复审</td>
-<td>25</td>
-<td>25</td>
+<td>60</td>
+<td>150</td>
 </tr>
 <tr>
 <td>· Test</td>
 <td>· 测试（自我测试，修改代码，提交修改）</td>
-<td>25</td>
-<td>25</td>
+<td>360</td>
+<td>665</td>
 </tr>
 <tr>
 <td>Reporting</td>
 <td>报告</td>
-<td>100</td>
-<td>100</td>
+<td>110</td>
+<td>130</td>
 </tr>
 <tr>
 <td>· Test Report</td>
 <td>· 测试报告</td>
-<td>50</td>
-<td>50</td>
+<td>60</td>
+<td>80</td>
 </tr>
 <tr>
 <td>· Size Measurement</td>
@@ -418,14 +411,24 @@
 <tr>
 <td>合计</td>
 <td></td>
-<td>650</td>
-<td>750</td>
+<td>1135</td>
+<td>1725</td>
 </tr>
 </tbody></table>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>一开始没有认真分析需求，没有想好就开始动手编码实现，中途停停顿顿，浪费了不少时间。从上面的PSP也可以看出，我花了很少时间在“生成设计文档”、“设计复审”、“代码规范”这三个环节上，导致我后面“具体编码”的环节花的时间比预估的时间长了很多。后来，我重新阅读了项目文件，明确了需求，并进行了相关设计，然后就实现得比较顺利了。这启发我，在开始动手编码前，应该先想好思路，并设计好模块，磨刀不误砍柴工嘛。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
-<li><a href="http://magustest.com/2010/09/12/using-gcov-lcov/">C&#x2F;C++代码覆盖工具gcov与lcov入门</a></li>
-</ul>
+<h1 id="项目小结"><a href="#项目小结" class="headerlink" title="项目小结"></a>项目小结</h1><p><strong>有待改进的地方</strong></p>
+<p>   溢出问题：当给定r过大的时候，将会导致最终运算结构的分母溢出，而造成的数据错误<br>   目前方案：检查溢出，将发生了溢出的表达式删除<br>   更佳方案：使用大数的运算，就可以完美避免数据溢出的问题</p>
+<p> 生成题目不够友好：当给定数据范围r稍稍有点大的时候，最终答案的分母可能超过一亿<br> 目前方案：不处理<br> 更佳方案: 暂无</p>
+<p> 死循环生成题目: 当给定题数过大且给定限制太小时,无法生成要求的题目数量, 导致进入死循环<br> 目前方案: 设置时间戳time,只生成1000000次表达式,再进行合法性判断,但也导致有可能无法生成要求题目数量<br> 更佳方案: 暂无</p>
+<h2 id="开发项目中发生的问题"><a href="#开发项目中发生的问题" class="headerlink" title="开发项目中发生的问题"></a><strong>开发项目中发生的问题</strong></h2><ol>
+<li>一开始的时候是选择暴力深搜生成题集,再随机选取表达式输出,但是生成的效果来看,题目并不是很随机,例如前两个数字是固定死的,思前想后,觉得还是使用rand()随机生成效果更佳</li>
+<li>在最开始设计方案的时候,还是思虑的不够多,以至于后面的代码复审(Debug)工作做了很多,远超过代码编写部分</li>
+<li>还有各种人性化的设置,如参数错误提示,程序运行结果显示之类话语并没有想到,但是一个软件,一个项目最终都是面向于人群大众,人性化的设置是必须的</li>
+</ol>
+<h2 id="团队之中的闪光点"><a href="#团队之中的闪光点" class="headerlink" title="团队之中的闪光点"></a><strong>团队之中的闪光点</strong></h2><ol>
+<li>良好的代码风格: 在一开始我们就约束好了团队的代码风格,在后续的代码编写之中我们也能够很好的参照代码风格进行书写,因此在代码复审的时候我们也能够很好的查阅对方的代码</li>
+<li>不错的代码能力: 想定思路学习知识之后,可直接进行代码的实现,基本上不会出现一些逻辑错误.后面出现的bug也是因为设计的时候稍稍不够考虑细节,一旦出现bug,都能够立马找到bug和想到相应的修复方案</li>
+<li>互帮互助: 在一开始我们就进行了分工,一个人主要负责对给定的题目文件和答案文件进行答案校对、参数组合正确性的检测，另一个人负责了题集的生成部分。并且在最后，一起测试并撰写了博客。<br>通过这次项目，我们实践了结对编程，提高了沟通能力，加强了团队合作的能力。</li>
+</ol>
 
       
     </div>
@@ -444,7 +447,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/36/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/36/">36</a><span class="page-number current">37</span><a class="page-number" href="/page/38/">38</a><span class="space">&hellip;</span><a class="page-number" href="/page/69/">69</a><a class="extend next" rel="next" href="/page/38/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/36/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/36/">36</a><span class="page-number current">37</span><a class="page-number" href="/page/38/">38</a><span class="space">&hellip;</span><a class="page-number" href="/page/70/">70</a><a class="extend next" rel="next" href="/page/38/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -512,7 +515,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">69</span>
+          <span class="site-state-item-count">70</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

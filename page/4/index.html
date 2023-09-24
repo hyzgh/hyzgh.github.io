@@ -184,7 +184,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2021/05/15/docker-proxy/">
+    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2021/06/05/The-Willpower-Instinct-readingNote/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/hyzgh-128x128.png">
@@ -198,7 +198,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/05/15/docker-proxy/" class="post-title-link" itemprop="url">Docker 代理</a>
+            <a href="/2021/06/05/The-Willpower-Instinct-readingNote/" class="post-title-link" itemprop="url">《自控力》阅读笔记</a>
         </h2>
 
         <div class="post-meta">
@@ -208,7 +208,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2021-05-15 22:30:14" itemprop="dateCreated datePublished" datetime="2021-05-15T22:30:14+08:00">2021-05-15</time>
+              <time title="创建时间：2021-06-05 16:25:01" itemprop="dateCreated datePublished" datetime="2021-06-05T16:25:01+08:00">2021-06-05</time>
             </span>
 
           
@@ -222,28 +222,75 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>最近在玩docker，由于众所周知的原因，在国内访问海外的网站速度会很慢，在docker内的表现是git clone和apt install缓慢。这个问题的常见解决方法是换源、挂代理。这里我使用了挂代理的方式解决，主要是考虑比较通用，不需要给每个工具配置一遍源。</p>
-<p>在container里面挂代理，需要确定container是如何和host的网络通信的。实际上，在host有一个docker0的虚拟网卡，用于container和host通信，可以这么查看：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># host</span></span><br><span class="line">$ ip addr show docker0</span><br><span class="line">4: docker0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default</span><br><span class="line">    <span class="built_in">link</span>/ether 02:42:64:51:fb:47 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 fe80::42:64ff:fe51:fb47/64 scope <span class="built_in">link</span></span><br><span class="line">       valid_lft forever preferred_lft forever</span><br></pre></td></tr></table></figure>
-
-<p>在container内，我们同样观察一下网络的路由配置：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># container</span></span><br><span class="line">$ ip route show</span><br><span class="line">default via 172.17.0.1 dev eth0 </span><br><span class="line">172.17.0.0/16 dev eth0  src 172.17.0.4 </span><br></pre></td></tr></table></figure>
-
-<p>可以发现container的ip包默认会转发到172.17.0.1，这正是host的docker0网卡配置的ip。至此，我们确定了container和host通信的ip地址。</p>
-<p>为了让host允许container访问所有port，需要修改host的ip路由表：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># host</span></span><br><span class="line">iptables -A INPUT -i docker0 -j ACCEPT</span><br></pre></td></tr></table></figure>
-
-<p>假设在host已经配置了一个可用的代理地址127.0.0.1:7890，那么container访问这个代理就需要使用172.17.0.1:7890。</p>
-<p>在container可以如此配置代理：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> http_proxy=http://172.17.0.1:7890</span><br><span class="line"><span class="built_in">export</span> https_proxy=http://172.17.0.1:7890</span><br></pre></td></tr></table></figure>
-
-<p>这样设置后，运行<code>curl www.google.com</code>成功，就说明代理生效了。通过设置这两个变量后，apt install和git clone也成功挂上了代理。</p>
-<p>参考：</p>
+          <p>最近阅读完了《自控力》这本书，书里讲的一些内容挺有道理和依据的，能解释生活中的一些行为。读完本书可以明白自己为何失控、如何失控，以及如何更好地避免失控，更好地掌控自己的生活。本博文以总结技巧为主，知识点为辅，说明该如何提高自己的自控力。</p>
+<p>当我们觉得自己的自控力很差时，其实其他大多数人也存在和我们一样的问题。这本书教给我一个很重要的道理，即任何人都是普通人，都会受生理的限制，会产生普通人面对诱惑时该有的表现。我们首先应该有自知之明，明白人类的自控力系统很孱弱，需要我们好好地运用技巧来“提高”自控力。</p>
+<h1 id="第一章-意志力是什么"><a href="#第一章-意志力是什么" class="headerlink" title="第一章 意志力是什么"></a>第一章 意志力是什么</h1><p>我理解文中提到的意志力和自控力是同义词，都表示对自己生活的掌控能力。</p>
+<p>生活中的事情，可以归为三类：我要做，我不要，我想要。意志力就是驾驭这三种事情，在这三者中寻得平衡。</p>
+<p>“我想要”是自己的目标和欲望，它越强大，越能让自己做该做的事情，并让自己不做不应该做的事情。</p>
+<p>每个人都会有积极的欲望和消极的欲望。积极欲望通常是更长期的目标，比如拥有规律的作息、健壮的身体、良好的学习习惯、向上的职业规划。而消极欲望，通常是短期的放纵，比如玩游戏、刷短视频、刷朋友圈。<strong>这里有个核心问题是怎么让自己的积极欲望更强大， 而消极欲望更渺小？</strong></p>
+<p>书中提到，每个会有两个自我，一个会控制自己，另一个则充满冲动。前者是多做积极事情的推动者，而后者则比较本能。</p>
+<p>技巧：给两个自我起个名字，以更好地认清两个自我的存在。比如可以将控制自我称为mage，而将冲动的自我称为monster。通过分别赋予前者积极的语义，后者消极的语义，以利于在做决策时，更好地唤醒明智的自己。</p>
+<p>通常来说，我们做决定时，通常都像开了自动挡，或者说，我们大多数时候会被过去的习惯所驱动。</p>
+<p><strong>这里有个核心问题，如何在做决定时唤醒自己？</strong></p>
+<p>技巧：集中注意力。比如在做决定时，关闭电子设备，闭上眼睛，做几个深呼吸。</p>
+<p>技巧：回忆做过的决定。比如可以在睡前，回忆一下今天没有去健身房健身的场景，受到了什么因素的干扰，下次应该怎么集中注意力。</p>
+<p>前额皮质：大脑中用于控制行为的区域。分成三部分，分别对应三类事情。</p>
+<p>技巧：练习冥想。冥想可以让更多的血液流进前额皮质，帮助自己做正确的事情。</p>
+<h1 id="第二章-意志力本能"><a href="#第二章-意志力本能" class="headerlink" title="第二章 意志力本能"></a>第二章 意志力本能</h1><p>本能是指人类先天携带的应对外界刺激时的反应。有些本能是先天携带的，比如生存、进食、应对危险等。</p>
+<p>本能、习惯其实都是在描述人类应对某一类事情如何表现。通常我们会说如何培养习惯，而不会说如何培养本能，因为本能是不可更改的。我们可以通过更改自己的习惯，来改变自己。</p>
+<p>多巴胺：一种让自己觉得做得某件事情会很快乐的化学物质。</p>
+<p>比如，在面对食物诱惑时，大脑会分泌一些多巴胺，让自己产生进食的冲动。这个应该因人而异，笔者面对食物诱惑时，多巴胺似乎分泌不足，因为自己总是不太想吃东西。另外，还有个例子是让很多人深受其恼的熬夜刷短视频，在我们想再刷几分钟就睡觉时，大脑总会分泌多巴胺让这个行为继续下去。</p>
+<p>本能相对应的自控表现，称之为“三思而后行”反应，即让自己慢下来，先想想，再做行动。在这个时代，我们应该做的是多做“三思而后行”反应，少依本能行事。</p>
+<p><strong>这里有个核心问题，如何让自己三思而后行？</strong></p>
+<p>技巧：将时间分块，强制事情执行前先思考。假如处于诱惑中，则应先强制中断当前的事情，先远离诱惑。</p>
+<p>心率变异度：反映意志力情况。越高，越能抵抗诱惑。</p>
+<p><strong>问题：怎么提高心意变异率？</strong></p>
 <ul>
-<li><a href="https://docs.docker.com/network/proxy/#configure-the-docker-client">Configure Docker to use a proxy server</a></li>
-<li><a href="https://stackoverflow.com/questions/31324981/how-to-access-host-port-from-docker-container"><a href="https://stackoverflow.com/questions/31324981/how-to-access-host-port-from-docker-container">How to access host port from docker container</a></a></li>
+<li>快速有效的方法，将呼吸频率降低到每分钟4~6次，也就是每分钟呼吸用10~15秒时间。</li>
+<li>长期坚持的方法，每周锻炼三次。这里的锻炼包括健身房、游泳、伸展运动、公园散步、打扫房间等活动。只要让自己离开床和沙发的活动，就有所帮助。</li>
+<li>充足、规律的晚上睡眠，以及适当的午休、小憩。</li>
 </ul>
-
+<p>素材：在网上搜索了一个问题，跳转到了知乎，看完了回答，刷起了短视频，本来打算查完问题就午休一会的，结果浪费了两个小时在刷视频上。睡了一觉后， 把手机扔在一边，才得以开始干活。</p>
+<p>素材：晚上，特别是周五的晚上，就会感觉很兴奋，想玩手机，打游戏、刷短视频、刷消息等。不知不觉就熬夜了。</p>
+<p>应对方法？</p>
+<ul>
+<li>属于“我不要”的挑战。</li>
+<li>不是强迫自己去睡觉，而是远离那些让自己没法睡觉的东西。并且在这个过程增强自己的控制力，比如用深呼吸大法。</li>
+</ul>
+<h1 id="第三章-意志力极限"><a href="#第三章-意志力极限" class="headerlink" title="第三章 意志力极限"></a>第三章 意志力极限</h1><p>意志力像肌肉一样，是有极限的。</p>
+<p>例子：当自己学习了一段时间后，不应该做的事情是玩手机，因为很有可能这会触发自己陷入一段很长的无意义行为中。正确的做法是脱离工作区域，随便做点和成瘾无关的事情，让自己的身心放松下来，以便迎接下一阶段的事情。</p>
+<p>例子：遇到不爽的事情应该马上解决，不然会一直消耗自己的意志力，是一个debuff。</p>
+<p>持续使用意志力会让它消耗，应该让它恢复。</p>
+<p>问题：如何补充意志力？</p>
+<ul>
+<li>放松</li>
+<li>补充能量</li>
+</ul>
+<p>虽然短期吃点东西能补充能量，提高意志力，但是这长远来看，血糖的突然波动会影响身体使用糖分的能力，即身体中的含糖量很高却没有多少能量可用。一种更好的方法是保证身体有足够的食物供应，以实现更持久稳定的能量供应。</p>
+<p>实践：尝试低血糖饮食，让自己的血糖更稳定。低血糖食物包括瘦肉蛋白、坚果、豆类、粗纤维谷类、麦片、水果、蔬菜等。</p>
+<p>在一些小事上持续自控会提高整体的意志力。</p>
+<p>实践：以前不太记录时间的话，可以尝试增强自我监控能力，可以记录每天的时间花在哪里上了。做好这件小事，可以帮助自己认识自己到底浪费了多少时间。</p>
+<p>问题：当自己觉得意志力告急，控制不了自己时，可以怎么挽救一下？</p>
+<p>很多时候意志力告急可能就像跑步跑不下去一样，可以通过逼自己一把来实现突破。</p>
+<p>假如是“我想要”的事情，可以假想一下挑战成功后获得的奖励是什么，我会有什么回报，是更健康、更靠谱、更幸福、更自由、更有钱，还是更成功？另外，假如挑战成功，还有谁会获益？假如是自己的榜样，他会建议自己怎么做？假如是自己讨厌的人，他会放弃吗，自己能做得比他更好吗？</p>
+<p>假如是“我不要”的事情，可以假想一下持续做了这些事情带来的可怕后果，越形象越好。假如自己喜欢的人发现自己做了不该做的事情，会怎么看自己？自己讨厌的人也陷入了这些事情，自己是和他一样的吗？</p>
+<h1 id="第四章-道德许可"><a href="#第四章-道德许可" class="headerlink" title="第四章 道德许可"></a>第四章 道德许可</h1><p>道德许可：在做了好事或者以为自己会做好事后，纵容自己做坏事的现象。</p>
+<p>例子：</p>
+<ul>
+<li>在晚上进行健身后，更容易导致晚上不学习</li>
+<li>在学习一段时间后，更可能纵容自己打很久的游戏，导致游戏时间远远大于学习时间</li>
+<li>当为复习考试花了很多时间后，自我感觉相当良好，更可能花整晚时间和朋友打游戏“放松”</li>
+<li>假想了一个很完美的计划后，很容易感觉良好，本想让自己短暂“放松”，但最终导致计划一点也没有执行</li>
+<li>今天犯错了，信誓旦旦地保证明天好好补救，实际上明天还是这样</li>
+</ul>
+<p>道德许可意味着在前进一小步后，很可能也会退一小步，假如能克服这一点，那么就能前进一大步。</p>
+<p>问题：如何克服道德许可？</p>
+<ul>
+<li>牢记目标，而不是行动。即关注为什么，而不是做了什么。</li>
+<li>将自己做过的好事用于证明自己对目标有多坚定，而不盘点自己取得了多少进步。</li>
+<li>告诉自己明天和今天毫无区别。假想一下以后每天都像今天这样放纵，会有什么可怕后果。</li>
+</ul>
+<h1 id="第五章-渴望不是幸福"><a href="#第五章-渴望不是幸福" class="headerlink" title="第五章 渴望不是幸福"></a>第五章 渴望不是幸福</h1>
       
     </div>
 
@@ -261,7 +308,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/69/">69</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/70/">70</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -329,7 +376,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">69</span>
+          <span class="site-state-item-count">70</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
