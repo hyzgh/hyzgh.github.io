@@ -233,8 +233,8 @@
 <p>比如<code>/estransport</code>下的测试代码属于integration-test。它依赖了es组件，需要在本地先起好es。</p>
 <p>发现Makefile还挺强大的，可以节省很多的重复性工作。比如其中的release命令，甚至可以将代码发布到Github的流程自动化。为了方便测试，Makefile也集成了用docker起ES的命令。通过Makefile，也可以很好的实践项目到API文档的输出。</p>
 <h1 id="Client"><a href="#Client" class="headerlink" title="Client"></a>Client</h1><p>项目的入口在于<code>elasticsearch.go</code>，它提供了创建Client的函数。另外也有对应的一些_test.go文件，包括example, benchmark, test等。</p>
-<p>Client包含了两个成员，一个是esapi.API，另一个是estransport.Interface。</p>
-<p>API: </p>
+<p><code>Client</code>包含了两个成员，一个是<code>esapi.API</code>，另一个是<code>estransport.Interface</code>。</p>
+<p><code>API</code>: </p>
 <ul>
 <li><p><code>/esapi/doc.go</code>的文档提供了比较充分的说明。</p>
 </li>

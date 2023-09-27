@@ -28,7 +28,7 @@
 <meta property="og:description" content="仓库地址：https:&#x2F;&#x2F;github.com&#x2F;elastic&#x2F;go-elasticsearch 仓库简介：The official Go client for Elasticsearch 分支：v7.11.0 README &amp; MakeFile使用了goreportcard对项目的质量进行了分析。 使用了codecov对代码覆盖率进行测试，网站界面用起来还挺舒服的。这个项目的覆盖率有80">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-09-27T12:58:13.000Z">
-<meta property="article:modified_time" content="2023-09-27T13:02:17.831Z">
+<meta property="article:modified_time" content="2023-09-27T13:03:51.970Z">
 <meta property="article:author" content="hyz">
 <meta property="article:tag" content="编程">
 <meta property="article:tag" content="仓库">
@@ -239,8 +239,8 @@
 <p>比如<code>/estransport</code>下的测试代码属于integration-test。它依赖了es组件，需要在本地先起好es。</p>
 <p>发现Makefile还挺强大的，可以节省很多的重复性工作。比如其中的release命令，甚至可以将代码发布到Github的流程自动化。为了方便测试，Makefile也集成了用docker起ES的命令。通过Makefile，也可以很好的实践项目到API文档的输出。</p>
 <h1 id="Client"><a href="#Client" class="headerlink" title="Client"></a>Client</h1><p>项目的入口在于<code>elasticsearch.go</code>，它提供了创建Client的函数。另外也有对应的一些_test.go文件，包括example, benchmark, test等。</p>
-<p>Client包含了两个成员，一个是esapi.API，另一个是estransport.Interface。</p>
-<p>API: </p>
+<p><code>Client</code>包含了两个成员，一个是<code>esapi.API</code>，另一个是<code>estransport.Interface</code>。</p>
+<p><code>API</code>: </p>
 <ul>
 <li><p><code>/esapi/doc.go</code>的文档提供了比较充分的说明。</p>
 </li>
