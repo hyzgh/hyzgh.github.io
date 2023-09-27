@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"hyzgh.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="elastic&#x2F;go-elasticseach仓库学习笔记仓库地址：https:&#x2F;&#x2F;github.com&#x2F;elastic&#x2F;go-elasticsearch 仓库简介：The official Go client for Elasticsearch 分支：v7.11.0 README &amp; MakeFile使用了goreportcard对项目的质量进行了分析。 使用了codecov对">
+  <meta name="description" content="仓库地址：https:&#x2F;&#x2F;github.com&#x2F;elastic&#x2F;go-elasticsearch 仓库简介：The official Go client for Elasticsearch 分支：v7.11.0 README &amp; MakeFile使用了goreportcard对项目的质量进行了分析。 使用了codecov对代码覆盖率进行测试，网站界面用起来还挺舒服的。这个项目的覆盖率有80">
 <meta property="og:type" content="article">
 <meta property="og:title" content="elastic&#x2F;go-elasticseach仓库学习笔记">
 <meta property="og:url" content="https://hyzgh.github.io/2023/09/27/null/index.html">
 <meta property="og:site_name" content="hyz&#39;s blog">
-<meta property="og:description" content="elastic&#x2F;go-elasticseach仓库学习笔记仓库地址：https:&#x2F;&#x2F;github.com&#x2F;elastic&#x2F;go-elasticsearch 仓库简介：The official Go client for Elasticsearch 分支：v7.11.0 README &amp; MakeFile使用了goreportcard对项目的质量进行了分析。 使用了codecov对">
+<meta property="og:description" content="仓库地址：https:&#x2F;&#x2F;github.com&#x2F;elastic&#x2F;go-elasticsearch 仓库简介：The official Go client for Elasticsearch 分支：v7.11.0 README &amp; MakeFile使用了goreportcard对项目的质量进行了分析。 使用了codecov对代码覆盖率进行测试，网站界面用起来还挺舒服的。这个项目的覆盖率有80">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-09-27T12:58:13.000Z">
-<meta property="article:modified_time" content="2023-09-27T12:59:17.126Z">
+<meta property="article:modified_time" content="2023-09-27T13:01:10.532Z">
 <meta property="article:author" content="hyz">
 <meta property="article:tag" content="编程">
 <meta property="article:tag" content="仓库">
@@ -228,17 +228,17 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="elastic-go-elasticseach仓库学习笔记"><a href="#elastic-go-elasticseach仓库学习笔记" class="headerlink" title="elastic&#x2F;go-elasticseach仓库学习笔记"></a>elastic&#x2F;go-elasticseach仓库学习笔记</h1><p>仓库地址：<a href="https://github.com/elastic/go-elasticsearch">https://github.com/elastic/go-elasticsearch</a></p>
+        <p>仓库地址：<a href="https://github.com/elastic/go-elasticsearch">https://github.com/elastic/go-elasticsearch</a></p>
 <p>仓库简介：The official Go client for Elasticsearch</p>
 <p>分支：v7.11.0</p>
-<h2 id="README-MakeFile"><a href="#README-MakeFile" class="headerlink" title="README &amp; MakeFile"></a>README &amp; MakeFile</h2><p>使用了<a href="https://github.com/gojp/goreportcard">goreportcard</a>对项目的质量进行了分析。</p>
+<h1 id="README-MakeFile"><a href="#README-MakeFile" class="headerlink" title="README &amp; MakeFile"></a>README &amp; MakeFile</h1><p>使用了<a href="https://github.com/gojp/goreportcard">goreportcard</a>对项目的质量进行了分析。</p>
 <p>使用了codecov对代码覆盖率进行测试，网站界面用起来还挺舒服的。这个项目的覆盖率有80%+，挺高的。</p>
 <p>使用了Github Action对项目进行自动构建编译。</p>
 <p>使用MakeFile封装了一系列构建命令，其中有Unit-test和integration-test。它使用了go的条件编译，来区分两种测试。</p>
 <p>比如<code>/esutil</code>下的测试代码属于unit-test。它不需要依赖es组件。</p>
 <p>比如<code>/estransport</code>下的测试代码属于integration-test。它依赖了es组件，需要在本地先起好es。</p>
 <p>发现Makefile还挺强大的，可以节省很多的重复性工作。比如其中的release命令，甚至可以将代码发布到Github的流程自动化。为了方便测试，Makefile也集成了用docker起ES的命令。通过Makefile，也可以很好的实践项目到API文档的输出。</p>
-<h2 id="elasticsearch-go"><a href="#elasticsearch-go" class="headerlink" title="elasticsearch.go"></a>elasticsearch.go</h2><p>项目的入口在于这个文件，它提供了创建Client的函数。另外也有对应的一些_test.go文件，包括example, benchmark, test等。</p>
+<h1 id="Client"><a href="#Client" class="headerlink" title="Client"></a>Client</h1><p>项目的入口在于<code>elasticsearch.go</code>，它提供了创建Client的函数。另外也有对应的一些_test.go文件，包括example, benchmark, test等。</p>
 <p>Client包含了两个成员，一个是esapi.API，另一个是estransport.Interface。</p>
 <p>API: </p>
 <ul>
@@ -363,7 +363,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#elastic-go-elasticseach%E4%BB%93%E5%BA%93%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0"><span class="nav-number">1.</span> <span class="nav-text">elastic&#x2F;go-elasticseach仓库学习笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#README-MakeFile"><span class="nav-number">1.1.</span> <span class="nav-text">README &amp; MakeFile</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#elasticsearch-go"><span class="nav-number">1.2.</span> <span class="nav-text">elasticsearch.go</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#README-MakeFile"><span class="nav-number">1.</span> <span class="nav-text">README &amp; MakeFile</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Client"><span class="nav-number">2.</span> <span class="nav-text">Client</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
