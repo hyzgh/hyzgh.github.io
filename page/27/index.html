@@ -184,7 +184,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2019/09/15/CSAPP-learning-note-2/">
+    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2019/09/29/CSAPP-learning-note-3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/hyzgh-128x128.png">
@@ -198,7 +198,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2019/09/15/CSAPP-learning-note-2/" class="post-title-link" itemprop="url">CSAPP 学习笔记 2 信息的表示与处理</a>
+            <a href="/2019/09/29/CSAPP-learning-note-3/" class="post-title-link" itemprop="url">CSAPP 学习笔记 3 程序的机器级表示</a>
         </h2>
 
         <div class="post-meta">
@@ -208,7 +208,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2019-09-15 23:31:06" itemprop="dateCreated datePublished" datetime="2019-09-15T23:31:06+08:00">2019-09-15</time>
+              <time title="创建时间：2019-09-29 22:38:59" itemprop="dateCreated datePublished" datetime="2019-09-29T22:38:59+08:00">2019-09-29</time>
             </span>
 
           
@@ -222,17 +222,72 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>这一周看了第二章的剩余篇幅，关于整数运算以及浮点数。目前还未完全搞定，有很多习题待写。</p>
-<h1 id="整数运算"><a href="#整数运算" class="headerlink" title="整数运算"></a>整数运算</h1><p>整数运算的分类主要有两个维度，一个是无符号数、有符号数，另一个是加法、乘法。</p>
-<p>之前知道编译器会将乘法转化成加减法&#x2F;移位，但始终不知所以然。这次通过阅读CSAPP，深入理解了它的原理，另外知道了还可以将除法转化为加减法&#x2F;移位。</p>
-<p>这一节讲得都是规律和证明，这里不再赘述。贴一张图进行总结，以方便以后回忆。</p>
-<p><img src="https://s2.ax1x.com/2019/09/16/nRiAaT.png" alt="image-20190915234925595"></p>
-<h1 id="浮点数"><a href="#浮点数" class="headerlink" title="浮点数"></a>浮点数</h1><p>阅读完这一节后，对于浮点数的表示、运算、舍入等有了更深入的理解。</p>
-<p>其中，有的地方一开始不是很理解，当弄懂后，觉得这些设计很优雅、很聪明。</p>
-<p>比如，对于IEEE非规范值得设计不是很理解，为什么要增加复杂性呢。后来，明白了非规格值的设计，使得0的表示很加自然且靠近0的浮点数分布得更均匀。</p>
-<p>比如，一开始不太明白为什么要有偶数舍入法，直接四舍五入不行吗。后来，明白了偶数舍入法是对四舍五入的一种改进，避免了舍入所造成的统计误差。</p>
-<p>还有浮点的运算，不遵循结合律，这是之前没有注意到但也是十分重要的知识点。</p>
-<p><img src="https://s2.ax1x.com/2019/09/16/nRikZV.png" alt="image-20190916000251225"></p>
+          <p>这两周看了第三章的前面五节，对机器指令有了更进一步的认识。</p>
+<p><img src="https://s2.ax1x.com/2019/09/29/uGR19e.png" alt="程序的机器级表示 阅读进度"></p>
+<h1 id="历史观点"><a href="#历史观点" class="headerlink" title="历史观点"></a>历史观点</h1><p>Intel处理器系列俗称x86，它有着一段进化之旅。从最初的8086到i386，再到i5和i7。那么它究竟有哪些方面的提升呢？</p>
+<ul>
+<li>晶体管数量增加。Core i7的1.4G个晶体管，是8086芯片29K个晶体管的4.8万倍。晶体管越多，意味着芯片的电路越复杂，能力越强。</li>
+<li>指令集变大，支持更多指令。8087在8086的基础上，建立了浮点模型。</li>
+<li>更多的位数。Pentium 4E是Intel对AMD提出的对IA32的64位拓展的实现，我们称之为x86-64。</li>
+<li>更多的核数。Core 2是Intel的第一个多核微处理器。</li>
+<li>更多的技术。Pentium 4E增加了超线程，允许一个处理器上同时运行两个程序。</li>
+</ul>
+<p>AMD等产商的大多处理器与Intel处理器兼容，能够运行完全相同的机器级程序。</p>
+<h1 id="程序编码"><a href="#程序编码" class="headerlink" title="程序编码"></a>程序编码</h1><p>什么是机器代码呢？我们知道，C语言会经过预处理、编译、汇编、链接这些过程。</p>
+<ul>
+<li>预编译：拓展源代码，主要处理对象是#include及#define。</li>
+<li>编译：产生源文件的汇编代码，拓展名为.s。</li>
+<li>汇编：产生二进制目标代码，拓展名为.o。</li>
+<li>链接：将多个.o文件转化成一个可执行文件。</li>
+</ul>
+<p>所谓机器代码，第一种是指.o文件中的代码，第二种是指可执行文件中的代码。它们的区别在于前者还没有填入全局值的地址。</p>
+<p>机器代码是一些二进制代码，不具有可读性。汇编代码非常接近机器代码，我们可通过学习汇编代码来认识机器代码。</p>
+<h1 id="数据格式"><a href="#数据格式" class="headerlink" title="数据格式"></a>数据格式</h1><p>Intel的体系结构一直在变化，从16位到32位，再到64位，可能以后还会拓展到128位。</p>
+<p>Intel用以下术语来表示不同的数据类型。</p>
+<table>
+<thead>
+<tr>
+<th>Intel数据类型</th>
+<th>汇编代码后缀</th>
+<th>大小（字节）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>字节</td>
+<td>b</td>
+<td>1</td>
+</tr>
+<tr>
+<td>字</td>
+<td>w</td>
+<td>2</td>
+</tr>
+<tr>
+<td>双字</td>
+<td>l</td>
+<td>4</td>
+</tr>
+<tr>
+<td>四字</td>
+<td>q</td>
+<td>8</td>
+</tr>
+<tr>
+<td>单精度</td>
+<td>s</td>
+<td>4</td>
+</tr>
+<tr>
+<td>双精度</td>
+<td>l</td>
+<td>8</td>
+</tr>
+</tbody></table>
+<h1 id="访问信息"><a href="#访问信息" class="headerlink" title="访问信息"></a>访问信息</h1><p>一个CPU包含一组16个存储64位值的通用目的寄存器，这些寄存器用来存储整数数据和指针。</p>
+<p>我们知道，程序运行时，其数据存放在内存中。CPU需要一些指令来进行内存与寄存器间的数据转移，称为数据转移指令。</p>
+<p>我们也知道，程序运行时，在内存中有一个对应的程序栈。CPU有专门指令进行入栈、出栈操作。可否将这些指令去掉呢？可以，存在代替指令。但是这样做，会让机器代码增多，考虑到入栈出栈操作是非常常见的，所以提供专门的指令会缩减机器代码的大小。这也就是在精简指令集上编译出来的机器代码比复杂指令集庞大的原因。</p>
+<h1 id="算术和逻辑操作"><a href="#算术和逻辑操作" class="headerlink" title="算术和逻辑操作"></a>算术和逻辑操作</h1><p>所谓算术操作，指的是加减乘除等操作。所谓逻辑操作，是指与或移位等操作。</p>
+<p>通过学习汇编代码的算术和逻辑操作，对于高级语言的便利性有了更具体的认识。一条C语言简单的算术表达式，转化成汇编代码，会变成多条。对于一些更复杂的循环控制语句，就更复杂了。</p>
 <p>（全文完）</p>
 
       
@@ -252,7 +307,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/26/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/26/">26</a><span class="page-number current">27</span><a class="page-number" href="/page/28/">28</a><span class="space">&hellip;</span><a class="page-number" href="/page/70/">70</a><a class="extend next" rel="next" href="/page/28/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/26/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/26/">26</a><span class="page-number current">27</span><a class="page-number" href="/page/28/">28</a><span class="space">&hellip;</span><a class="page-number" href="/page/71/">71</a><a class="extend next" rel="next" href="/page/28/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -320,14 +375,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">70</span>
+          <span class="site-state-item-count">71</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-count">48</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

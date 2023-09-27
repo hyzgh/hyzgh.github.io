@@ -184,7 +184,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2020/04/04/leetcode-exercise-per-day-4-Move-Zeroes/">
+    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2020/04/05/leetcode-exercise-per-day-5-Best-Time-to-Buy-and-Sell-Stock-II/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/hyzgh-128x128.png">
@@ -198,7 +198,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/04/04/leetcode-exercise-per-day-4-Move-Zeroes/" class="post-title-link" itemprop="url">Leetcode 每日一题4 Move Zeroes</a>
+            <a href="/2020/04/05/leetcode-exercise-per-day-5-Best-Time-to-Buy-and-Sell-Stock-II/" class="post-title-link" itemprop="url">Leetcode 每日一题5 Best Time to Buy and Sell Stock II</a>
         </h2>
 
         <div class="post-meta">
@@ -208,7 +208,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-04-04 17:45:48" itemprop="dateCreated datePublished" datetime="2020-04-04T17:45:48+08:00">2020-04-04</time>
+              <time title="创建时间：2020-04-05 17:29:37" itemprop="dateCreated datePublished" datetime="2020-04-05T17:29:37+08:00">2020-04-05</time>
             </span>
 
           
@@ -222,15 +222,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h1><blockquote>
-<p>题目链接：<a href="https://leetcode.com/explore/featured/card/30-day-leetcoding-challenge/528/week-1/3286/">Move Zeroes</a></p>
-</blockquote>
-<p>给一个数组，通过交换将所有非零元素放置在前面，将所有零元素放置在后面。</p>
-<p>要求In-place，即不能使用额外的空间存放数组元素。</p>
-<p>另外还要求交换次数最少。</p>
-<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>为了满足题目要求，我们可以使用双指针法，找到一个零元素，以及在它后面的非零元素，将两者交换，不断重复这个过程。</p>
-<p>假如不需要交换次数最少，有种更简洁的写法，即两次for循环，第一个for循环将非零元素放在数组前面，第二次for循环将非零元素放在数组后面。</p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">moveZeroes</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> pZero = <span class="built_in">findNextZeroIndex</span>(nums, <span class="number">-1</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="type">int</span> pNonZero = <span class="built_in">findNextNonZeroIndex</span>(nums, pZero);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">while</span> (pZero &lt; nums.<span class="built_in">size</span>() &amp;&amp; pNonZero &lt; nums.<span class="built_in">size</span>()) &#123;</span><br><span class="line">            <span class="built_in">swap</span>(nums[pNonZero], nums[pZero]);</span><br><span class="line">            pZero = <span class="built_in">findNextZeroIndex</span>(nums, pZero);</span><br><span class="line">            pNonZero = <span class="built_in">findNextNonZeroIndex</span>(nums, pZero);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">findNextZeroIndex</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;nums, <span class="type">int</span> pZero)</span> </span>&#123;</span><br><span class="line">        pZero++;</span><br><span class="line">        <span class="keyword">while</span> (pZero &lt; nums.<span class="built_in">size</span>() &amp;&amp; nums[pZero] != <span class="number">0</span>) &#123;</span><br><span class="line">            pZero++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> pZero;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">findNextNonZeroIndex</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;nums, <span class="type">int</span> pNonZero)</span> </span>&#123;</span><br><span class="line">        pNonZero++;</span><br><span class="line">        <span class="keyword">while</span> (pNonZero &lt; nums.<span class="built_in">size</span>() &amp;&amp; nums[pNonZero] == <span class="number">0</span>) &#123;</span><br><span class="line">            pNonZero++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> pNonZero;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+          <h1 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h1><p>给一个数组，表示每天的股票股价。可以进行无数次交易，但同一时刻只能持有一股的股票。求最大收益。</p>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>假如股价在未来是涨的，那么就应该购买。假如是跌的，就不购买。</p>
+<p>因此，我们扫描一遍数组，维护当前最低的股价，假如遇到较高的股价，就卖出，并更新最低股价。时间复杂度为O(n)，空间复杂度为O(1)。</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxProfit</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; prices)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (prices.<span class="built_in">size</span>() == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> mi = prices[<span class="number">0</span>];</span><br><span class="line">        <span class="type">int</span> ans = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; prices.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (prices[i] - mi &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                ans += prices[i] - mi;</span><br><span class="line">                mi = prices[i];</span><br><span class="line">            &#125;</span><br><span class="line">            mi = <span class="built_in">min</span>(mi, prices[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
 
       
@@ -250,7 +245,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/13/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/70/">70</a><a class="extend next" rel="next" href="/page/15/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/13/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/71/">71</a><a class="extend next" rel="next" href="/page/15/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -318,14 +313,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">70</span>
+          <span class="site-state-item-count">71</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-count">48</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

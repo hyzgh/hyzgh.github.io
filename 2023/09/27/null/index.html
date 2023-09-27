@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.0.0-rc2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/hyzgh-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/hyzgh-16x16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hyzgh.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="elastic&#x2F;go-elasticseach仓库学习笔记仓库地址：https:&#x2F;&#x2F;github.com&#x2F;elastic&#x2F;go-elasticsearch 仓库简介：The official Go client for Elasticsearch 分支：v7.11.0 README &amp; MakeFile使用了goreportcard对项目的质量进行了分析。 使用了codecov对">
+<meta property="og:type" content="article">
+<meta property="og:title" content="elastic&#x2F;go-elasticseach仓库学习笔记">
+<meta property="og:url" content="https://hyzgh.github.io/2023/09/27/null/index.html">
+<meta property="og:site_name" content="hyz&#39;s blog">
+<meta property="og:description" content="elastic&#x2F;go-elasticseach仓库学习笔记仓库地址：https:&#x2F;&#x2F;github.com&#x2F;elastic&#x2F;go-elasticsearch 仓库简介：The official Go client for Elasticsearch 分支：v7.11.0 README &amp; MakeFile使用了goreportcard对项目的质量进行了分析。 使用了codecov对">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-27T12:58:13.000Z">
+<meta property="article:modified_time" content="2023-09-27T12:59:17.126Z">
+<meta property="article:author" content="hyz">
+<meta property="article:tag" content="编程">
+<meta property="article:tag" content="仓库">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://hyzgh.github.io/2023/09/27/null/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>elastic/go-elasticseach仓库学习笔记 | hyz's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="hyz's blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">hyz's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2023/09/27/null/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/hyzgh-128x128.png">
+      <meta itemprop="name" content="hyz">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hyz's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          elastic/go-elasticseach仓库学习笔记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-09-27 20:58:13" itemprop="dateCreated datePublished" datetime="2023-09-27T20:58:13+08:00">2023-09-27</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="elastic-go-elasticseach仓库学习笔记"><a href="#elastic-go-elasticseach仓库学习笔记" class="headerlink" title="elastic&#x2F;go-elasticseach仓库学习笔记"></a>elastic&#x2F;go-elasticseach仓库学习笔记</h1><p>仓库地址：<a href="https://github.com/elastic/go-elasticsearch">https://github.com/elastic/go-elasticsearch</a></p>
+<p>仓库简介：The official Go client for Elasticsearch</p>
+<p>分支：v7.11.0</p>
+<h2 id="README-MakeFile"><a href="#README-MakeFile" class="headerlink" title="README &amp; MakeFile"></a>README &amp; MakeFile</h2><p>使用了<a href="https://github.com/gojp/goreportcard">goreportcard</a>对项目的质量进行了分析。</p>
+<p>使用了codecov对代码覆盖率进行测试，网站界面用起来还挺舒服的。这个项目的覆盖率有80%+，挺高的。</p>
+<p>使用了Github Action对项目进行自动构建编译。</p>
+<p>使用MakeFile封装了一系列构建命令，其中有Unit-test和integration-test。它使用了go的条件编译，来区分两种测试。</p>
+<p>比如<code>/esutil</code>下的测试代码属于unit-test。它不需要依赖es组件。</p>
+<p>比如<code>/estransport</code>下的测试代码属于integration-test。它依赖了es组件，需要在本地先起好es。</p>
+<p>发现Makefile还挺强大的，可以节省很多的重复性工作。比如其中的release命令，甚至可以将代码发布到Github的流程自动化。为了方便测试，Makefile也集成了用docker起ES的命令。通过Makefile，也可以很好的实践项目到API文档的输出。</p>
+<h2 id="elasticsearch-go"><a href="#elasticsearch-go" class="headerlink" title="elasticsearch.go"></a>elasticsearch.go</h2><p>项目的入口在于这个文件，它提供了创建Client的函数。另外也有对应的一些_test.go文件，包括example, benchmark, test等。</p>
+<p>Client包含了两个成员，一个是esapi.API，另一个是estransport.Interface。</p>
+<p>API: </p>
+<ul>
+<li><p><code>/esapi/doc.go</code>的文档提供了比较充分的说明。</p>
+</li>
+<li><p>API是自动根据<a href="https://github.com/elastic/elasticsearch/tree/master/rest-api-spec/src/main/resources/rest-api-spec/api">ES官方client标准</a>生成的，生成代码在&#x2F;internal&#x2F;cmd&#x2F;generate。更牛的是，ES官方还提供了client test，以保证不同语言实现的client都能复用。</p>
+</li>
+<li><p>API本身是个结构体，成员是函数。API的调用设计，提供了struct和function两种方式。为了实现struct方式的调用，Request定义了Do的method，感觉用起来还挺奇怪的。更倾向于使用function的模式，更紧凑一些。</p>
+</li>
+</ul>
+<p><code>estransport.Interface</code>:</p>
+<ul>
+<li><p><code>/estransport/doc.go</code>有文档说明。estransport感觉蛮可配置化的，包括重试策略、节点选择、连接池、Logger等。</p>
+</li>
+<li><p><code>estransport.go</code>: 核心文件。主要实现函数是Perform。</p>
+</li>
+<li><p><code>logger.go</code>: 实现了日志的采集，其实不仅是日志，其他metrics的埋点也可以在这里做。</p>
+</li>
+<li><p><code>metrics.go</code>: 实现了metrics的采集。</p>
+</li>
+<li><p><code>connection.go</code>: 实现了连接池。只有在输入多个URL的时候有效。假如是使用云厂商的，一般会提供一个VIP，云厂商做了负载均衡。</p>
+</li>
+</ul>
+<p><code>NewClient</code>源码阅读收获：</p>
+<ul>
+<li>默认是使用http.DefaultTransport，该transport没有设置读取header的超时时间，所以假如是客户端返回response慢，那么可能会导致hang住。</li>
+</ul>
+<p><code>Perform</code>源码阅读收获：</p>
+<ul>
+<li>为了实现重试，会将request body拷贝一份，因为http请求发送出去后就没了。http内置了GetBody函数可实现多次读取body。</li>
+<li>默认超时是不会自动重试的，需要配置enableRetryOnTimeout为true才会。为什么这么设计？</li>
+<li>为了实现并发访问，很多地方使用了Lock来实现的，包括对pool, metrics等字段的访问。</li>
+<li>使用sleep来实现退避重试。</li>
+<li>还是使用transport来发起请求，并在发起请求后使用logger来记录请求情况，用户可以用该logger记录日志、打点等。</li>
+</ul>
+<p><code>Connection</code>源码阅读收获：</p>
+<ul>
+<li>创建连接池只需要少量参数（host, username, password）。当真正发起请求前，需要将这些参数的绑定到Request中，以便发起http请求。</li>
+<li>Next用于获取连接，OnSuccess用于归还成功的连接，OnFailure用于归还失败的连接。</li>
+<li>实现了两种连接池，一种是单URL地址的连接池，另一种是多URL地址的连接池。后者相比于前者多了一个负载均衡策略，代码中定义了Selector来抽象。</li>
+<li>singleConnectionPool其实只会返回自己的URL，没有建立连接的概念。这里复用连接是依赖底层的http client实现的。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%BC%96%E7%A8%8B/" rel="tag"># 编程</a>
+              <a href="/tags/%E4%BB%93%E5%BA%93/" rel="tag"># 仓库</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/09/24/2023-09-25-weekly-report/" rel="prev" title="2023.09.25周报">
+      <i class="fa fa-chevron-left"></i> 2023.09.25周报
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#elastic-go-elasticseach%E4%BB%93%E5%BA%93%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0"><span class="nav-number">1.</span> <span class="nav-text">elastic&#x2F;go-elasticseach仓库学习笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#README-MakeFile"><span class="nav-number">1.1.</span> <span class="nav-text">README &amp; MakeFile</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#elasticsearch-go"><span class="nav-number">1.2.</span> <span class="nav-text">elasticsearch.go</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="hyz"
+      src="/images/hyzgh-128x128.png">
+  <p class="site-author-name" itemprop="name">hyz</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">71</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hyzgh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hyzgh" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="rss fa-fw"></i>RSS</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="male"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hyz</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'bf1417ba028af8a9f328',
+      clientSecret: '18c36b663b5531dcb085af6a7e5d1cfc7dac3223',
+      repo        : 'blog-comment-gitalk',
+      owner       : 'hyzgh',
+      admin       : ['hyzgh'],
+      id          : '5ed42439285a8a1c9254eb68e7f9e4d0',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>
