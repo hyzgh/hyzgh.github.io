@@ -184,7 +184,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2020/08/29/CSAPP-learning-note-7/">
+    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2020/04/06/leetcode-exercise-per-day-6-Group-Anagrams/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/hyzgh-128x128.png">
@@ -198,7 +198,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/08/29/CSAPP-learning-note-7/" class="post-title-link" itemprop="url">CSAPP 学习笔记 7 虚拟内存</a>
+            <a href="/2020/04/06/leetcode-exercise-per-day-6-Group-Anagrams/" class="post-title-link" itemprop="url">Leetcode 每日一题6 Group Anagrams</a>
         </h2>
 
         <div class="post-meta">
@@ -208,7 +208,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-08-29 17:13:37" itemprop="dateCreated datePublished" datetime="2020-08-29T17:13:37+08:00">2020-08-29</time>
+              <time title="创建时间：2020-04-06 16:30:17" itemprop="dateCreated datePublished" datetime="2020-04-06T16:30:17+08:00">2020-04-06</time>
             </span>
 
           
@@ -222,73 +222,18 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>好久没看CSAPP这本书了。最近在学习redis的AOF重写过程，发现对于涉及的一些概念有些模糊，比如fork、页表、虚拟内存、物理内存等。而且，最近在工作中也经常遇到和内存相关的问题，在利用top命令来排查内存问题的过程中，发现手册里提到的一些内存的概念，自己都不甚清晰。</p>
-<p>于是很有必要重新捡起这本书看看，梳理一下书中第9章虚拟内存的相关知识，巩固一下基础。</p>
-<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>操作系统的内存是由许多进程共享的，假如进程之间内存没有独立开来，那么很有可能导致进程崩溃。</p>
-<p>虚拟内存是现代系统提供的一种对主存的抽象概念，用于将进程间的内存空间相互独立开来。</p>
-<blockquote>
-<p> 现代操作系统都使用的是按需页面调度的方式。</p>
-</blockquote>
-<p>从top的manual中可以查看Linux的多种内存类型的定义。</p>
-<blockquote>
-<p>physical memory: a limited resource where code and data must reside when executed or referenced.</p>
-<p>optional swap file: where modified (dirty) memory can be saved and later retrieved if too many demands are made on physical memory.</p>
-<p>virtual memory: a  nearly  unlimited resource.</p>
-</blockquote>
-<p>其中，虚拟内存是近似无限大的，它的意义在于：</p>
-<blockquote>
-<ol>
-<li>abstraction, free from physical memory addresses&#x2F;limits</li>
-<li>isolation, every process in a separate address space</li>
-<li>sharing, a single mapping can serve multiple needs</li>
-<li>flexibility, assign a virtual address to a file</li>
-</ol>
-</blockquote>
-<p>对于第一点和第二点，就是CSAPP中提到的进程内存之间抽象和隔离。</p>
-<p>第三点和第四点是什么意思呢？</p>
-<p>另外，手册中也提到了不管是哪种内存类型，都是以页面的方式进行管理，通常是4KB。当然，在某些场景可以将页面设置得大一些，称为big pgae.</p>
-<p>对于每一个page，在Linux中，都可以划分到某一类中。具体类别如下：</p>
-<p><img src="/../../../../Documents/notebook/img/image-20201129171849191.png" alt="image-20201129171849191"></p>
-<p>对于物理内存和虚拟内存，可以划分到这四类中任意一个。而对于swap file的内存，只能划分到#1和#3.</p>
-<p>Anonymous和File-backed有什么区别：</p>
-<blockquote>
-<p><strong>File</strong>-<strong>backed</strong> mapping maps an area of the process’s virtual memory to <strong>files</strong>; i.e. reading those areas of memory causes the <strong>file</strong> to be read. It is the default mapping type. <strong>Anonymous</strong> mapping maps an area of the process’s virtual memory not <strong>backed</strong> by any <strong>file</strong>. The contents are initialized to zero.</p>
-</blockquote>
-<p>top可以显示的关于内存的各种指标，参考手册如下：</p>
-<pre><code>      %MEM - simply RES divided by total physical memory
-      CODE - the `pgms&#39; portion of quadrant 3
-      DATA - the entire quadrant 1 portion of VIRT plus all
-             explicit mmap file-backed pages of quadrant 3
-      RES  - anything occupying physical memory which, beginning with
-             Linux-4.5, is the sum of the following three fields:
-             RSan - quadrant 1 pages, which include any
-                    former quadrant 3 pages if modified
-             RSfd - quadrant 3 and quadrant 4 pages
-             RSsh - quadrant 2 pages
-      RSlk - subset of RES which cannot be swapped out (any quadrant)
-      SHR  - subset of RES (excludes 1, includes all 2 &amp; 4, some 3)
-      SWAP - potentially any quadrant except 4
-      USED - simply the sum of RES and SWAP
-      VIRT - everything in-use and/or reserved (all quadrants)
-</code></pre>
-<p>使用Go写一个简单的hello, world程序：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">&quot;fmt&quot;</span></span><br><span class="line">    <span class="string">&quot;time&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">&quot;hello, world&quot;</span>)</span><br><span class="line">    time.Sleep(<span class="number">1</span> * time.Hour)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <h1 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h1><p>给一个数组，起元素为只包含英文小写字母的单词。</p>
+<p>要求分组输出使用了相同字符构造的单词，比如tea和eat就是同类单词。</p>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>将所有的单词遍历一遍，将同类单词放到同一个位置中去，关键是这个映射要怎么实现。对于一个长度为m的单词，我们可以用O(m)的时间遍历出各字符的使用次数。接着，我们将其转化成字符串，对于某个字符，其出现次数可以编码成cnt + char，然后按照英文字母表顺序连接起来。比如，teaa编码成2a1e1t。</p>
+<p>上面的编码使用了一个优化，即对于出现次数的0的字母，不编码到字符串中。</p>
+<p>假如追求极致，还可以对编码继续优化。</p>
+<ul>
+<li>对于出现次数为1的字母，可以不写上cnt。比如teaa可以写成2aet。</li>
+<li>当cnt很大时，可以使用整形来表示。比如250，使用char来表示需要3个字节，使用整形只要1个字节。</li>
+</ul>
+<p>编码是个很有趣的知识点，上面的编码方式似乎都有专门的名称，以后有空的话专门写篇博客总结一下，这里留个坑:)</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;vector&lt;string&gt;&gt; <span class="built_in">groupAnagrams</span>(vector&lt;string&gt;&amp; strs) &#123;</span><br><span class="line">        vector&lt;vector&lt;string&gt;&gt; v;</span><br><span class="line">        unordered_map&lt;string, vector&lt;string&gt;&gt; m;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> i: strs) &#123;</span><br><span class="line">            m[<span class="built_in">hashWord</span>(i)].<span class="built_in">push_back</span>(i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> it: m) &#123;</span><br><span class="line">            v.<span class="built_in">push_back</span>(it.second);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> v;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">string <span class="title">hashWord</span><span class="params">(string s)</span> </span>&#123;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">cnt</span><span class="params">(<span class="number">26</span>, <span class="number">0</span>)</span></span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; s.<span class="built_in">length</span>(); i++) &#123;</span><br><span class="line">            cnt[s[i] - <span class="string">&#x27;a&#x27;</span>]++;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        string hash;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">26</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!cnt[i])</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            hash += <span class="built_in">string</span>(cnt[i], <span class="string">&#x27;a&#x27;</span> + i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> hash;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
-
-
-<p>运行后，通过top的mem视图可以观察该进程的内存情况：</p>
-<p><img src="/../../../../Documents/notebook/img/image-20201205114259481.png" alt="image-20201205114259481"></p>
-<p>这里的VIRT, RES, CODE, DATA, SHR的单位是KiB。</p>
-<p>VIRT：虚拟内存占用大概是700MiB。（感觉有点反直觉）</p>
-<p>RES：实际的物理内存占用大概是1.8MiB。</p>
-<p>CODE：代码占用的内存是584KiB。</p>
-<p>DATA：运行栈和堆的数据大概是102MiB。</p>
-<p>SHR：共享内存大概是1MiB。</p>
-<p>我感觉实际的内存占用都有点大，能更细粒度地观察内存花在哪里的吗？分析一下。</p>
-<p>怎么分析该进程的内存情况呢？</p>
-<p>怎么理解这四种内存页呢？mmap这个函数的定义是什么？</p>
-<p>top如何保存视图？</p>
-<p>（未完待续）</p>
 
       
     </div>
@@ -307,7 +252,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/72/">72</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/69/">69</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -375,14 +320,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">72</span>
+          <span class="site-state-item-count">69</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">49</span>
+        <span class="site-state-item-count">47</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -417,7 +362,7 @@
 <div class="copyright">
   
   &copy; 2018 – 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="male"></i>
   </span>

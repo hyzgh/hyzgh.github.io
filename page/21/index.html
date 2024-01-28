@@ -184,7 +184,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2020/01/11/go-garbage-collector-learning-note/">
+    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2019/10/21/CSAPP-learning-note-6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/hyzgh-128x128.png">
@@ -198,7 +198,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/01/11/go-garbage-collector-learning-note/" class="post-title-link" itemprop="url">Go Lang GC 学习笔记</a>
+            <a href="/2019/10/21/CSAPP-learning-note-6/" class="post-title-link" itemprop="url">CSAPP 学习笔记 6 异常控制流</a>
         </h2>
 
         <div class="post-meta">
@@ -208,7 +208,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-01-11 23:42:50" itemprop="dateCreated datePublished" datetime="2020-01-11T23:42:50+08:00">2020-01-11</time>
+              <time title="创建时间：2019-10-21 19:16:38" itemprop="dateCreated datePublished" datetime="2019-10-21T19:16:38+08:00">2019-10-21</time>
             </span>
 
           
@@ -222,23 +222,23 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>GC的具体实现一直在改变，但是其模型是相对稳定的。</p>
-<p>collection的三个阶段：</p>
-<ul>
-<li>Mark Setup - STW</li>
-<li>Marking - Concurrent</li>
-<li>Mark Termination - STW</li>
+          <p>最近看了CSAPP的第八章——异常控制流。</p>
+<h1 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h1><p>在计算机中，假如没有异常，那么指令是顺序执行的。当遇到异常时，会执行异常处理程序。异常有不同的种类，有中断、陷阱、故障、终止。</p>
+<p>中断，是在CPU执行某条指令的时候，其他部件异步产生的，比如定时器芯片、磁盘控制器、网络适配器等。CPU检测到中断后，会把当前指令执行完，然后转去执行异常处理程序，接着再返回来执行下一条指令。</p>
+<p>陷阱，是有意的异常，最常见的陷阱是系统调用。系统调用，是指从用户模式转为内核模式，以执行一些特殊的指令，比如操作I&#x2F;O设备。执行完系统调用后，会返回来执行下一条指令。</p>
+<p>故障，是指执行指令的时候遇到了意外，比如遇到了缺页、访问了未定义的虚拟内存区域等。根据故障的不同，异常处理程序执行完后可能会返回执行当前指令，也有可能会终止程序。在写程序时常常遇到的<code>Floating point exception</code>和<code>Segmentation fault</code>就属于故障，且在Linux中的处理是程序被终止。</p>
+<p>终止，是指遇到了致命的硬件错误，必须结束程序。</p>
+<p>因为异常种类繁多，所以计算机中有一张异常表，用来记录不同的异常及对应的异常处理程序。在CPU中，有一个特殊的寄存器——异常表基址寄存器，用来存放异常表在内存中的基址。当CPU遇到一种异常的时候，会拿到一个异常号。CPU拿着这个异常号及寄存器中的基址，便可以找到对应的异常处理程序了。</p>
+<h1 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h1><p>进程，是执行中的程序实例，是操作系统对于程序的一种抽象。这种抽象，使得看起来进程是独占cpu和内存的。为了实现这种抽象，需要操作系统保存好进程的上下文，进行进程调度。</p>
+<p>进程的上下文，是指进程执行的状态，包括CPU中的状态、用户模式中的状态、内核模式中的状态。具体来说，cpu中的状态，包括各种寄存器，比如通用寄存器，用来保存指令执行用到的数据，还有程序计数器，用来指明程序执行的进度。用户模式下的状态，包括用户栈等。内核模式中的状态，包括内核栈、进程已打开文件的信息的文件表、有关当前进程的信息的进程表等。</p>
+<p>什么时候会触发进程调度呢？主要有两种情况。一种是进程执行了系统调用，阻塞住了，比如读写文件、sleep等。另一种是中断，包括IO操作完成以及时钟中断等。</p>
+<h1 id="操作进程的工具"><a href="#操作进程的工具" class="headerlink" title="操作进程的工具"></a>操作进程的工具</h1><ul>
+<li><code>PS</code>：列出当前系统中的进程。</li>
+<li><code>TOP</code>：打印出关于当前进程资源使用的进程。</li>
+<li><code>PMAP</code>：显示进程的内存映射。</li>
+<li><code>STRACE</code>：打印一个正在运行的程序和它的子进程调用的每个系统调用的轨迹。<code>-static</code>是个实用的参数。</li>
+<li><code>/proc</code>：一个虚拟文件系统，以ASCII文件格式输出大量内核数据结构的内容。</li>
 </ul>
-<p>Mark Setup：当进行gc时，为了保证数据完整性，需要设置Write Barrier，这要求将所有的goroutine停止，正常情况下这个时间平均为10-30ms。但是当goroutine停止不下时，会让这个时间变长。调度器目前停止goroutine的时机是在goroutine执行函数调用的时候，因为这样做才能保证安全。假如某个goroutine一直在执行循环，而不执行函数调用，它就无法被停止，这不仅会耽误gc第一个阶段的完成，还会造成其他goroutine停止着。将在Go1.14引入 <a href="https://github.com/golang/go/issues/24543">preemptive</a> techniques 尝试对此进行优化。</p>
-<p>Marking - Concurrent：当设置好Write Barrier后，collector会拿走25%可用的CPU，用于mark操作。mark操作，会遍历所有goroutine的栈，寻找指针指向的heap内存，将仍在使用的内存标记一下。这个时候，goroutine是可以并发执行的。在mark的过程，其他正在运行的goroutine可以分配内存，这可能导致内存不够用，这时候需要Mark Assits。Mark Assits，是指短暂停止正在运行的goroutine，让它们来帮忙mark，加快mark的进度。当然，这会影响这些goroutine的执行，collector的目标是尽可能减少Mark Assits的需要。</p>
-<p>Mark Termination - STW：Mark完成后，需要关闭Write Barrier，进行多项清理工作，设定下次collection的目标。在进行这些工作前，仍要求所有的goroutine停止。这些工作平均持续60~90ms。虽然也可以设计成边Termination边正常运行一些gorutine的模式，但是设计者认为这样得到的收益很小，而增加的复杂性较高，所以选择了这种STW的实现方式。当Termination工作完成后，回到正常状态。</p>
-<p>在collection完成后，会进行sweeping。</p>
-<p>sweep是指将那些没有标记为使用的heap内存回收，它不是发生在一次collection中，而是被均摊到每次分配内存的时候。</p>
-<p>以上所有行为只有在GC开始且正在进行的时候发生，GC Percentage对collection有很大影响。GC Pencentage，默认是100%。将GC Pencentage设置为100%，意味着下次GC会在heap达到当前GC的mark live内存的2倍时进行。</p>
-<p>GC trace可用于追踪collection。<code>GODEBUG=gctrace=1 ./app</code>可查看GC信息，输出到<code>stderr</code>。</p>
-<p>GC trace：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 通过设置环境变量查看GC trace</span></span><br><span class="line">GODEBUG=gctrace=1 ./app</span><br><span class="line"></span><br><span class="line">gc 1405 @6.068s 11%: 0.058+1.2+0.083 ms clock, 0.70+2.5/1.5/0+0.99 ms cpu, 7-&gt;11-&gt;6 MB, 10 MB goal, 12 P</span><br><span class="line"></span><br><span class="line">gc 1406 @6.070s 11%: 0.051+1.8+0.076 ms clock, 0.61+2.0/2.5/0+0.91 ms cpu, 8-&gt;11-&gt;6 MB, 13 MB goal, 12 P</span><br><span class="line"></span><br><span class="line">gc 1407 @6.073s 11%: 0.052+1.8+0.20 ms clock, 0.62+1.5/2.2/0+2.4 ms cpu, 8-&gt;14-&gt;8 MB, 13 MB goal, 12 P</span><br><span class="line"></span><br><span class="line"><span class="comment"># GC trace含义</span></span><br><span class="line">gc 1405 @6.068s 11%: 0.058+1.2+0.083 ms clock, 0.70+2.5/1.5/0+0.99 ms cpu, 7-&gt;11-&gt;6 MB, 10 MB goal, 12 P</span><br><span class="line"></span><br><span class="line">// General</span><br><span class="line">gc 1404     : The 1404 GC run since the program started</span><br><span class="line">@6.068s     : Six seconds since the program started</span><br><span class="line">11%         : Eleven percent of the available CPU so far has been spent <span class="keyword">in</span> GC</span><br><span class="line"></span><br><span class="line">// Wall-Clock</span><br><span class="line">0.058ms     : STW        : Mark Start       - Write Barrier on</span><br><span class="line">1.2ms       : Concurrent : Marking</span><br><span class="line">0.083ms     : STW        : Mark Termination - Write Barrier off and clean up</span><br><span class="line"></span><br><span class="line">// CPU Time</span><br><span class="line">0.70ms      : STW        : Mark Start</span><br><span class="line">2.5ms       : Concurrent : Mark - Assist Time (GC performed <span class="keyword">in</span> line with allocation)</span><br><span class="line">1.5ms       : Concurrent : Mark - Background GC time</span><br><span class="line">0ms         : Concurrent : Mark - Idle GC time</span><br><span class="line">0.99ms      : STW        : Mark Term</span><br><span class="line"></span><br><span class="line">// Memory</span><br><span class="line">7MB         : Heap memory in-use before the Marking started</span><br><span class="line">11MB        : Heap memory in-use after the Marking finished</span><br><span class="line">6MB         : Heap memory marked as live after the Marking finished</span><br><span class="line">10MB        : Collection goal <span class="keyword">for</span> heap memory in-use after Marking finished</span><br><span class="line"></span><br><span class="line">// Threads</span><br><span class="line">12P         : Number of logical processors or threads used to run Goroutines</span><br></pre></td></tr></table></figure>
-
 <p>（全文完）</p>
 
       
@@ -258,7 +258,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/20/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><span class="page-number current">21</span><a class="page-number" href="/page/22/">22</a><span class="space">&hellip;</span><a class="page-number" href="/page/72/">72</a><a class="extend next" rel="next" href="/page/22/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/20/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><span class="page-number current">21</span><a class="page-number" href="/page/22/">22</a><span class="space">&hellip;</span><a class="page-number" href="/page/69/">69</a><a class="extend next" rel="next" href="/page/22/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -326,14 +326,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">72</span>
+          <span class="site-state-item-count">69</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">49</span>
+        <span class="site-state-item-count">47</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -368,7 +368,7 @@
 <div class="copyright">
   
   &copy; 2018 – 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="male"></i>
   </span>

@@ -184,7 +184,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2018/07/18/0/">
+    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2018/05/05/0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/hyzgh-128x128.png">
@@ -198,7 +198,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2018/07/18/0/" class="post-title-link" itemprop="url">截止于180718的AOBO补题汇总</a>
+            <a href="/2018/05/05/0/" class="post-title-link" itemprop="url">CF 976E: Well played!</a>
         </h2>
 
         <div class="post-meta">
@@ -208,7 +208,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2018-07-18 00:00:00" itemprop="dateCreated datePublished" datetime="2018-07-18T00:00:00+08:00">2018-07-18</time>
+              <time title="创建时间：2018-05-05 11:01:11" itemprop="dateCreated datePublished" datetime="2018-05-05T11:01:11+08:00">2018-05-05</time>
             </span>
 
           
@@ -222,32 +222,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>待补题目按AC数降序排列。</p>
-<h2 id="180429（浙江省赛）"><a href="#180429（浙江省赛）" class="headerlink" title="180429（浙江省赛）"></a>180429（浙江省赛）</h2><p><a href="http://acm.zju.edu.cn/onlinejudge/showContestProblems.do?contestId=378">补题传送门</a><br>待补：<br>D题：Sequence Swapping<br>E题：LIS<br>I题：Magic Points</p>
-<h2 id="180426（2017杭州亚洲区域赛）"><a href="#180426（2017杭州亚洲区域赛）" class="headerlink" title="180426（2017杭州亚洲区域赛）"></a>180426（2017杭州亚洲区域赛）</h2><p><a href="https://vjudge.net/contest/225282">补题传送门</a><br>待补：</p>
-<ul>
-<li><del>K题：Master of Sequence</del></li>
-<li><del>B题：Master of Phi</del></li>
-</ul>
-<h2 id="180422（2018-ACM-ICPC-中国大学生程序设计竞赛线上赛）"><a href="#180422（2018-ACM-ICPC-中国大学生程序设计竞赛线上赛）" class="headerlink" title="180422（2018 ACM-ICPC 中国大学生程序设计竞赛线上赛）"></a>180422（2018 ACM-ICPC 中国大学生程序设计竞赛线上赛）</h2><p><a href="https://www.jisuanke.com/contest/1227">补题传送门</a><br>待补：</p>
-<ul>
-<li><del>G题：Trouble of Tyrant</del></li>
-<li><del>F题：Clever King</del></li>
-<li><del>H题：Rock Paper Scissors Lizard Spock</del></li>
-</ul>
-<h2 id="180419（2017中国大学生程序设计竞赛-女生专场）"><a href="#180419（2017中国大学生程序设计竞赛-女生专场）" class="headerlink" title="180419（2017中国大学生程序设计竞赛 - 女生专场）"></a>180419（2017中国大学生程序设计竞赛 - 女生专场）</h2><p><a href="https://vjudge.net/contest/223275#overview">补题传送门</a><br>待补：</p>
-<ul>
-<li><del>J题：Judicious Strategy</del></li>
-<li><del>I题：Innumerable Ancestors</del></li>
-</ul>
-<h2 id="180412（OI题目）"><a href="#180412（OI题目）" class="headerlink" title="180412（OI题目）"></a>180412（OI题目）</h2><p><a href="http://10.21.32.116/contest.php?cid=1010">补题传送门</a><br>待补：</p>
-<ul>
-<li>H题：以撒</li>
-<li>I题：永恒</li>
-<li><del>A题：动物朋友</del></li>
-<li><del>D题：永恒的史诗</del></li>
-<li><del>E题：中二病也要浪漫!</del></li>
-</ul>
+          <h1 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h1><p>你拥有n个怪兽，每个怪兽具有hp和dam这两种属性。你可以进行两种操作：第一种是将怪兽的hp值翻倍；第二种是令怪兽的dam &#x3D; hp。第一种操作你最多可以进行a次，第二种操作你最多可以进行b次，问所有怪兽的dam和最大是多少？</p>
+<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>看到题目，容易想到动态规划，但是想了挺久，没思路。看了官方题解，发现了一个重要的性质：第一种操作应该只分配给某一只怪兽，这个可以通过反证法来证明，挺简单的，这里不再赘述。a个第一种操作和1个第二种操作分配完了，那么剩余的b-1个第二种操作应该怎么分配？贪心，即优先分配给hp - dam值较大的怪兽（在这之前需要排序一次）。最终此题的复杂度是O(nlogn)。</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> x first</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> y second</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ok cout &lt;&lt; <span class="string">&quot;ok&quot;</span> &lt;&lt; endl;</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">typedef</span> <span class="type">long</span> <span class="type">long</span> ll;</span><br><span class="line"><span class="keyword">typedef</span> vector&lt;<span class="type">int</span>&gt; vi;</span><br><span class="line"><span class="keyword">typedef</span> pair&lt;<span class="type">int</span>, <span class="type">int</span>&gt; pii;</span><br><span class="line"><span class="keyword">typedef</span> pair&lt;ll, ll&gt; pll;</span><br><span class="line"><span class="type">const</span> <span class="type">double</span> PI = <span class="built_in">acos</span>(<span class="number">-1.0</span>);</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> INF=<span class="number">0x3f3f3f3f</span>;</span><br><span class="line"><span class="type">const</span> ll LINF=<span class="number">0x3f3f3f3f3f3f3f3f</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N=<span class="number">2e5</span>+<span class="number">9</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> shift=<span class="number">1e3</span>+<span class="number">9</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">double</span> Eps=<span class="number">1e-7</span>;</span><br><span class="line"></span><br><span class="line">ll n, aa, b, t, ans, sum;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">node</span> &#123;</span><br><span class="line">    ll hea, dam;</span><br><span class="line">&#125;a[N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">cmp</span><span class="params">(node a, node b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (a.hea - a.dam) &gt; (b.hea - b.dam);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">void</span>)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">fopen</span>(<span class="string">&quot;in&quot;</span>, <span class="string">&quot;r&quot;</span>)!=<span class="literal">NULL</span>) &#123;<span class="built_in">freopen</span>(<span class="string">&quot;in&quot;</span>, <span class="string">&quot;r&quot;</span>, stdin); <span class="built_in">freopen</span>(<span class="string">&quot;out&quot;</span>, <span class="string">&quot;w&quot;</span>, stdout);&#125;</span><br><span class="line">    <span class="keyword">while</span>(cin &gt;&gt; n &gt;&gt; aa &gt;&gt; b) &#123;</span><br><span class="line">        t = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(aa--) t *= <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">            <span class="built_in">scanf</span>(<span class="string">&quot;%lld%lld&quot;</span>, &amp;a[i].hea, &amp;a[i].dam);</span><br><span class="line">        <span class="built_in">sort</span>(a, a + n, cmp);</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span>(i &lt; b) sum += <span class="built_in">max</span>(a[i].hea, a[i].dam);</span><br><span class="line">            <span class="keyword">else</span> sum += a[i].dam;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(b == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;%lld\n&quot;</span>, sum);</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span>(i &lt; b) ans = <span class="built_in">max</span>(ans, sum - <span class="built_in">max</span>(a[i].hea, a[i].dam) + <span class="built_in">max</span>(a[i].hea * t, a[i].dam));</span><br><span class="line">            <span class="keyword">else</span> ans = <span class="built_in">max</span>(ans, sum - <span class="built_in">max</span>(a[b<span class="number">-1</span>].hea, a[b<span class="number">-1</span>].dam) + a[b<span class="number">-1</span>].dam - a[i].dam + <span class="built_in">max</span>(a[i].hea * t, a[i].dam));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%lld\n&quot;</span>, ans);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -266,7 +244,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/56/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/56/">56</a><span class="page-number current">57</span><a class="page-number" href="/page/58/">58</a><span class="space">&hellip;</span><a class="page-number" href="/page/72/">72</a><a class="extend next" rel="next" href="/page/58/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/56/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/56/">56</a><span class="page-number current">57</span><a class="page-number" href="/page/58/">58</a><span class="space">&hellip;</span><a class="page-number" href="/page/69/">69</a><a class="extend next" rel="next" href="/page/58/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -334,14 +312,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">72</span>
+          <span class="site-state-item-count">69</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">49</span>
+        <span class="site-state-item-count">47</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -376,7 +354,7 @@
 <div class="copyright">
   
   &copy; 2018 – 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="male"></i>
   </span>

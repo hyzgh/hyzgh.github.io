@@ -184,7 +184,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2023/10/14/2023-09-25-biweekly-report/">
+    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2023/09/27/elastic-go-elasticseach/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/hyzgh-128x128.png">
@@ -198,7 +198,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/10/14/2023-09-25-biweekly-report/" class="post-title-link" itemprop="url">2023.10.09双周报</a>
+            <a href="/2023/09/27/elastic-go-elasticseach/" class="post-title-link" itemprop="url">elastic/go-elasticseach仓库学习笔记</a>
         </h2>
 
         <div class="post-meta">
@@ -208,7 +208,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2023-10-14 10:46:12" itemprop="dateCreated datePublished" datetime="2023-10-14T10:46:12+08:00">2023-10-14</time>
+              <time title="创建时间：2023-09-27 20:58:13" itemprop="dateCreated datePublished" datetime="2023-09-27T20:58:13+08:00">2023-09-27</time>
             </span>
 
           
@@ -222,47 +222,59 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>最近放国庆，连着放了八天假，接着上了七天班，人都麻了。中间的周报也耽搁了一下，今天补一下前两周的周报，凑成双周报。</p>
-<p>这两周，整体给自己的表现打6分吧。打及格分的原因在于没有明显堕落的行为（比如过度熬夜、过度赖床、日夜颠倒、情绪EMO）。没有打更高分的原因，在于没有什么亮眼的表现，太平庸了。</p>
-<p>这是自己第三次写周报了，当前写周报的主要目的如下：</p>
+          <p>仓库地址：<a href="https://github.com/elastic/go-elasticsearch">https://github.com/elastic/go-elasticsearch</a></p>
+<p>仓库简介：The official Go client for Elasticsearch</p>
+<p>分支：v7.11.0</p>
+<h1 id="README-MakeFile"><a href="#README-MakeFile" class="headerlink" title="README &amp; MakeFile"></a>README &amp; MakeFile</h1><p>使用了<a href="https://github.com/gojp/goreportcard">goreportcard</a>对项目的质量进行了分析。</p>
+<p>使用了codecov对代码覆盖率进行测试，网站界面用起来还挺舒服的。这个项目的覆盖率有80%+，挺高的。</p>
+<p>使用了Github Action对项目进行自动构建编译。</p>
+<p>使用MakeFile封装了一系列构建命令，其中有Unit-test和integration-test。它使用了go的条件编译，来区分两种测试。</p>
+<p>比如<code>/esutil</code>下的测试代码属于unit-test。它不需要依赖es组件。</p>
+<p>比如<code>/estransport</code>下的测试代码属于integration-test。它依赖了es组件，需要在本地先起好es。</p>
+<p>发现Makefile还挺强大的，可以节省很多的重复性工作。比如其中的release命令，甚至可以将代码发布到Github的流程自动化。为了方便测试，Makefile也集成了用docker起ES的命令。通过Makefile，也可以很好的实践项目到API文档的输出。</p>
+<h1 id="Client"><a href="#Client" class="headerlink" title="Client"></a>Client</h1><p>项目的入口在于<code>elasticsearch.go</code>，它提供了创建Client的函数。另外也有对应的一些_test.go文件，包括example, benchmark, test等。</p>
+<p><code>Client</code>包含了两个成员，一个是<code>esapi.API</code>，另一个是<code>estransport.Interface</code>。</p>
+<p><code>API</code>: </p>
 <ul>
-<li>记录生活，培养积极的心态，防止抑郁</li>
-<li>提高表达能力</li>
-<li>引发思考</li>
+<li><p><code>/esapi/doc.go</code>的文档提供了比较充分的说明。</p>
+</li>
+<li><p>API是自动根据<a href="https://github.com/elastic/elasticsearch/tree/master/rest-api-spec/src/main/resources/rest-api-spec/api">ES官方client标准</a>生成的，生成代码在&#x2F;internal&#x2F;cmd&#x2F;generate。更牛的是，ES官方还提供了client test，以保证不同语言实现的client都能复用。</p>
+</li>
+<li><p>API本身是个结构体，成员是函数。API的调用设计，提供了struct和function两种方式。为了实现struct方式的调用，Request定义了Do的method，感觉用起来还挺奇怪的。更倾向于使用function的模式，更紧凑一些。</p>
+</li>
 </ul>
-<p>时间周期：09.25-10.08</p>
-<h1 id="生活"><a href="#生活" class="headerlink" title="生活"></a>生活</h1><ol>
-<li>习惯<ol>
-<li>尝试睡前涂保湿霜的习惯，完成得较好，打7分，继续保持！</li>
-<li>尝试培养晚上回家后冥想的习惯，完成度低，打3分，这是下一个要重点培养的习惯，得想想怎么搞。</li>
-<li>尝试自然醒的习惯，完成度低，打4分，先丧着吧，还是摘不掉早起困难的标签，哈哈。</li>
-</ol>
+<p><code>estransport.Interface</code>:</p>
+<ul>
+<li><p><code>/estransport/doc.go</code>有文档说明。estransport感觉蛮可配置化的，包括重试策略、节点选择、连接池、Logger等。</p>
 </li>
-<li>新体验：中秋这天晚上尝试了几件新事情，和家人一起去脚按摩和拔罐，还去了人生第一次livehouse。livehouse整体感觉还不错，挺嗨的，我们显得有点呆哈哈。但是有点太嗨了，而且部分曲目有点过于“狂野”。假如让我去第二次livehouse，我希望是少点嗨度、更多抒情、禁烟的。关于脚按摩，和背按摩体验差不多，自己都挺紧绷的，因为肉比较少，按起来比较疼，要是胖点就好了。关于拔罐，作用是去湿，有点疼，没感觉到什么明显的身体变化。</li>
-<li>游戏：<ol>
-<li>开始从零玩金铲铲之战，上到了璀璨钻石。但是自己只会剑姬卡莎这套阵容，缺乏变化，所以卡在了钻石，上不了大师。高手的一个能力是可以根据不同的变量制定出适宜的策略，就像《沟通的艺术》中的书籍中提到的沟通，需要根据沟通对象的性格、沟通的场景、沟通的目的等而使用不同的沟通技巧。管理上也是类似，要求管理者根据不同的人、发展时期、业务场景等使用不同的管理手段。</li>
-<li>在老家，还去了一次中学时期常去的网吧，网吧变化挺大，机器挺差的，玩了几把无畏契约，赢二输一还可以。</li>
-</ol>
+<li><p><code>estransport.go</code>: 核心文件。主要实现函数是Perform。</p>
 </li>
-<li>健康：<ol>
-<li>去了眼科医院验光，度数没怎么变化，换了一副新眼睛，算是完成了一直拖着没完成的事情，很棒。</li>
-<li>感冒生病了，躺了一天后好了。不知道是什么原因，来得快去得也快，问题不大。</li>
-<li>国庆当天，病好了后想动动，就去爬了大南山，这算是自己第二次去爬这座山，挺好的。</li>
-<li>在老家，去打了一次羽毛球，遇到许多打得不错的高中生，日常羡慕球打得好的人。</li>
-</ol>
+<li><p><code>logger.go</code>: 实现了日志的采集，其实不仅是日志，其他metrics的埋点也可以在这里做。</p>
 </li>
-<li>阅读《结构化思考力》，有所启发。本来想国庆读完，但是游戏打多了没看完哈哈。</li>
-<li>在老家，断断续续看了《去有风的地方》，感觉断续观影的体验不是很好。</li>
-</ol>
-<h1 id="技术"><a href="#技术" class="headerlink" title="技术"></a>技术</h1><ol>
-<li>跟进模糊搜索项目的线上发布，踩了挺多发布的坑，整了一下发布笔记。</li>
-<li>学习了go-elasticsearch库，并写了一篇博客。</li>
-<li>阅读《凤凰架构》，有所启发。</li>
-</ol>
-<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><ol>
-<li>有位同事碰到已读不回的情况会直接飞书语音，虽然有点打扰，但是可以提升沟通效率。以后不妨在遇到block的事情上使用这个方法，做一个高效沟通者，不要有太多的心理负担，对方回了就赚了，不回损失点能量。</li>
-</ol>
-<p>感觉这次博客写得有点罗嗦，下次写简短一点～</p>
+<li><p><code>metrics.go</code>: 实现了metrics的采集。</p>
+</li>
+<li><p><code>connection.go</code>: 实现了连接池。只有在输入多个URL的时候有效。假如是使用云厂商的，一般会提供一个VIP，云厂商做了负载均衡。</p>
+</li>
+</ul>
+<p><code>NewClient</code>源码阅读收获：</p>
+<ul>
+<li>默认是使用http.DefaultTransport，该transport没有设置读取header的超时时间，所以假如是客户端返回response慢，那么可能会导致hang住。</li>
+</ul>
+<p><code>Perform</code>源码阅读收获：</p>
+<ul>
+<li>为了实现重试，会将request body拷贝一份，因为http请求发送出去后就没了。http内置了GetBody函数可实现多次读取body。</li>
+<li>默认超时是不会自动重试的，需要配置enableRetryOnTimeout为true才会。为什么这么设计？</li>
+<li>为了实现并发访问，很多地方使用了Lock来实现的，包括对pool, metrics等字段的访问。</li>
+<li>使用sleep来实现退避重试。</li>
+<li>还是使用transport来发起请求，并在发起请求后使用logger来记录请求情况，用户可以用该logger记录日志、打点等。</li>
+</ul>
+<p><code>Connection</code>源码阅读收获：</p>
+<ul>
+<li>创建连接池只需要少量参数（host, username, password）。当真正发起请求前，需要将这些参数的绑定到Request中，以便发起http请求。</li>
+<li>Next用于获取连接，OnSuccess用于归还成功的连接，OnFailure用于归还失败的连接。</li>
+<li>实现了两种连接池，一种是单URL地址的连接池，另一种是多URL地址的连接池。后者相比于前者多了一个负载均衡策略，代码中定义了Selector来抽象。</li>
+<li>singleConnectionPool其实只会返回自己的URL，没有建立连接的概念。这里复用连接是依赖底层的http client实现的。</li>
+</ul>
 
       
     </div>
@@ -281,7 +293,7 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/72/">72</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/69/">69</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -349,14 +361,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">72</span>
+          <span class="site-state-item-count">69</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">49</span>
+        <span class="site-state-item-count">47</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -391,7 +403,7 @@
 <div class="copyright">
   
   &copy; 2018 – 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="male"></i>
   </span>

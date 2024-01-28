@@ -184,7 +184,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2020/01/27/go-slice-learning-note/">
+    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2019/12/07/null/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/hyzgh-128x128.png">
@@ -198,7 +198,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/01/27/go-slice-learning-note/" class="post-title-link" itemprop="url">Go Lang slice 学习笔记</a>
+            <a href="/2019/12/07/null/" class="post-title-link" itemprop="url">图片文件格式 学习笔记</a>
         </h2>
 
         <div class="post-meta">
@@ -208,7 +208,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-01-27 21:48:29" itemprop="dateCreated datePublished" datetime="2020-01-27T21:48:29+08:00">2020-01-27</time>
+              <time title="创建时间：2019-12-07 16:07:02" itemprop="dateCreated datePublished" datetime="2019-12-07T16:07:02+08:00">2019-12-07</time>
             </span>
 
           
@@ -222,94 +222,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="切片的数据结构"><a href="#切片的数据结构" class="headerlink" title="切片的数据结构"></a>切片的数据结构</h1><p>切片，本身不存储实际数据。切片的数据结构，也被称为slice header，包含指向首元素的指针、切片长度、切片容量：</p>
-<p><img src="https://s2.ax1x.com/2020/01/27/1uWu2n.png" alt="img"></p>
-<p>当将切片作为实参时，只会传递slice header。这个传递是值传递，这意味着：</p>
-<ul>
-<li>假如在函数里面对slice的元素作赋值操作，由于有指针指着元素，所以原有slice指向的元素也会被改变。</li>
-<li>假如在函数里面reslice，并不会影响原slice。</li>
-</ul>
-<p>假如想要改变原有slice，有两种写法：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 第一种，将返回值赋值给原slice，这种方式也就是append的实现</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">SubtractOneFromLength</span><span class="params">(slice []<span class="type">byte</span>)</span></span> []<span class="type">byte</span> &#123;</span><br><span class="line">    slice = slice[<span class="number">0</span> : <span class="built_in">len</span>(slice)<span class="number">-1</span>]</span><br><span class="line">    <span class="keyword">return</span> slice</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    newSlice := SubtractOneFromLength(slice)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 第二种，用slice指针</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">PtrSubtractOneFromLength</span><span class="params">(slicePtr *[]<span class="type">byte</span>)</span></span> &#123;</span><br><span class="line">    slice := *slicePtr</span><br><span class="line">    *slicePtr = slice[<span class="number">0</span> : <span class="built_in">len</span>(slice)<span class="number">-1</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这引发了另一个需要注意的点，对于slice的方法，假如需要reslice，要用slice指针：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> path []<span class="type">byte</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p *path)</span></span> TruncateAtFinalSlash() &#123;</span><br><span class="line">    i := bytes.LastIndex(*p, []<span class="type">byte</span>(<span class="string">&quot;/&quot;</span>))</span><br><span class="line">    <span class="keyword">if</span> i &gt;= <span class="number">0</span> &#123;</span><br><span class="line">        *p = (*p)[<span class="number">0</span>:i]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    pathName := path(<span class="string">&quot;/usr/bin/tso&quot;</span>) <span class="comment">// Conversion from string to path.</span></span><br><span class="line">    pathName.TruncateAtFinalSlash()</span><br><span class="line">    fmt.Printf(<span class="string">&quot;%s\n&quot;</span>, pathName)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>切片，可以改变指向的范围，这是成本很低的操作：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    r := []<span class="type">bool</span>&#123;<span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>, <span class="literal">false</span>&#125;</span><br><span class="line">    fmt.Println(r)</span><br><span class="line">    r = r[<span class="number">1</span>:<span class="number">2</span>]</span><br><span class="line">    fmt.Println(r)</span><br><span class="line">    r = r[<span class="number">0</span>:<span class="number">3</span>]</span><br><span class="line">    fmt.Println(r)</span><br><span class="line">  # 输出[<span class="literal">true</span> <span class="literal">true</span> <span class="literal">false</span>]，即最开始的[<span class="number">1</span>,<span class="number">4</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>切片，可以切片，即<code>s := s[[begin]:[end]]</code>，其中begin和end可以省略。当end超过实际cap时，会panic。</p>
-<p><code>cap()</code> 查看容量，即从下界到数组最后一个元素的个数</p>
-<p><code>len()</code>查看长度，即从下界到上界的个数</p>
-<p>切片的零值为<code>nil</code>，此时<code>cap</code>和<code>len</code>都为0</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a []<span class="type">int</span>  <span class="comment">// nil</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="切片的append"><a href="#切片的append" class="headerlink" title="切片的append"></a>切片的append</h1><p>可使用<code>append</code>函数向切片添加元素，对nil切片进行<code>append</code>是正确的。</p>
-<p>当append超过切片容量时，会将容量翻倍，且利用内置函数copy进行数据的拷贝，该函数在切片重叠的情况下也可以保证正确拷贝。注意只有被append的slice的指针会指向这块新的区域，基于这个slice的其他slice并不会更新指针。</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> s []<span class="type">int</span></span><br><span class="line">    s = <span class="built_in">append</span>(s, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)</span><br><span class="line">    fmt.Println(s)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>还可以使用<code>append</code>函数向切片中添加切片：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x := []<span class="type">int</span>&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;</span><br><span class="line">y := []<span class="type">int</span>&#123;<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;</span><br><span class="line">x = <span class="built_in">append</span>(x, y...)</span><br><span class="line">fmt.Println(x)</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="切片的内存管理"><a href="#切片的内存管理" class="headerlink" title="切片的内存管理"></a>切片的内存管理</h1><p>注意只要有一个slice使用着底层slice，即使这个上层slice只包含了很少的元素，底层slice的内存也不会被释放掉。这时候假如为了释放不必要的内存占用，需要将上层slice指向的数据拷贝到新的区域：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> digitRegexp = regexp.MustCompile(<span class="string">&quot;[0-9]+&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 整个文件的字节都被加载进去了，且不释放</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">FindDigits</span><span class="params">(filename <span class="type">string</span>)</span></span> []<span class="type">byte</span> &#123;</span><br><span class="line">    b, _ := ioutil.ReadFile(filename)</span><br><span class="line">    <span class="keyword">return</span> digitRegexp.Find(b)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 拷贝到c，释放多余的占用</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">CopyDigits</span><span class="params">(filename <span class="type">string</span>)</span></span> []<span class="type">byte</span> &#123;</span><br><span class="line">    b, _ := ioutil.ReadFile(filename)</span><br><span class="line">    b = digitRegexp.Find(b)</span><br><span class="line">    c := <span class="built_in">make</span>([]<span class="type">byte</span>, <span class="built_in">len</span>(b))</span><br><span class="line">    <span class="built_in">copy</span>(c, b)</span><br><span class="line">    <span class="keyword">return</span> c</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="切片的创建"><a href="#切片的创建" class="headerlink" title="切片的创建"></a>切片的创建</h1><p>使用<code>make</code>来创建一维切片</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a := <span class="built_in">make</span>([]<span class="type">int</span>, <span class="number">5</span>)  <span class="comment">// len(a) == cap(a) == 5</span></span><br><span class="line">b := <span class="built_in">make</span>([]<span class="type">int</span>, <span class="number">0</span>, <span class="number">5</span>)  <span class="comment">// len(b) == 0, cap(b) == 5</span></span><br></pre></td></tr></table></figure>
-
-<p>使用<code>make</code>创建二维切片</p>
-<p>第一种方式，该方式允许第二维大小有所变化：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建一个位数为[dx][dy]的切片</span></span><br><span class="line">a := <span class="built_in">make</span>([][]<span class="type">uint8</span>, dx)</span><br><span class="line"><span class="keyword">for</span> i := <span class="keyword">range</span> a &#123;</span><br><span class="line">    a[i] = <span class="built_in">make</span>([]<span class="type">uint8</span>, dy)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>第二种方式，不允许第二维大小有所变化，因为改变了就会有可能覆盖：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Allocate the top-level slice, the same as before.</span></span><br><span class="line">picture := <span class="built_in">make</span>([][]<span class="type">uint8</span>, YSize) <span class="comment">// One row per unit of y.</span></span><br><span class="line"><span class="comment">// Allocate one large slice to hold all the pixels.</span></span><br><span class="line">pixels := <span class="built_in">make</span>([]<span class="type">uint8</span>, XSize*YSize) <span class="comment">// Has type []uint8 even though picture is [][]uint8.</span></span><br><span class="line"><span class="comment">// Loop over the rows, slicing each row from the front of the remaining pixels slice.</span></span><br><span class="line"><span class="keyword">for</span> i := <span class="keyword">range</span> picture &#123;</span><br><span class="line">    picture[i], pixels = pixels[:XSize], pixels[XSize:]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="切片的遍历"><a href="#切片的遍历" class="headerlink" title="切片的遍历"></a>切片的遍历</h1><p>可使用<code>range</code>遍历切片，每次循环会有两个值，一个是元素的下标，一个是元素的值。可使用<code>_</code>忽略其中一个。</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    pow := []<span class="type">int</span>&#123;<span class="number">4</span>, <span class="number">1</span>, <span class="number">5</span>&#125;</span><br><span class="line">    <span class="keyword">for</span> _, value := <span class="keyword">range</span> pow &#123;</span><br><span class="line">        fmt.Printf(<span class="string">&quot;%d\n&quot;</span>, value)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 只有一个值只会得到下标</span></span><br><span class="line">    <span class="keyword">for</span> idx := <span class="keyword">range</span> pow &#123;</span><br><span class="line">        fmt.Printf(<span class="string">&quot;%d\n&quot;</span>, pow[idx])</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="切片的技巧"><a href="#切片的技巧" class="headerlink" title="切片的技巧"></a>切片的技巧</h1><p>优雅地往slice插入一个value：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Insert inserts the value into the slice at the specified index,</span></span><br><span class="line"><span class="comment">// which must be in range.</span></span><br><span class="line"><span class="comment">// The slice must have room for the new element.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Insert</span><span class="params">(slice []<span class="type">int</span>, index, value <span class="type">int</span>)</span></span> []<span class="type">int</span> &#123;</span><br><span class="line">    <span class="comment">// Grow the slice by one element.</span></span><br><span class="line">    slice = slice[<span class="number">0</span> : <span class="built_in">len</span>(slice)+<span class="number">1</span>]</span><br><span class="line">    <span class="comment">// Use copy to move the upper part of the slice out of the way and open a hole.</span></span><br><span class="line">    <span class="built_in">copy</span>(slice[index+<span class="number">1</span>:], slice[index:])</span><br><span class="line">    <span class="comment">// Store the new value.</span></span><br><span class="line">    slice[index] = value</span><br><span class="line">    <span class="comment">// Return the result.</span></span><br><span class="line">    <span class="keyword">return</span> slice</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>优雅地合并两个切片：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a := []<span class="type">string</span>&#123;<span class="string">&quot;John&quot;</span>, <span class="string">&quot;Paul&quot;</span>&#125;</span><br><span class="line">b := []<span class="type">string</span>&#123;<span class="string">&quot;George&quot;</span>, <span class="string">&quot;Ringo&quot;</span>, <span class="string">&quot;Pete&quot;</span>&#125;</span><br><span class="line">a = <span class="built_in">append</span>(a, b...) <span class="comment">// equivalent to &quot;append(a, b[0], b[1], b[2])&quot;</span></span><br><span class="line"><span class="comment">// a == []string&#123;&quot;John&quot;, &quot;Paul&quot;, &quot;George&quot;, &quot;Ringo&quot;, &quot;Pete&quot;&#125;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>优雅地copy：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">b = <span class="built_in">make</span>([]T, <span class="built_in">len</span>(a))</span><br><span class="line"><span class="built_in">copy</span>(b, a)</span><br><span class="line"><span class="comment">// or</span></span><br><span class="line">b = <span class="built_in">append</span>([]T(<span class="literal">nil</span>), a...)</span><br></pre></td></tr></table></figure>
-
-
-
-<p>cut，优雅地删除掉slice中的某一个区间：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 普通版，对于元素为指针或者结构中含有指针，会存在内存泄漏，因为被删掉的元素仍属于slice</span></span><br><span class="line">a = <span class="built_in">append</span>(a[:i], a[j:]...)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 升级版，将指针设为nil，减少了内存泄漏，但是还是有元素属于slice</span></span><br><span class="line"><span class="built_in">copy</span>(a[i:], a[j:])</span><br><span class="line"><span class="keyword">for</span> k, n := <span class="built_in">len</span>(a)-j+i, <span class="built_in">len</span>(a); k &lt; n; k++ &#123;</span><br><span class="line">    a[k] = <span class="literal">nil</span> <span class="comment">// or the zero value of T</span></span><br><span class="line">&#125;</span><br><span class="line">a = a[:<span class="built_in">len</span>(a)-j+i]</span><br></pre></td></tr></table></figure>
-
-
-
-<p>filter：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">filter</span><span class="params">(a []<span class="type">int</span>)</span></span> []<span class="type">int</span> &#123;</span><br><span class="line">    n := <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> _, x := <span class="keyword">range</span> a &#123;</span><br><span class="line">        <span class="keyword">if</span> keep(x) &#123;</span><br><span class="line">            a[n] = x</span><br><span class="line">            n++</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    a = a[:n]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>reverse:</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i := <span class="built_in">len</span>(a)/<span class="number">2</span><span class="number">-1</span>; i &gt;= <span class="number">0</span>; i-- &#123;</span><br><span class="line">    opp := <span class="built_in">len</span>(a)<span class="number">-1</span>-i</span><br><span class="line">    a[i], a[opp] = a[opp], a[i]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>shuffling:</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i := <span class="built_in">len</span>(a) - <span class="number">1</span>; i &gt; <span class="number">0</span>; i-- &#123;</span><br><span class="line">    j := rand.Intn(i + <span class="number">1</span>)</span><br><span class="line">    a[i], a[j] = a[j], a[i]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 或者直接用math/rand.Shuffle</span></span><br><span class="line"><span class="comment">// 使用了Fisher–Yates算法</span></span><br></pre></td></tr></table></figure>
-
+          <p>在互联网中，常见的图片文件格式有jpeg, png, bmp, gif等。</p>
+<p>一副图片，具有很多的属性，比如分辨率，色彩空间等。可以通过<code>ImageMagick</code>这个程序来解析图片文件。</p>
+<p>分辨率，比如1920x1080，是指图片的一行具有1920个像素，一列具有1080个像素。</p>
+<p>色彩空间，是指描述一个像素点的方式。比如RGB，是指一个像素点用red, green, blue各8bit一共24bit来描述。而YUV，是指Y表示亮度，U和V一起表示色调和饱和度。</p>
+<p>在互联网上最常见的大概是jpeg类的文件。jpeg文件之所以适合在互联网上传播，是因为它的压缩比较高，且能在压缩和图片还原度上保持平衡，使得一张图片既有小巧的体积，又能在肉眼级别上有良好的清晰度。</p>
+<p>但是jpeg文件并不适合保存图标等图像内容，因为它不具有alpha通道，不能用来表示透明的背景。一般会用png来保存图标。由于png是无损压缩存储图片的，所以会比jpeg文件要大一些，也适合对于图像质量要求较高的情况。</p>
+<p>bmp文件，它也是无损不压缩的，所以会比较大，比较少见。</p>
+<p>git文件，可以存储动图，但是由于它只用了8bit来描述一个像素点，所以可用的色彩并不多，色彩丰富度低。</p>
+<p>（全文完）</p>
 
       
     </div>
@@ -328,7 +249,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/19/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><span class="page-number current">20</span><a class="page-number" href="/page/21/">21</a><span class="space">&hellip;</span><a class="page-number" href="/page/72/">72</a><a class="extend next" rel="next" href="/page/21/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/19/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><span class="page-number current">20</span><a class="page-number" href="/page/21/">21</a><span class="space">&hellip;</span><a class="page-number" href="/page/69/">69</a><a class="extend next" rel="next" href="/page/21/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -396,14 +317,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">72</span>
+          <span class="site-state-item-count">69</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">49</span>
+        <span class="site-state-item-count">47</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -438,7 +359,7 @@
 <div class="copyright">
   
   &copy; 2018 – 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="male"></i>
   </span>

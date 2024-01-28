@@ -184,7 +184,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2019/10/21/CSAPP-learning-note-6/">
+    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2019/10/15/CSAPP-learning-note-4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/hyzgh-128x128.png">
@@ -198,7 +198,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2019/10/21/CSAPP-learning-note-6/" class="post-title-link" itemprop="url">CSAPP 学习笔记 6 异常控制流</a>
+            <a href="/2019/10/15/CSAPP-learning-note-4/" class="post-title-link" itemprop="url">CSAPP 学习笔记 4 程序的机器级表示</a>
         </h2>
 
         <div class="post-meta">
@@ -208,7 +208,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2019-10-21 19:16:38" itemprop="dateCreated datePublished" datetime="2019-10-21T19:16:38+08:00">2019-10-21</time>
+              <time title="创建时间：2019-10-15 12:31:41" itemprop="dateCreated datePublished" datetime="2019-10-15T12:31:41+08:00">2019-10-15</time>
             </span>
 
           
@@ -222,23 +222,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>最近看了CSAPP的第八章——异常控制流。</p>
-<h1 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h1><p>在计算机中，假如没有异常，那么指令是顺序执行的。当遇到异常时，会执行异常处理程序。异常有不同的种类，有中断、陷阱、故障、终止。</p>
-<p>中断，是在CPU执行某条指令的时候，其他部件异步产生的，比如定时器芯片、磁盘控制器、网络适配器等。CPU检测到中断后，会把当前指令执行完，然后转去执行异常处理程序，接着再返回来执行下一条指令。</p>
-<p>陷阱，是有意的异常，最常见的陷阱是系统调用。系统调用，是指从用户模式转为内核模式，以执行一些特殊的指令，比如操作I&#x2F;O设备。执行完系统调用后，会返回来执行下一条指令。</p>
-<p>故障，是指执行指令的时候遇到了意外，比如遇到了缺页、访问了未定义的虚拟内存区域等。根据故障的不同，异常处理程序执行完后可能会返回执行当前指令，也有可能会终止程序。在写程序时常常遇到的<code>Floating point exception</code>和<code>Segmentation fault</code>就属于故障，且在Linux中的处理是程序被终止。</p>
-<p>终止，是指遇到了致命的硬件错误，必须结束程序。</p>
-<p>因为异常种类繁多，所以计算机中有一张异常表，用来记录不同的异常及对应的异常处理程序。在CPU中，有一个特殊的寄存器——异常表基址寄存器，用来存放异常表在内存中的基址。当CPU遇到一种异常的时候，会拿到一个异常号。CPU拿着这个异常号及寄存器中的基址，便可以找到对应的异常处理程序了。</p>
-<h1 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h1><p>进程，是执行中的程序实例，是操作系统对于程序的一种抽象。这种抽象，使得看起来进程是独占cpu和内存的。为了实现这种抽象，需要操作系统保存好进程的上下文，进行进程调度。</p>
-<p>进程的上下文，是指进程执行的状态，包括CPU中的状态、用户模式中的状态、内核模式中的状态。具体来说，cpu中的状态，包括各种寄存器，比如通用寄存器，用来保存指令执行用到的数据，还有程序计数器，用来指明程序执行的进度。用户模式下的状态，包括用户栈等。内核模式中的状态，包括内核栈、进程已打开文件的信息的文件表、有关当前进程的信息的进程表等。</p>
-<p>什么时候会触发进程调度呢？主要有两种情况。一种是进程执行了系统调用，阻塞住了，比如读写文件、sleep等。另一种是中断，包括IO操作完成以及时钟中断等。</p>
-<h1 id="操作进程的工具"><a href="#操作进程的工具" class="headerlink" title="操作进程的工具"></a>操作进程的工具</h1><ul>
-<li><code>PS</code>：列出当前系统中的进程。</li>
-<li><code>TOP</code>：打印出关于当前进程资源使用的进程。</li>
-<li><code>PMAP</code>：显示进程的内存映射。</li>
-<li><code>STRACE</code>：打印一个正在运行的程序和它的子进程调用的每个系统调用的轨迹。<code>-static</code>是个实用的参数。</li>
-<li><code>/proc</code>：一个虚拟文件系统，以ASCII文件格式输出大量内核数据结构的内容。</li>
-</ul>
+          <p>这两周看得比较少，进度缓慢，只看了第三章关于控制的一小节内容，下面简单写一写。</p>
+<p>在CPU中，维护着一组单个位的条件码寄存器，用于描述算术或逻辑操作的属性，可以通过检测这些寄存器来执行条件分支指令，最常用的条件码有进位标志、零标志、符号标志、溢出标志。</p>
+<p>在CPU执行所有算术和逻辑运算时，都会设置条件码。此外，还有两类指令，即<code>CMP</code>和<code>TEST</code>，也会设置条件码，但它们不会改变其他寄存器。</p>
+<p>那么怎么访问这些条件寄存器呢？CPU中提供了<code>SET</code>指令，对这些标志位进行了封装，可以更方便地获取常见的比较结果。举个例子，最简单的情况，是判断结果是否为零，对应<code>SETE</code>指令，它会读取零标志寄存器。而比较复杂的情况，判断有符号数的小于比较，对应<code>SETL</code>，它会读取符号标志寄存器和溢出标志寄存器，然后取它们的异或值。</p>
+<p>要实现像C语言中的for语句，还需要一类指令<code>JMP</code>。它可以根据条件跳转到其他语句，而不是一直顺序执行。</p>
 <p>（全文完）</p>
 
       
@@ -258,7 +246,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/23/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><span class="page-number current">24</span><a class="page-number" href="/page/25/">25</a><span class="space">&hellip;</span><a class="page-number" href="/page/72/">72</a><a class="extend next" rel="next" href="/page/25/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/23/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><span class="page-number current">24</span><a class="page-number" href="/page/25/">25</a><span class="space">&hellip;</span><a class="page-number" href="/page/69/">69</a><a class="extend next" rel="next" href="/page/25/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -326,14 +314,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">72</span>
+          <span class="site-state-item-count">69</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">49</span>
+        <span class="site-state-item-count">47</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -368,7 +356,7 @@
 <div class="copyright">
   
   &copy; 2018 – 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="male"></i>
   </span>

@@ -184,7 +184,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2019/12/07/null/">
+    <link itemprop="mainEntityOfPage" href="https://hyzgh.github.io/2019/10/15/CSAPP-learning-note-4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/hyzgh-128x128.png">
@@ -198,7 +198,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2019/12/07/null/" class="post-title-link" itemprop="url">图片文件格式 学习笔记</a>
+            <a href="/2019/10/15/CSAPP-learning-note-4/" class="post-title-link" itemprop="url">CSAPP 学习笔记 4 程序的机器级表示</a>
         </h2>
 
         <div class="post-meta">
@@ -208,7 +208,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2019-12-07 16:07:02" itemprop="dateCreated datePublished" datetime="2019-12-07T16:07:02+08:00">2019-12-07</time>
+              <time title="创建时间：2019-10-15 12:31:41" itemprop="dateCreated datePublished" datetime="2019-10-15T12:31:41+08:00">2019-10-15</time>
             </span>
 
           
@@ -222,14 +222,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>在互联网中，常见的图片文件格式有jpeg, png, bmp, gif等。</p>
-<p>一副图片，具有很多的属性，比如分辨率，色彩空间等。可以通过<code>ImageMagick</code>这个程序来解析图片文件。</p>
-<p>分辨率，比如1920x1080，是指图片的一行具有1920个像素，一列具有1080个像素。</p>
-<p>色彩空间，是指描述一个像素点的方式。比如RGB，是指一个像素点用red, green, blue各8bit一共24bit来描述。而YUV，是指Y表示亮度，U和V一起表示色调和饱和度。</p>
-<p>在互联网上最常见的大概是jpeg类的文件。jpeg文件之所以适合在互联网上传播，是因为它的压缩比较高，且能在压缩和图片还原度上保持平衡，使得一张图片既有小巧的体积，又能在肉眼级别上有良好的清晰度。</p>
-<p>但是jpeg文件并不适合保存图标等图像内容，因为它不具有alpha通道，不能用来表示透明的背景。一般会用png来保存图标。由于png是无损压缩存储图片的，所以会比jpeg文件要大一些，也适合对于图像质量要求较高的情况。</p>
-<p>bmp文件，它也是无损不压缩的，所以会比较大，比较少见。</p>
-<p>git文件，可以存储动图，但是由于它只用了8bit来描述一个像素点，所以可用的色彩并不多，色彩丰富度低。</p>
+          <p>这两周看得比较少，进度缓慢，只看了第三章关于控制的一小节内容，下面简单写一写。</p>
+<p>在CPU中，维护着一组单个位的条件码寄存器，用于描述算术或逻辑操作的属性，可以通过检测这些寄存器来执行条件分支指令，最常用的条件码有进位标志、零标志、符号标志、溢出标志。</p>
+<p>在CPU执行所有算术和逻辑运算时，都会设置条件码。此外，还有两类指令，即<code>CMP</code>和<code>TEST</code>，也会设置条件码，但它们不会改变其他寄存器。</p>
+<p>那么怎么访问这些条件寄存器呢？CPU中提供了<code>SET</code>指令，对这些标志位进行了封装，可以更方便地获取常见的比较结果。举个例子，最简单的情况，是判断结果是否为零，对应<code>SETE</code>指令，它会读取零标志寄存器。而比较复杂的情况，判断有符号数的小于比较，对应<code>SETL</code>，它会读取符号标志寄存器和溢出标志寄存器，然后取它们的异或值。</p>
+<p>要实现像C语言中的for语句，还需要一类指令<code>JMP</code>。它可以根据条件跳转到其他语句，而不是一直顺序执行。</p>
 <p>（全文完）</p>
 
       
@@ -249,7 +246,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/22/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><span class="page-number current">23</span><a class="page-number" href="/page/24/">24</a><span class="space">&hellip;</span><a class="page-number" href="/page/72/">72</a><a class="extend next" rel="next" href="/page/24/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/22/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><span class="page-number current">23</span><a class="page-number" href="/page/24/">24</a><span class="space">&hellip;</span><a class="page-number" href="/page/69/">69</a><a class="extend next" rel="next" href="/page/24/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -317,14 +314,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">72</span>
+          <span class="site-state-item-count">69</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">49</span>
+        <span class="site-state-item-count">47</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -359,7 +356,7 @@
 <div class="copyright">
   
   &copy; 2018 – 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="male"></i>
   </span>
